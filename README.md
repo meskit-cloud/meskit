@@ -1,5 +1,7 @@
 # MESkit
 
+**The AI-Native MES.** An MES, but an Autonomous one.
+
 Open-source, AI-native Manufacturing Execution System toolkit. Simulation-first, agent-powered, MQTT-ready.
 
 **[meskit.cloud](https://meskit.cloud)**
@@ -8,11 +10,15 @@ Open-source, AI-native Manufacturing Execution System toolkit. Simulation-first,
 
 ## What is MESkit?
 
-MESkit is a lightweight MES built on the ISA-95 standard. It lets you define a virtual factory — lines, workstations, machines — configure products and routes, then run production simulations with real-time visibility.
+MESkit is a complete, buildable Manufacturing Execution System built on the ISA-95 standard. It starts with simulation, uses AI agents as first-class operators, and is architecturally ready for real sensor input via MQTT.
 
-What makes it AI-native: every MES operation flows through a **tool layer** that both the UI and AI agents consume. An operator can click a button to move a unit, or type "move SMX-00042 to the next station" in the chat panel — same tool, same result. AI agents aren't bolted on; they're peers to human operators.
+MESkit is not an "AI-enhanced" bolt-on or a chatbot demo. Every MES operation — moving a lot, logging a defect, querying yield — flows through a **tool layer** that both the UI and AI agents consume. The same function that powers a button click also powers a natural-language command. Agents are peers to human operators, not assistants to the UI.
 
 All data persists in Supabase (Postgres). Updates push to all clients via Realtime subscriptions.
+
+### North Star
+
+> Predict a machine failure and reschedule the entire shop floor autonomously — before the failure happens, without human intervention.
 
 ## Who is it for?
 
@@ -37,6 +43,14 @@ Four modes drive the UI, with a chat panel always available:
 | **Monitor** | Live WIP counts, throughput charts, yield summaries, unit lookup |
 
 ## AI Agents
+
+MESkit's agents are designed around three complementary layers that, together, deliver the North Star:
+
+| Layer | Role | Agent | Available |
+|-------|------|-------|-----------|
+| **Executor** | Acts on decisions through the tool layer — updates schedules, notifies operators | Agent Runtime | M1+ |
+| **Strategist** | Evaluates constraints (backlog, deadlines, capacity), computes alternative schedules | Production Planner | M5 |
+| **Sentinel** | Monitors sensor telemetry, detects degradation, outputs failure probability scores | Anomaly Monitor | M6 |
 
 Three specialized agents ship with MESkit:
 
@@ -90,19 +104,23 @@ The interface contract is defined now, implemented in M6:
 
 | Milestone | Scope |
 |-----------|-------|
-| M1 | Project scaffold, Supabase setup, auth, dark theme shell, tool layer, chat panel |
+| M1 | Project scaffold, Supabase setup, auth, professional light-first shell, tool layer, chat panel |
 | M2 | Build Mode + Operator Assistant — CRUD via UI and chat |
 | M3 | Configure Mode — Part numbers, BOM, routes via UI and chat |
 | M4 | Run Mode + Quality Analyst — Production execution with proactive quality monitoring |
 | M5 | Monitor Mode + Planner — Dashboard with AI insights and production planning |
 | M6 | MQTT interface + Anomaly Monitor — Broker, device gateway, sensor anomaly detection |
 
+## What MESkit Is NOT
+
+MESkit is not a learning exercise or a demo wrapper around a vendor API. It is a standalone product with its own persistence layer, authentication, real-time infrastructure, and agent runtime. No proprietary API dependencies — MESkit follows the ISA-95 standard data model.
+
 ## Getting Started
 
 > Coming soon — M1 is in progress.
 
 ```bash
-git clone https://github.com/your-username/meskit.git
+git clone https://github.com/meskit-cloud/meskit.git
 cd meskit
 npm install
 # Set up your Supabase project and add credentials to .env.local
