@@ -29,13 +29,13 @@ All data persists in Supabase (Postgres). Updates push to all clients via Realti
 - **Developers** building manufacturing apps who want a reference stack
 - **Teams exploring AI in manufacturing** who want agents with real MES tools, not chatbot demos
 
-## Current Status: M1 Complete
+## Current Status: M2 In Progress
 
-The foundation is live. The tool layer, agent runtime, and app shell are built and verified end-to-end:
+M1 (scaffold) is complete. M2 (Build Mode + Operator Assistant) is in progress — shop floor tools and the agent are functional via chat, Build Mode UI is next.
 
 - **Auth** — Signup, login, logout, protected routes with Supabase Auth
 - **ISA-95 Schema** — 15 Postgres tables with RLS, enums, indexes, and Realtime publications
-- **Tool Layer** — 23 registered tools (8 shop floor tools fully implemented, 15 stubs for M2-M5)
+- **Tool Layer** — 26 registered tools (8 shop floor fully implemented, 18 stubs for M3-M5)
 - **Agent Runtime** — Gemini tool-use loop with streaming, Operator Assistant active
 - **UI Shell** — Sidebar (Build/Configure/Run/Monitor), top bar, collapsible chat panel, live ticker
 - **End-to-end verified** — "Create a line called Assembly" in chat calls `create_line`, persists to Supabase, confirmed via `list_lines`
@@ -119,7 +119,7 @@ The interface contract is defined now, implemented in M6:
 | Milestone | Scope | Status |
 |-----------|-------|--------|
 | **M1** | Project scaffold, Supabase schema, auth, tool layer, agent runtime, UI shell | Done |
-| M2 | Build Mode + Operator Assistant — CRUD via UI and chat | Next |
+| **M2** | Build Mode + Operator Assistant — CRUD via UI and chat | In progress |
 | M3 | Configure Mode — Part numbers, BOM, routes via UI and chat | |
 | M4 | Run Mode + Quality Analyst — Production execution with proactive quality monitoring | |
 | M5 | Monitor Mode + Planner — Dashboard with AI insights and production planning | |

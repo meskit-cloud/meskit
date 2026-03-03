@@ -1,5 +1,7 @@
-import { GoogleGenerativeAI, type Content, type Part } from "@google/generative-ai";
-import { executeTool, getToolsByNames, toGeminiTools } from "@/lib/tools/registry";
+import { streamText, stepCountIs, type ModelMessage } from "ai";
+import { getModel } from "@/lib/ai/provider";
+import { toAISDKTools } from "@/lib/ai/tools";
+import { getToolsByNames } from "@/lib/tools/registry";
 
 // Ensure tool modules are loaded so they register themselves
 import "@/lib/tools/shop-floor";
@@ -19,13 +21,17 @@ export interface AgentRequest {
   messages: AgentMessage[];
 }
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-
 export async function runAgent(
   request: AgentRequest,
 ): Promise<ReadableStream<Uint8Array>> {
-  const tools = toGeminiTools(getToolsByNames(request.toolNames));
+  const mesTools = getToolsByNames(request.toolNames);
+  const tools = toAISDKTools(mesTools);
   const encoder = new TextEncoder();
+
+  const messages: ModelMessage[] = request.messages.map((m) => ({
+    role: m.role,
+    content: m.content,
+  }));
 
   return new ReadableStream({
     async start(controller) {
@@ -36,85 +42,41 @@ export async function runAgent(
       };
 
       try {
-        const model = genAI.getGenerativeModel({
-          model: "gemini-2.0-flash",
-          systemInstruction: request.systemPrompt,
-          tools: tools.length > 0 ? [{ functionDeclarations: tools }] : undefined,
+        const result = streamText({
+          model: getModel(),
+          system: request.systemPrompt,
+          messages,
+          tools: Object.keys(tools).length > 0 ? tools : undefined,
+          stopWhen: stepCountIs(10),
         });
 
-        // Convert messages to Gemini format
-        const history: Content[] = request.messages.slice(0, -1).map((m) => ({
-          role: m.role === "assistant" ? "model" : "user",
-          parts: [{ text: m.content }],
-        }));
-
-        const lastMessage = request.messages[request.messages.length - 1];
-
-        const chat = model.startChat({ history });
-
-        // Tool-use loop
-        let currentInput: string | Part[] = lastMessage.content;
-        let continueLoop = true;
-
-        while (continueLoop) {
-          continueLoop = false;
-
-          const result = await chat.sendMessageStream(currentInput);
-
-          let fullText = "";
-          const functionCalls: { name: string; args: Record<string, unknown> }[] = [];
-
-          for await (const chunk of result.stream) {
-            const candidate = chunk.candidates?.[0];
-            if (!candidate?.content?.parts) continue;
-
-            for (const part of candidate.content.parts) {
-              if (part.text) {
-                fullText += part.text;
-                send("text", { text: part.text });
-              }
-              if (part.functionCall) {
-                functionCalls.push({
-                  name: part.functionCall.name,
-                  args: part.functionCall.args as Record<string, unknown>,
+        for await (const part of result.fullStream) {
+          switch (part.type) {
+            case "text-delta":
+              send("text", { text: part.text });
+              break;
+            case "tool-call":
+              send("tool_call", { name: part.toolName, input: part.input });
+              break;
+            case "tool-result": {
+              const output = part.output;
+              const isError =
+                typeof output === "object" &&
+                output !== null &&
+                "error" in output;
+              if (isError) {
+                send("tool_error", {
+                  name: part.toolName,
+                  error: (output as { error: string }).error,
+                });
+              } else {
+                send("tool_result", {
+                  name: part.toolName,
+                  result: output,
                 });
               }
+              break;
             }
-          }
-
-          // If the model wants to call tools, execute them and continue
-          if (functionCalls.length > 0) {
-            continueLoop = true;
-
-            const functionResponses: Part[] = [];
-
-            for (const fc of functionCalls) {
-              send("tool_call", { name: fc.name, input: fc.args });
-
-              try {
-                const toolResult = await executeTool(fc.name, fc.args);
-                functionResponses.push({
-                  functionResponse: {
-                    name: fc.name,
-                    response: { result: toolResult },
-                  },
-                });
-                send("tool_result", { name: fc.name, result: toolResult });
-              } catch (error) {
-                const errorMsg =
-                  error instanceof Error ? error.message : "Unknown error";
-                functionResponses.push({
-                  functionResponse: {
-                    name: fc.name,
-                    response: { error: errorMsg },
-                  },
-                });
-                send("tool_error", { name: fc.name, error: errorMsg });
-              }
-            }
-
-            // Send tool results back to the model
-            currentInput = functionResponses;
           }
         }
 

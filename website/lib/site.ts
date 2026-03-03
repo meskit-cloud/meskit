@@ -129,12 +129,12 @@ export function buildPageMetadata(input: {
 export const coreFacts = [
   'Category: AI-native open-source MES toolkit (MIT license).',
   'Identity: The AI-Native MES — an MES, but an Autonomous one.',
-  'Standards: ISA-95 aligned data model with 12 mapped Postgres tables.',
-  'Tool layer: 20+ Zod-validated server actions shared by UI and agents.',
+  'Standards: ISA-95 aligned data model with 15 mapped Postgres tables.',
+  'Tool layer: 26 Zod-validated server actions shared by UI and agents.',
   'Agents: Operator Assistant, Quality Analyst, Production Planner (3 agents).',
   'North Star: Predict machine failure and reschedule autonomously via three AI layers (Sentinel, Strategist, Executor).',
   'Roadmap: 6 milestones (M1 complete, M2 in progress, through M6 MQTT integration).',
-  'Stack: Next.js, Supabase, Claude API (tool-use), TypeScript.',
+  'Stack: Next.js, Supabase, Gemini API (tool-use), TypeScript.',
 ];
 
 export const taxonomy = [
