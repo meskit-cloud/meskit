@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 
 export const siteConfig = {
   name: 'MESkit',
-  title: 'MESkit | Open-source, AI-native MES toolkit',
+  title: 'MESkit | The AI-Native MES',
   description:
-    'Open-source, AI-native Manufacturing Execution System toolkit. ISA-95 aligned, simulation-first, agent-powered, and MQTT-ready.',
+    'The AI-Native MES. Open-source Manufacturing Execution System toolkit — ISA-95 aligned, agent-powered, simulation-first, MQTT-ready.',
   url: 'https://meskit.cloud',
   githubUrl: 'https://github.com/meskit/meskit',
   docsUrl: 'https://meskit.cloud/docs',
@@ -113,7 +113,7 @@ export function buildPageMetadata(input: {
           url: `${siteConfig.url}/og-image.svg`,
           width: 1200,
           height: 630,
-          alt: 'MESkit open-source AI-native MES toolkit',
+          alt: 'MESkit — The AI-Native MES',
         },
       ],
     },
@@ -127,12 +127,14 @@ export function buildPageMetadata(input: {
 }
 
 export const coreFacts = [
-  'Category: AI-native open-source MES toolkit.',
-  'Standards alignment: ISA-95 aligned data model.',
-  'Architecture: UI and agents call the same typed tool layer.',
-  'Agents in scope: Operator Assistant, Quality Analyst, Production Planner.',
-  'Current status: pre-M1 implementation with architecture and roadmap finalized.',
-  'Stack: Next.js, Supabase, Claude API (tool-use).',
+  'Category: AI-native open-source MES toolkit (MIT license).',
+  'Identity: The AI-Native MES — an MES, but an Autonomous one.',
+  'Standards: ISA-95 aligned data model with 12 mapped Postgres tables.',
+  'Tool layer: 20+ Zod-validated server actions shared by UI and agents.',
+  'Agents: Operator Assistant, Quality Analyst, Production Planner (3 agents).',
+  'North Star: Predict machine failure and reschedule autonomously via three AI layers (Sentinel, Strategist, Executor).',
+  'Roadmap: 6 milestones (M1 scaffold through M6 MQTT integration).',
+  'Stack: Next.js, Supabase, Claude API (tool-use), TypeScript.',
 ];
 
 export const taxonomy = [

@@ -59,8 +59,10 @@ export function articleJsonLd(input: {
     datePublished: input.publishedAt,
     dateModified: input.updatedAt,
     author: {
-      '@type': 'Person',
+      '@type': 'Organization',
       name: input.author,
+      url: siteConfig.url,
+      sameAs: [siteConfig.githubUrl],
     },
     publisher: {
       '@type': 'Organization',
@@ -69,5 +71,52 @@ export function articleJsonLd(input: {
     },
     mainEntityOfPage: url,
     url,
+  };
+}
+
+export function howToJsonLd(input: {
+  name: string;
+  description: string;
+  steps: Array<{ name: string; text: string }>;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: input.name,
+    description: input.description,
+    step: input.steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  };
+}
+
+export function definedTermJsonLd(
+  terms: Array<{ name: string; description: string }>,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'DefinedTermSet',
+    name: 'MESkit terminology',
+    hasDefinedTerm: terms.map((term) => ({
+      '@type': 'DefinedTerm',
+      name: term.name,
+      description: term.description,
+    })),
+  };
+}
+
+export function softwareSourceCodeJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: 'MESkit — The AI-Native MES',
+    description: siteConfig.description,
+    codeRepository: siteConfig.githubUrl,
+    programmingLanguage: ['TypeScript', 'SQL'],
+    runtimePlatform: 'Node.js',
+    license: 'https://opensource.org/licenses/MIT',
   };
 }

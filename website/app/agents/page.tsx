@@ -11,7 +11,7 @@ import {
   SummaryBlock,
 } from '@/components/page-elements';
 import { buildPageMetadata, siteConfig } from '@/lib/site';
-import { breadcrumbJsonLd } from '@/lib/structured-data';
+import { breadcrumbJsonLd, definedTermJsonLd } from '@/lib/structured-data';
 
 export const metadata = buildPageMetadata({
   title: 'AI agents',
@@ -30,11 +30,12 @@ export const metadata = buildPageMetadata({
 const breadcrumbs = [{ name: 'Agents', path: '/agents' }];
 
 const facts = [
-  'AI-native means shared tools between UI and agents.',
-  'Operator Assistant is chat-triggered and always available.',
-  'Quality Analyst is event-driven from realtime thresholds.',
-  'Production Planner is on-demand for capacity and schedule scenarios.',
-  'Agents operate with human oversight, not autonomous authority.',
+  '3 specialized agents share 20+ typed tool operations with the UI.',
+  'Operator Assistant is chat-triggered with access to all shop-floor tools.',
+  'Quality Analyst triggers on yield below 90%, defect clusters, or elevated scrap.',
+  'Production Planner analyzes capacity across routes and shift windows.',
+  'Three AI layers (Sentinel, Strategist, Executor) build toward autonomous predictive rescheduling.',
+  'All agent actions are Zod-validated — no hidden APIs or uncontrolled authority.',
 ];
 
 const miniFaq = [
@@ -57,6 +58,11 @@ export default function AgentsPage() {
   return (
     <div className="page">
       <JsonLd data={breadcrumbJsonLd(breadcrumbs)} />
+      <JsonLd data={definedTermJsonLd([
+        { name: 'AI-native MES', description: 'A Manufacturing Execution System where AI agents and human operators execute the same typed manufacturing operations through a shared tool layer.' },
+        { name: 'Tool layer', description: 'A set of Zod-validated server actions that serve as the single execution interface for both UI interactions and AI agent commands in MESkit.' },
+        { name: 'Agent runtime', description: 'The Claude tool-use runtime that maps natural-language intent to explicit, schema-validated MES tool calls.' },
+      ])} />
       <div className="container">
         <Breadcrumbs items={breadcrumbs} />
         <PageIntro
@@ -67,6 +73,46 @@ export default function AgentsPage() {
 
         <Section title="What AI-native MES means" subtitle="Tool layer first, chat interface second.">
           <SummaryBlock summary="In MESkit, AI capability is defined by tool contracts. The Operator Assistant, Quality Analyst, and Production Planner use the same operations used by UI buttons. This keeps behavior consistent, testable, and auditable." />
+        </Section>
+
+        <Section title="Three AI layers" subtitle="The architecture behind autonomous manufacturing.">
+          <SummaryBlock summary="MESkit agents are designed around three complementary roles that, together, deliver the North Star: predict a machine failure and reschedule the entire shop floor autonomously." />
+          <div className="table-wrap" style={{ marginTop: '1rem' }}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Layer</th>
+                  <th>Role</th>
+                  <th>Agent</th>
+                  <th>Milestone</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Sentinel</strong></td>
+                  <td>Monitors sensor telemetry, detects degradation, outputs failure probability scores</td>
+                  <td>Anomaly Monitor</td>
+                  <td>M6</td>
+                </tr>
+                <tr>
+                  <td><strong>Strategist</strong></td>
+                  <td>Evaluates constraints (backlog, deadlines, capacity), computes alternative schedules</td>
+                  <td>Production Planner</td>
+                  <td>M5</td>
+                </tr>
+                <tr>
+                  <td><strong>Executor</strong></td>
+                  <td>Acts on decisions through the tool layer — updates schedules, notifies operators</td>
+                  <td>Agent Runtime</td>
+                  <td>M1+</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style={{ marginTop: '0.8rem' }}>
+            In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist,
+            which triggers the Executor — closing the autonomous loop.
+          </p>
         </Section>
 
         <Section title="Agent profiles" subtitle="Roles, triggers, and tool access by design.">
@@ -177,6 +223,62 @@ Planner: Recommend parallel lines to hit target.`}</pre>
                 <li>Operator oversight remains mandatory for production decisions.</li>
               </ul>
             </div>
+          </div>
+        </Section>
+
+        <Section
+          title="AI-native vs traditional MES"
+          subtitle="How the tool layer changes the integration model."
+        >
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dimension</th>
+                  <th>Traditional MES</th>
+                  <th>AI-enhanced MES</th>
+                  <th>AI-native MES (MESkit)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>AI integration</td>
+                  <td>None</td>
+                  <td>Sidecar / bolt-on</td>
+                  <td>Shared tool layer</td>
+                </tr>
+                <tr>
+                  <td>Execution path</td>
+                  <td>UI only</td>
+                  <td>UI + separate AI API</td>
+                  <td>One path for UI and agents</td>
+                </tr>
+                <tr>
+                  <td>Validation</td>
+                  <td>Per-screen logic</td>
+                  <td>Duplicated across layers</td>
+                  <td>Single Zod schema per tool</td>
+                </tr>
+                <tr>
+                  <td>Audit trail</td>
+                  <td>UI actions logged</td>
+                  <td>Partial AI logging</td>
+                  <td>Full trace for both UI and agents</td>
+                </tr>
+                <tr>
+                  <td>Natural language</td>
+                  <td>Not supported</td>
+                  <td>Chat wrapper</td>
+                  <td>Maps to typed tool calls</td>
+                </tr>
+                <tr>
+                  <td>Standards</td>
+                  <td>Vendor-specific</td>
+                  <td>Varies</td>
+                  <td>ISA-95 aligned schema</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </Section>
 

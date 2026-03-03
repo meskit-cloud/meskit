@@ -67,9 +67,19 @@ MVP product scope focuses on discrete manufacturing UX (Build, Configure, Run, M
 
 ## 5. Messaging Framework
 
+### Brand tagline
+
+**The AI-Native MES.** An MES, but an Autonomous one.
+
 ### Core promise
 
 "Open-source, AI-native MES toolkit. ISA-95 aligned, agent-powered, simulation-first, MQTT-ready."
+
+### North Star
+
+Predict a machine failure and reschedule the entire shop floor autonomously. Three AI layers build toward this: the Sentinel (Anomaly Monitor) detects degradation, the Strategist (Production Planner) evaluates alternatives, and the Executor (Agent Runtime) acts through the tool layer.
+
+Use the North Star as aspirational vision in hero and brand messaging. Current MVP claims must remain accurate — see messaging guardrails.
 
 ### Key proof points
 
@@ -78,11 +88,12 @@ MVP product scope focuses on discrete manufacturing UX (Build, Configure, Run, M
 3. **Real architecture**: Postgres, auth, realtime, tool layer — not a mock UI or chatbot demo.
 4. **Clear upgrade path**: Simulation to device-driven execution via MQTT using the same message schema and tool layer.
 5. **Three specialized agents**: Operator Assistant (chat), Quality Analyst (event-driven), Production Planner (on-demand) — each with defined tools, triggers, and roles.
+6. **Autonomous vision**: Three AI layers (Sentinel, Strategist, Executor) designed to close the loop from detection to rescheduling without human intervention.
 
 ### Messaging guardrails
 
 1. Do not imply batch/continuous UI is fully available in MVP.
-2. Do not position agents as autonomous decision-makers — they operate through the same tool layer as humans, with human oversight.
+2. Do not position agents as autonomous decision-makers in current MVP — they operate through the same tool layer as humans, with human oversight. The autonomous vision (North Star) can be referenced as the product direction, clearly distinguished from current capabilities.
 3. Avoid generic "AI manufacturing" or "AI-powered" claims without specifying what the agents actually do (which tools they call, what triggers them).
 4. Prioritize concrete technical language over vague marketing terms.
 5. Distinguish between "AI-native" (architecture-level, tool layer shared between UI and agents) and "AI-enhanced" (bolted-on chatbot) — MESkit is the former.
@@ -93,9 +104,9 @@ This section is the single source of truth for the website's visual identity. Al
 
 ### 6.1 Brand DNA
 
-MESkit's visual identity is **dark, industrial, and data-dense** — purpose-built for manufacturing, not consumer SaaS. The website reflects this by defaulting to a dark theme with high-contrast text, monospaced data elements, and a cyan accent that signals precision and tech-forward thinking.
+MESkit's website identity is **professional, precise, and enterprise-ready**. The visual system is light-first, structured, and high-clarity, designed to communicate trust and engineering maturity rather than experimental aesthetics.
 
-The aesthetic should evoke a factory control room: functional, information-rich, zero decoration for decoration's sake.
+The aesthetic should evoke a modern operations platform: clean surfaces, clear hierarchy, restrained motion, and technical credibility.
 
 ### 6.2 Color System
 
@@ -105,84 +116,85 @@ All colors are defined as design tokens. The website uses the same palette as th
 
 | Token | Hex | Tailwind | Usage |
 |-------|-----|----------|-------|
-| `--bg-primary` | `#000000` | `black` | Page background, hero backgrounds |
-| `--bg-secondary` | `#111111` | `zinc-950` | Alternate section backgrounds |
-| `--surface` | `#1A1A1A` | `zinc-900` | Cards, panels, code blocks, feature boxes |
-| `--surface-hover` | `#222222` | `zinc-800` | Card hover states, interactive surfaces |
-| `--border` | `#2A2A2A` | `zinc-800` | Dividers, card edges, section separators |
-| `--border-subtle` | `#1F1F1F` | `zinc-900` | Subtle borders within surfaces |
+| `--bg-primary` | `#F3F7FC` | `slate-100` | Page background, global canvas |
+| `--bg-secondary` | `#EAF1F8` | `slate-200` | Footer and alternate section backgrounds |
+| `--surface` | `#FFFFFF` | `white` | Cards, panels, code containers |
+| `--surface-hover` | `#F8FBFF` | `blue-50` | Card hover states and soft highlights |
+| `--border` | `#D6E0EA` | `slate-300` | Dividers, card edges, nav separator |
+| `--border-subtle` | `#E5EDF5` | `slate-200` | Internal table and component separators |
 
 #### Accent colors
 
 | Token | Hex | Tailwind | Usage |
 |-------|-----|----------|-------|
-| `--accent` | `#06B6D4` | `cyan-500` | Primary CTAs, links, active nav, hover accents |
-| `--accent-hover` | `#0891B2` | `cyan-600` | CTA hover states |
-| `--accent-muted` | `#164E63` | `cyan-900` | Accent backgrounds (badges, highlights) |
-| `--accent-glow` | `#06B6D4` at 15% opacity | — | Subtle glow effects on hero elements, accent borders |
+| `--accent` | `#0F6FF2` | `blue-600` | Primary CTAs, links, active states |
+| `--accent-hover` | `#0A58C7` | `blue-700` | Primary CTA hover states |
+| `--accent-muted` | `#DBEAFE` | `blue-100` | Soft accent backgrounds |
+| `--accent-soft` | `#EFF6FF` | `blue-50` | Hero and callout washes |
 
 #### Text colors
 
 | Token | Hex | Tailwind | Usage |
 |-------|-----|----------|-------|
-| `--text-primary` | `#FFFFFF` | `white` | Headings, body text, primary content |
-| `--text-secondary` | `#A1A1AA` | `zinc-400` | Subheadings, descriptions, meta text |
-| `--text-tertiary` | `#71717A` | `zinc-500` | Labels, hints, footnotes, disabled text |
-| `--text-accent` | `#06B6D4` | `cyan-500` | Links, emphasized technical terms |
+| `--text-primary` | `#0F172A` | `slate-900` | Headings and primary content |
+| `--text-secondary` | `#334155` | `slate-700` | Body text and descriptions |
+| `--text-tertiary` | `#64748B` | `slate-500` | Labels, timestamps, helper text |
+| `--text-accent` | `#0F6FF2` | `blue-600` | Links and emphasized technical terms |
 
 #### Semantic colors
 
 | Token | Hex | Tailwind | Usage |
 |-------|-----|----------|-------|
-| `--success` | `#22C55E` | `green-500` | Pass results, status indicators, "completed" badges |
-| `--warning` | `#F59E0B` | `amber-500` | Attention states, "in progress" badges |
-| `--error` | `#EF4444` | `red-500` | Fail results, critical alerts |
-| `--agent` | `#A78BFA` | `violet-400` | Agent-related UI: agent badges, chat examples, agent section accents |
+| `--success` | `#15803D` | `green-700` | Pass results and completed states |
+| `--warning` | `#B45309` | `amber-700` | Attention and in-progress states |
+| `--error` | `#B91C1C` | `red-700` | Fail results and critical alerts |
+| `--agent` | `#7C3AED` | `violet-600` | Agent badges and chat/example accents |
 
 #### Usage rules
 
-1. **No light mode.** The website is dark-only. This is a brand decision, not a missing feature.
-2. **Cyan is the only brand accent.** Do not introduce additional accent colors. Use semantic colors only for their defined purpose.
+1. **Light-first by default.** The website must ship with the professional light identity as canonical.
+2. **Blue is the only brand accent.** Do not introduce additional primary accents. Semantic colors are functional only.
 3. **Agent violet** is reserved exclusively for content about AI agents (chat examples, agent cards, agent page accents). Do not use it as a general-purpose accent.
-4. **Glow effects** are used sparingly — hero elements, section dividers, and featured cards. Never on body text or small UI elements.
+4. **No neon/glow treatments.** Use subtle borders, soft gradients, and restrained shadows.
+5. **Accessibility baseline**: maintain contrast appropriate for professional documentation and enterprise buyers.
 
 ### 6.3 Typography
 
 | Element | Font | Weight | Size (desktop) | Size (mobile) | Tracking |
 |---------|------|--------|----------------|---------------|----------|
-| H1 (hero) | Inter | 700 (Bold) | 56px / 3.5rem | 36px / 2.25rem | -0.02em |
-| H1 (page) | Inter | 700 (Bold) | 40px / 2.5rem | 28px / 1.75rem | -0.02em |
-| H2 | Inter | 600 (Semibold) | 30px / 1.875rem | 24px / 1.5rem | -0.01em |
-| H3 | Inter | 600 (Semibold) | 22px / 1.375rem | 20px / 1.25rem | 0 |
-| Body | Inter | 400 (Regular) | 17px / 1.0625rem | 16px / 1rem | 0 |
-| Body small | Inter | 400 (Regular) | 15px / 0.9375rem | 14px / 0.875rem | 0 |
-| Code / data | JetBrains Mono | 400 (Regular) | 15px / 0.9375rem | 14px / 0.875rem | 0 |
-| Nav | Inter | 500 (Medium) | 15px / 0.9375rem | 15px / 0.9375rem | 0 |
-| CTA button | Inter | 600 (Semibold) | 15px / 0.9375rem | 15px / 0.9375rem | 0.01em |
-| Badge / label | Inter | 500 (Medium) | 13px / 0.8125rem | 12px / 0.75rem | 0.02em |
+| H1 (hero) | Manrope | 800 (ExtraBold) | 52px / 3.25rem | 34px / 2.125rem | -0.03em |
+| H1 (page) | Manrope | 700 (Bold) | 42px / 2.625rem | 30px / 1.875rem | -0.02em |
+| H2 | Manrope | 700 (Bold) | 32px / 2rem | 24px / 1.5rem | -0.02em |
+| H3 | Manrope | 600 (Semibold) | 24px / 1.5rem | 20px / 1.25rem | -0.01em |
+| Body | Manrope | 400 (Regular) | 18px / 1.125rem | 16px / 1rem | 0 |
+| Body small | Manrope | 400 (Regular) | 15px / 0.9375rem | 14px / 0.875rem | 0 |
+| Code / data | IBM Plex Mono | 400 (Regular) | 14px / 0.875rem | 13px / 0.8125rem | 0 |
+| Nav | Manrope | 600 (Semibold) | 15px / 0.9375rem | 15px / 0.9375rem | 0 |
+| CTA button | Manrope | 700 (Bold) | 15px / 0.9375rem | 15px / 0.9375rem | 0.01em |
+| Badge / label | Manrope | 600 (Semibold) | 12px / 0.75rem | 12px / 0.75rem | 0.03em |
 
 #### Typography rules
 
-1. **Inter** is the primary typeface for all UI and content text. Load weights 400, 500, 600, 700 from Google Fonts or self-host.
-2. **JetBrains Mono** is used for code blocks, data values, serial numbers, tool names, and technical identifiers (e.g., `get_wip_status`, `SMX-00042`). Load weight 400.
+1. **Manrope** is the primary typeface for all UI and marketing content. Load weights 400, 500, 600, 700, 800.
+2. **IBM Plex Mono** is used for code blocks, data values, serial numbers, tool names, and technical identifiers (e.g., `get_wip_status`, `SMX-00042`). Load weight 400.
 3. Line height: 1.6 for body text, 1.2 for headings, 1.5 for code blocks.
-4. Maximum content width: 720px for body text. Full-width for hero sections, diagrams, and tables.
-5. Do not use Roboto on the website. Inter replaces it for the marketing site (the app may use Roboto separately).
+4. Maximum content width: 740px for long-form body text. Use full width for hero, diagrams, and data tables.
+5. Keep typographic rhythm consistent across product pages and blog pages; avoid mixing additional display fonts.
 
 ### 6.4 Logo & Wordmark
 
 | Asset | Spec |
 |-------|------|
-| **Wordmark** | "MESkit" — set in Inter Bold. "MES" in `--text-primary` (#FFFFFF), "kit" in `--accent` (#06B6D4). |
-| **Favicon** | Stylized "M" in cyan on black, 32x32 and 16x16. SVG preferred for scalability. |
-| **OG image** | Dark background (#000000), MESkit wordmark centered, tagline below: "Open-source, AI-native MES toolkit." 1200x630px. |
+| **Wordmark** | "MESkit" — set in Manrope Bold/ExtraBold. "MES" in `--text-primary` (#0F172A), "kit" in `--accent` (#0F6FF2). |
+| **Favicon** | Stylized "M" in brand blue on white with subtle border, 32x32 and 16x16. SVG preferred. |
+| **OG image** | Light gradient background with white card, centered MESkit wordmark, tagline below: "The AI-Native MES." 1200x630px. |
 
 #### Logo usage rules
 
-1. The wordmark always uses the two-tone split: white "MES" + cyan "kit". Never render the full word in a single color.
+1. The wordmark always uses the two-tone split: dark "MES" + blue "kit". Never render the full word in a single color.
 2. Minimum clear space around the wordmark: 1x the height of the "M" character.
-3. The wordmark is text-based (Inter Bold), not a graphic logo. This means it can be rendered in CSS/HTML without an image asset.
-4. On surfaces lighter than `#1A1A1A` (if they ever appear in diagrams or external contexts), use black "MES" + cyan "kit".
+3. The wordmark is text-based (Manrope Bold/ExtraBold), not a fixed graphic. It should render cleanly in CSS/HTML.
+4. On dark external backgrounds, invert "MES" to white while keeping "kit" in brand blue.
 
 ### 6.5 Voice & Tone
 
@@ -199,7 +211,7 @@ All colors are defined as design tokens. The website uses the same palette as th
 
 | Context | Tone | Example |
 |---------|------|---------|
-| Hero / homepage | Bold, declarative | "The MES that talks back." |
+| Hero / homepage | Bold, declarative | "The AI-Native MES." / "An MES, but an Autonomous one." |
 | Product pages | Explanatory, specific | "Each agent calls typed tools through the same interface the UI uses." |
 | Technical pages (architecture, ISA-95) | Precise, neutral | "The tool layer validates inputs with Zod schemas before executing against Supabase." |
 | Blog posts | Authoritative, educational | "ISA-95 defines five levels of manufacturing integration. Here's how MESkit maps to each." |
@@ -223,16 +235,16 @@ All colors are defined as design tokens. The website uses the same palette as th
 | `--space-block` | 48px (3rem) | Spacing between content blocks within a section |
 | `--space-element` | 24px (1.5rem) | Spacing between elements within a block (cards, list items) |
 | `--space-tight` | 12px (0.75rem) | Tight spacing within components (label to value, icon to text) |
-| `--radius-card` | 12px (0.75rem) | Border radius for cards, panels, feature boxes |
-| `--radius-button` | 8px (0.5rem) | Border radius for buttons and inputs |
-| `--radius-badge` | 6px (0.375rem) | Border radius for badges and tags |
+| `--radius-card` | 14px (0.875rem) | Border radius for cards and feature panels |
+| `--radius-button` | 10px (0.625rem) | Border radius for buttons and inputs |
+| `--radius-badge` | 999px | Pill badges and status tokens |
 
 #### Layout rules
 
 1. **Max content width**: 1200px, centered. Hero sections may span full viewport width with content constrained.
 2. **Grid**: 12-column grid on desktop, collapsing to single column on mobile. Use 4-column for card grids (agents, modes, features).
 3. **Section pattern**: Each page section follows: heading → subheading → content block → optional CTA. Separated by `--space-section`.
-4. **Card pattern**: `--surface` background, `--border` border (1px), `--radius-card` corners, `--space-element` internal padding. Hover: border transitions to `--accent` at 40% opacity.
+4. **Card pattern**: `--surface` background, `--border` border (1px), `--radius-card` corners, `--space-element` internal padding, with subtle elevation (`box-shadow`) on hover.
 5. **Mobile breakpoint**: 768px. All grids collapse to single column. Section spacing reduces to 64px (4rem).
 
 ### 6.7 Component Patterns
@@ -241,18 +253,18 @@ All colors are defined as design tokens. The website uses the same palette as th
 
 | Variant | Background | Text | Border | Usage |
 |---------|-----------|------|--------|-------|
-| Primary | `--accent` | `#000000` | none | Main CTAs: "View on GitHub", "Get Updates" |
-| Secondary | transparent | `--accent` | 1px `--accent` | Secondary actions: "Read Docs", "View Roadmap" |
+| Primary | `--accent` gradient | `#FFFFFF` | none | Main CTAs: "View on GitHub", "Get Updates" |
+| Secondary | `#FFFFFF` | `--accent` | 1px `--accent` | Secondary actions: "Read Docs", "View Roadmap" |
 | Ghost | transparent | `--text-secondary` | none | Tertiary: "Learn more", inline links |
 
-All buttons: `--radius-button`, 12px 24px padding, `font-weight: 600`, uppercase tracking for primary only if ≤3 words.
+All buttons: `--radius-button`, 12px 24px padding, `font-weight: 700`. Avoid all-caps CTA text.
 
 #### Code blocks
 
-- Background: `--surface` (`#1A1A1A`)
-- Border: 1px `--border`
-- Font: JetBrains Mono 400
-- Syntax highlighting: muted palette — cyan for keywords, green for strings, violet for agent-related terms, zinc-400 for comments
+- Background: `#F8FBFF`
+- Border: 1px `#D5E5F7`
+- Font: IBM Plex Mono 400
+- Syntax highlighting: muted palette — blue for keywords, green for strings, violet for agent-related terms, slate for comments
 - Top bar with language label and optional copy button
 
 #### Agent chat examples
@@ -266,26 +278,26 @@ When showing agent interactions on the website (for illustration, not live):
 
 #### Navigation
 
-- Fixed top nav, `--bg-primary` background with `--border` bottom border
+- Fixed top nav, translucent light background over `--bg-primary`, with `--border` bottom border
 - Wordmark left-aligned (two-tone "MES" + "kit")
 - Nav links: `--text-secondary`, hover `--text-primary`, active `--accent`
 - Primary CTA button in nav (rightmost): "View on GitHub"
-- Mobile: hamburger menu, full-screen overlay on `--bg-primary`
+- Mobile: hamburger menu with overlay on semi-opaque `--bg-primary`
 
 #### Footer
 
-- `--bg-secondary` background
+- `--bg-secondary` gradient background
 - Four-column layout: Product links, Resources links, Community links, Legal
 - Wordmark + one-line tagline at bottom
 - Social icons: GitHub (required), Twitter/X (optional), Discord (optional)
 
 ### 6.8 Imagery & Diagrams
 
-1. **Architecture diagrams**: Rendered in SVG or CSS, not raster images. Use the color palette — `--surface` for boxes, `--border` for edges, `--accent` for connections and data flow arrows, `--agent` for agent-related nodes.
-2. **Screenshots**: When the app exists, use actual dark-theme screenshots. Before that, use wireframe-style mockups matching the color system.
+1. **Architecture diagrams**: Rendered in SVG or CSS, not raster images. Use light surfaces with clear borders and blue data-flow accents.
+2. **Screenshots**: Use product-realistic, light-first screenshots with readable data density and clear panel hierarchy.
 3. **Icons**: Use Lucide icons (open-source, consistent with the engineering aesthetic). Stroke width 1.5px, `--text-secondary` default color, `--accent` for active/featured states.
 4. **No stock photography.** No abstract AI art. No gradient meshes. Illustrations should be technical diagrams, architecture drawings, or data visualizations.
-5. **Hero visuals**: Terminal-style or control-room-style compositions — showing tool calls, data flow, or agent interactions in a structured layout. Not decorative.
+5. **Hero visuals**: Product-grade interface compositions (dashboard panels, chat/tool call chains, architecture cards). Avoid terminal-hacker styling.
 
 ## 7. Conversion Model
 
@@ -330,7 +342,7 @@ When showing agent interactions on the website (for illustration, not live):
 
 Must include:
 
-1. Clear hero with value proposition emphasizing AI-native + ISA-95 + open-source.
+1. Clear hero with brand tagline ("The AI-Native MES") and value proposition emphasizing AI-native + ISA-95 + open-source. North Star vision statement below the fold.
 2. "How it works" flow aligned to product loop:
    - Define product.
    - Build route.

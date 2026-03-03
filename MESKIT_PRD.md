@@ -6,6 +6,18 @@
 
 MESkit follows the **ISA-95** standard data model — no proprietary API dependencies.
 
+### Brand Identity
+
+**The AI-Native MES.** An MES, but an Autonomous one.
+
+MESkit is not an "AI-enhanced" bolt-on or a chatbot demo. It is a Manufacturing Execution System where AI agents are first-class operators — peers to humans, consuming the same tool layer, acting on the same data.
+
+### North Star
+
+Predict a machine failure and reschedule the entire shop floor autonomously — before the failure happens, without human intervention.
+
+The product roadmap builds toward this: the Anomaly Monitor (Sentinel) detects degradation signals from sensor data, the Production Planner (Strategist) evaluates constraints and alternatives, and the Agent Runtime (Executor) acts through the tool layer to update schedules and notify operators.
+
 ### What "AI-Native" Means
 
 AI is not bolted on after the fact. Every MES operation — moving a lot, logging a defect, querying yield — flows through a **tool layer** that both the UI and AI agents consume. The same function that powers a button click also powers a natural-language command. Agents are peers to human operators, not assistants to the UI.
@@ -357,6 +369,18 @@ MESkit ships with three specialized agents. Each agent uses Claude's tool-use ca
 └──────────────────────────────────────────────┘
 ```
 
+### 5.1.1 Three AI Layers (North Star Architecture)
+
+The agents are designed around three complementary roles that, together, deliver the North Star: autonomous predictive rescheduling.
+
+| Layer | Role | Agent | Milestone |
+|-------|------|-------|-----------|
+| **Sentinel** | Monitors sensor telemetry, detects degradation, outputs failure probability scores | Anomaly Monitor | M6 |
+| **Strategist** | Evaluates constraints (backlog, deadlines, capacity), computes alternative schedules | Production Planner | M5 |
+| **Executor** | Acts on decisions through the tool layer — updates schedules, notifies operators | Agent Runtime | M1+ |
+
+In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist, which triggers the Executor — closing the autonomous loop.
+
 ### 5.2 Operator Assistant
 
 **Trigger**: User-initiated via chat panel (always available in the UI shell).
@@ -567,7 +591,7 @@ A "virtual device" module publishes fake MQTT messages at configurable intervals
 
 | # | Milestone | Deliverable | Key Details |
 |---|-----------|-------------|-------------|
-| **M1** | Project scaffold + Tool Layer | Next.js app, Supabase project, auth, dark theme shell, tool layer scaffold, chat panel | Tailwind config, Zustand stores, Supabase client, sidebar + top bar + ticker + chat panel layout, login/signup, tool layer architecture with Zod schemas |
+| **M1** | Project scaffold + Tool Layer | Next.js app, Supabase project, auth, professional light-first shell, tool layer scaffold, chat panel | Design tokens, Zustand stores, Supabase client, sidebar + top bar + ticker + chat panel layout, login/signup, tool layer architecture with Zod schemas |
 | **M2** | Build Mode + Operator Assistant | CRUD for lines, workstations, machines via UI and chat | Shop floor tools implemented, Operator Assistant wired to Claude tool-use, Realtime subscriptions |
 | **M3** | Configure Mode | Part numbers, BOM, routes, serial algorithms via UI and chat | Product & process tools, route step designer, BOM assembly UI, all operations available via assistant |
 | **M4** | Run Mode + Quality Analyst | Unit generation, WIP movement, quality gates, proactive quality monitoring | Production tools, auto-run engine, yield injection, Quality Analyst agent with event-driven triggers |
@@ -580,22 +604,22 @@ A "virtual device" module publishes fake MQTT messages at configurable intervals
 
 ### 10.1 Brand DNA — MESkit Identity
 
-MESkit has a dark industrial aesthetic — high-tech, data-dense, purpose-built for manufacturing.
+MESkit uses a professional, engineering-first visual identity: clean information hierarchy, light-first surfaces, and enterprise-grade clarity. The interface should feel production-ready, not experimental.
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| Background | `#000000` / `#111111` | App background, page canvas |
-| Surface | `#1A1A1A` | Cards, panels, modals, chat panel |
-| Border | `#2A2A2A` | Dividers, card edges |
-| Accent (primary) | `#06B6D4` (Cyan 500) | Primary actions, links, active states, agent responses |
-| Accent (hover) | `#0891B2` (Cyan 600) | Hover states for primary actions |
-| Text primary | `#FFFFFF` | Headings, body text |
-| Text secondary | `#999999` | Labels, hints, disabled text |
-| Success | `#22C55E` | Pass results, healthy status |
-| Warning | `#F59E0B` | Yield warnings, attention states, agent alerts |
-| Error | `#EF4444` | Fail results, faults, scrap |
-| Agent | `#A78BFA` (Violet 400) | Agent-originated messages and actions |
-| Font | `Roboto`, sans-serif | All text |
+| Background | `#F3F7FC` / `#EAF1F8` | App canvas and secondary sections |
+| Surface | `#FFFFFF` | Cards, panels, modals, chat panel |
+| Border | `#D6E0EA` | Dividers, card edges |
+| Accent (primary) | `#0F6FF2` (Blue 600) | Primary actions, links, active states |
+| Accent (hover) | `#0A58C7` (Blue 700) | Hover states for primary actions |
+| Text primary | `#0F172A` | Headings, body text |
+| Text secondary | `#334155` | Labels and secondary copy |
+| Success | `#15803D` | Pass results and healthy status |
+| Warning | `#B45309` | Attention states and warnings |
+| Error | `#B91C1C` | Fail results and faults |
+| Agent | `#7C3AED` (Violet 600) | Agent-originated accents and tags |
+| Font | `Manrope` + `IBM Plex Mono` | UI/content + technical data text |
 
 ### 10.2 UI Structure
 
@@ -621,6 +645,7 @@ MESkit has a dark industrial aesthetic — high-tech, data-dense, purpose-built 
 - **Main area**: Context-dependent content per selected mode
 - **Chat panel**: Persistent, collapsible agent interface (right side). Context-aware — agent sees current mode and selections
 - **Bottom bar**: Live event ticker — Supabase Realtime subscription renders a scrolling log (includes both human and agent actions)
+- **Surface style**: White cards on neutral background with subtle border and elevation; avoid neon/glow treatments
 
 ---
 
@@ -629,7 +654,7 @@ MESkit has a dark industrial aesthetic — high-tech, data-dense, purpose-built 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
 | Frontend framework | Next.js (App Router) | React ecosystem, SSR-capable, Server Actions for tool layer, Vercel deploy |
-| Styling | Tailwind CSS | Utility-first, matches dark industrial aesthetic |
+| Styling | Tailwind CSS | Utility-first system that supports a professional, enterprise-grade visual language |
 | Client state | Zustand | Lightweight, no boilerplate — UI state + chat state |
 | Backend | Supabase | Postgres + Auth + Realtime + Edge Functions in one platform |
 | Tool layer | Next.js Server Actions + Zod | Typed operations, single source of truth for UI and agents |

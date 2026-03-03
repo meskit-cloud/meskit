@@ -9,17 +9,19 @@ import {
 } from '@/components/page-elements';
 import { JsonLd } from '@/components/json-ld';
 import { buildPageMetadata, coreFacts, siteConfig } from '@/lib/site';
+import { howToJsonLd } from '@/lib/structured-data';
 
 export const metadata = buildPageMetadata({
-  title: 'Open-source, AI-native MES toolkit',
+  title: 'The AI-Native MES',
   description:
-    'MESkit is an ISA-95 aligned open-source MES toolkit where UI actions and AI agents run through the same typed tool layer.',
+    'The AI-Native MES. Open-source, ISA-95 aligned MES toolkit where UI actions and AI agents run through the same typed tool layer.',
   path: '/',
   keywords: [
     'AI-native MES',
     'open source MES',
     'ISA-95 MES',
     'manufacturing AI agents',
+    'autonomous MES',
     'simulation-first MES',
   ],
 });
@@ -28,17 +30,17 @@ const homeFaq = [
   {
     question: 'What is MESkit?',
     answer:
-      'MESkit is an open-source, AI-native MES toolkit aligned to ISA-95 with a simulation-first execution model.',
+      'MESkit is the AI-Native MES — an open-source Manufacturing Execution System toolkit aligned to the ISA-95 standard. It routes both human UI actions and AI agent commands through a single typed tool layer — 20+ Zod-validated server actions backed by 12 ISA-95-mapped Postgres tables. Built on Next.js, Supabase, and Claude API tool-use, MESkit ships with three specialized agents (Operator Assistant, Quality Analyst, Production Planner) and a North Star vision of autonomous predictive rescheduling.',
   },
   {
     question: 'How do agents work in MESkit?',
     answer:
-      'Agents call the same typed tools as the UI. They do not bypass business logic or run on hidden APIs.',
+      'MESkit agents use Claude tool-use to call the same typed operations as UI buttons. When a user gives a natural-language command, the agent runtime selects from registered tools, validates input against Zod schemas, and executes against Supabase. Every button has a voice equivalent, and every voice command follows the same guardrails as a button click.',
   },
   {
     question: 'Is MESkit production-ready today?',
     answer:
-      'Current status is pre-M1 implementation, with architecture and milestones defined publicly on the roadmap.',
+      'MESkit is currently in pre-M1 implementation phase with a finalized architecture and a public six-milestone roadmap (M1 through M6). The simulation-first execution model means teams can validate line flow and quality thresholds before connecting real hardware via MQTT in milestone M6.',
   },
 ];
 
@@ -50,18 +52,29 @@ const websiteJsonLd = {
   description: siteConfig.description,
 };
 
+const howToSteps = [
+  { name: 'Define product', text: 'Create part numbers and BOM entries for the products to be manufactured.' },
+  { name: 'Build route', text: 'Define route steps that map each product to workstations and operations in sequence.' },
+  { name: 'Move units', text: 'Generate serial-numbered units and move them through route steps, tracking WIP in real time.' },
+  { name: 'Collect data', text: 'Log quality events, pass/fail results, and defect codes at each workstation.' },
+  { name: 'Visualize', text: 'Monitor throughput, yield, and unit traceability from dashboards tied to the same tool-layer data.' },
+];
+
 export default function HomePage() {
   return (
     <div className="page">
       <JsonLd data={websiteJsonLd} />
+      <JsonLd data={howToJsonLd({ name: 'How to set up MESkit', description: 'Step-by-step guide to defining products, building routes, moving units, collecting quality data, and monitoring execution in MESkit.', steps: howToSteps })} />
       <div className="container">
         <header className="page-intro">
-          <p className="eyebrow">AI-native manufacturing execution</p>
-          <h1>AI-native MES for modern manufacturing teams</h1>
-          <p className="lead">
-            Open-source MES infrastructure built with clear standards and operational discipline. ISA-95
-            aligned, simulation-first, and MQTT-ready, with one typed tool layer for UI actions and agent
-            commands.
+          <p className="eyebrow">Open-source MES toolkit</p>
+          <h1>The AI-Native MES</h1>
+          <p className="lead" style={{ fontSize: '1.18rem', color: 'var(--text-primary)', fontWeight: 500 }}>
+            An MES, but an Autonomous one.
+          </p>
+          <p className="lead" style={{ marginTop: '0.8rem' }}>
+            ISA-95 aligned, simulation-first, and MQTT-ready. One typed tool layer for UI actions and
+            AI agent commands. Three specialized agents that operate as peers to human operators.
           </p>
           <p className="updated">Last updated: {siteConfig.lastUpdated}</p>
           <div style={{ marginTop: '1.1rem' }}>
@@ -71,6 +84,89 @@ export default function HomePage() {
             />
           </div>
         </header>
+
+        <Section
+          title="What is MESkit?"
+          subtitle="The AI-Native MES — an MES, but an Autonomous one."
+        >
+          <SummaryBlock summary="MESkit is an open-source MES toolkit where AI agents and human operators execute the same typed manufacturing operations. Unlike traditional MES platforms where AI is bolted on as an afterthought, MESkit routes both UI actions and agent commands through one Zod-validated tool layer backed by an ISA-95-aligned Postgres schema. The result: every button has a voice equivalent, and every voice command follows the same guardrails as a button click." />
+          <div className="table-wrap" style={{ marginTop: '1rem' }}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Typed tool operations</td>
+                  <td>20+ Zod-validated server actions</td>
+                </tr>
+                <tr>
+                  <td>ISA-95-mapped tables</td>
+                  <td>12 Postgres tables via Supabase</td>
+                </tr>
+                <tr>
+                  <td>AI agents in scope</td>
+                  <td>3 (Operator, Quality, Planner)</td>
+                </tr>
+                <tr>
+                  <td>License</td>
+                  <td>MIT (fully open source)</td>
+                </tr>
+                <tr>
+                  <td>Roadmap milestones</td>
+                  <td>6 (M1 scaffold through M6 MQTT)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </Section>
+
+        <Section
+          title="North Star"
+          subtitle="The product vision MESkit is building toward."
+        >
+          <SummaryBlock summary="Predict a machine failure and reschedule the entire shop floor autonomously — before the failure happens, without human intervention." />
+          <div className="grid-3" style={{ marginTop: '1rem' }}>
+            <article className="card">
+              <h3>Sentinel</h3>
+              <p>
+                The Anomaly Monitor detects degradation signals from sensor telemetry and outputs failure
+                probability scores.
+              </p>
+              <p style={{ marginTop: '0.5rem', fontSize: '0.84rem', color: 'var(--text-tertiary)' }}>
+                Milestone M6
+              </p>
+            </article>
+            <article className="card">
+              <h3>Strategist</h3>
+              <p>
+                The Production Planner evaluates constraints — backlog, deadlines, alternative capacity — and
+                computes rescheduling options.
+              </p>
+              <p style={{ marginTop: '0.5rem', fontSize: '0.84rem', color: 'var(--text-tertiary)' }}>
+                Milestone M5
+              </p>
+            </article>
+            <article className="card">
+              <h3>Executor</h3>
+              <p>
+                The Agent Runtime acts on decisions through the tool layer — updates schedules, notifies
+                operators, adjusts production flow.
+              </p>
+              <p style={{ marginTop: '0.5rem', fontSize: '0.84rem', color: 'var(--text-tertiary)' }}>
+                Available from M1
+              </p>
+            </article>
+          </div>
+          <p style={{ marginTop: '0.8rem' }}>
+            In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist,
+            which triggers the Executor — closing the autonomous loop. See the{' '}
+            <Link href="/roadmap">roadmap</Link> for milestone details.
+          </p>
+        </Section>
 
         <Section
           title="Core facts"
