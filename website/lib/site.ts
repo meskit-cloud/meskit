@@ -6,7 +6,7 @@ export const siteConfig = {
   description:
     'The AI-Native MES. Open-source Manufacturing Execution System toolkit — ISA-95 aligned, agent-powered, simulation-first, MQTT-ready.',
   url: 'https://meskit.cloud',
-  githubUrl: 'https://github.com/meskit/meskit',
+  githubUrl: 'https://github.com/meskit-cloud/meskit',
   docsUrl: 'https://meskit.cloud/docs',
   lastUpdated: 'March 3, 2026',
   author: 'MESkit Team',
