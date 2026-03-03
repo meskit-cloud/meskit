@@ -4,3 +4,24 @@ swagger/
 *.log
 CLAUDE.md
 GEO-ANALYSIS.md
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Internal Tooling
+.claude/settings.local.json
+.playwright-mcp/
+
+# Misc
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
