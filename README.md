@@ -6,7 +6,7 @@ Open-source, AI-native Manufacturing Execution System toolkit. Simulation-first,
 
 **[meskit.cloud](https://meskit.cloud)**
 
-![MESkit M1 — Build Mode with Operator Assistant](docs/1st_ui.png)
+![MESkit M1 — Build Mode with Operator Assistant](public/assets/1st_ui.png)
 
 ---
 
@@ -144,6 +144,7 @@ cp .env.local.example .env.local
 ```
 
 You'll need:
+
 - A [Supabase](https://supabase.com) project — run `supabase/migrations/001_isa95_schema.sql` in the SQL editor
 - A [Gemini API key](https://ai.google.dev) — for the agent chat
 
