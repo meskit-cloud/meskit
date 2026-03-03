@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MESkit favicon">
+  <rect width="64" height="64" rx="10" fill="#FFFFFF" />
+  <rect x="1" y="1" width="62" height="62" rx="9" fill="none" stroke="#D6E0EA" />
+  <path d="M12 50V14h8l12 18 12-18h8v36h-8V28L32 46 20 28v22z" fill="#0F6FF2" />
+</svg>
