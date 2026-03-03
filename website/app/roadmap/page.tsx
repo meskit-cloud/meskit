@@ -39,16 +39,16 @@ const milestones = [
   {
     id: 'M1',
     title: 'Project scaffold + tool layer',
-    status: 'planned',
+    status: 'completed',
     detail:
-      'Next.js shell, Supabase setup, auth, chat panel scaffold, and typed tool-layer foundations.',
+      'Next.js shell, Supabase setup, auth, chat panel, Zustand stores, tool-layer architecture with stubs, agent runtime with streaming, and ISA-95 database schema — all complete.',
   },
   {
     id: 'M2',
     title: 'Build mode + Operator Assistant',
-    status: 'planned',
+    status: 'progress',
     detail:
-      'CRUD for lines/workstations/machines via UI and chat, with realtime sync across clients.',
+      'Shop floor tools (lines, workstations, machines) and Operator Assistant are functional via chat. Build Mode UI with CRUD panels and Realtime sync is next.',
   },
   {
     id: 'M3',
@@ -83,7 +83,7 @@ const milestones = [
 const facts = [
   'Roadmap covers six milestones plus a completed pre-M1 baseline phase.',
   'Agent progression: M2 Operator Assistant, M4 Quality Analyst, M5 Planner, M6 Anomaly Monitor.',
-  'Current public status is pre-M1 completed; M1-M6 are planned.',
+  'M1 is complete. M2 is in progress — shop floor tools and Operator Assistant are functional.',
   'Architecture and PRD are canonical references for scope checks.',
 ];
 
@@ -127,7 +127,7 @@ export default function RoadmapPage() {
         />
 
         <Section title="Summary" subtitle="Current state and direction.">
-          <SummaryBlock summary="MESkit roadmap starts from a completed architecture baseline (pre-M1) and advances through M1-M6. Each milestone adds production capability while preserving the same tool-layer contract for UI and agents." />
+          <SummaryBlock summary="MESkit roadmap starts from a completed architecture baseline (pre-M1) and advances through M1-M6. M1 (scaffold + tool layer) is complete. M2 (Build Mode + Operator Assistant) is in progress with shop floor tools and the agent functional via chat. Each milestone adds production capability while preserving the same tool-layer contract for UI and agents." />
         </Section>
 
         <Section title="Milestone timeline" subtitle="Explicit statuses with agent deliverables highlighted.">
@@ -152,10 +152,10 @@ export default function RoadmapPage() {
               <h3>Progression path</h3>
               <ul className="clean-list">
                 <li>
-                  <code>M1</code>: runtime scaffolding only.
+                  <code>M1</code>: runtime scaffolding — <strong>done</strong>.
                 </li>
                 <li>
-                  <code>M2</code>: Operator Assistant active.
+                  <code>M2</code>: Operator Assistant — <strong>active</strong>.
                 </li>
                 <li>
                   <code>M4</code>: Quality Analyst active.

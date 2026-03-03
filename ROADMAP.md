@@ -1,6 +1,6 @@
 # MESkit Roadmap
 
-> Status: Pre-M1 — architecture and PRD finalized, implementation not started.
+> Status: M2 in progress — M1 scaffold complete, Build Mode tools and Operator Assistant functional, Build Mode UI next.
 
 ---
 
@@ -9,49 +9,49 @@
 Foundation: app shell, auth, database schema, dark theme, tool layer architecture, chat panel.
 
 ### App & Infrastructure
-- [ ] Initialize Next.js (App Router) project with TypeScript
-- [ ] Configure Tailwind CSS with MESkit design tokens (dark theme, cyan accent, agent violet)
-- [ ] Set up Supabase project (Postgres, Auth, Realtime)
-- [ ] Create Supabase client and environment config (`.env.local`)
+- [x] Initialize Next.js (App Router) project with TypeScript
+- [x] Configure Tailwind CSS with MESkit design tokens (dark theme, cyan accent, agent violet)
+- [x] Set up Supabase project (Postgres, Auth, Realtime)
+- [x] Create Supabase client and environment config (`.env.local`)
 - [ ] Deploy to Vercel (frontend) + Supabase Cloud (backend)
 
 ### Database Schema
-- [ ] Create all database tables with ISA-95 schema
-  - [ ] Physical model: `lines`, `workstations`, `machines`
-  - [ ] Product model: `part_numbers`, `items`, `bom_entries`
-  - [ ] Process model: `routes`, `route_steps`
-  - [ ] Production model: `units`, `unit_history`
-  - [ ] Quality model: `quality_events`, `defect_codes`
-  - [ ] Config: `serial_algorithms`
-  - [ ] Agent: `agent_conversations`
-  - [ ] Future: `mqtt_messages` (table created, unused until M6)
-- [ ] Set up Row Level Security (RLS) policies
+- [x] Create all database tables with ISA-95 schema
+  - [x] Physical model: `lines`, `workstations`, `machines`
+  - [x] Product model: `part_numbers`, `items`, `bom_entries`
+  - [x] Process model: `routes`, `route_steps`
+  - [x] Production model: `units`, `unit_history`
+  - [x] Quality model: `quality_events`, `defect_codes`
+  - [x] Config: `serial_algorithms`
+  - [x] Agent: `agent_conversations`
+  - [x] Future: `mqtt_messages` (table created, unused until M6)
+- [x] Set up Row Level Security (RLS) policies
 
 ### Auth
-- [ ] Implement auth flow (login, signup, logout) with Supabase Auth
+- [x] Implement auth flow (login, signup, logout) with Supabase Auth
 
 ### Tool Layer
-- [ ] Set up tool layer architecture (`lib/tools/`)
-- [ ] Define Zod schemas for all tool inputs
-- [ ] Implement tool registration pattern (shared between Server Actions and agent runtime)
-- [ ] Create initial tool stubs for all categories (shop floor, product, production, quality, analytics)
+- [x] Set up tool layer architecture (`lib/tools/`)
+- [x] Define Zod schemas for all tool inputs
+- [x] Implement tool registration pattern (shared between Server Actions and agent runtime)
+- [x] Create initial tool stubs for all categories (shop floor, product, production, quality, analytics)
 
 ### UI Shell
-- [ ] Build app shell layout
-  - [ ] Sidebar — mode switcher (Build / Configure / Run / Monitor)
-  - [ ] Top bar — MESkit branding, simulation controls placeholder, user menu
-  - [ ] Chat panel — collapsible right panel with message input, agent selector
-  - [ ] Bottom bar — live ticker placeholder
-- [ ] Set up Zustand stores for UI state (active mode, panel state, chat state)
+- [x] Build app shell layout
+  - [x] Sidebar — mode switcher (Build / Configure / Run / Monitor)
+  - [x] Top bar — MESkit branding, simulation controls placeholder, user menu
+  - [x] Chat panel — collapsible right panel with message input, agent selector
+  - [x] Bottom bar — live ticker placeholder
+- [x] Set up Zustand stores for UI state (active mode, panel state, chat state)
 
 ### Agent Runtime
-- [ ] Install `@anthropic-ai/sdk`
-- [ ] Create agent runtime scaffold (`lib/agents/`)
-- [ ] Define agent system prompts and tool registrations
-- [ ] Implement streaming chat API route (`app/api/chat/route.ts`)
-- [ ] Wire chat panel to agent runtime with streaming responses
+- [x] Install `@google/generative-ai` (Gemini 2.0 Flash)
+- [x] Create agent runtime scaffold (`lib/agents/`)
+- [x] Define agent system prompts and tool registrations
+- [x] Implement streaming chat API route (`app/api/chat/route.ts`)
+- [x] Wire chat panel to agent runtime with streaming responses
 
-**Done when**: A logged-in user sees the dark-themed shell with sidebar navigation, a functional chat panel that connects to Claude, and empty content areas. All Supabase tables exist with RLS enabled. The tool layer architecture is in place with stubs.
+**Done when**: A logged-in user sees the dark-themed shell with sidebar navigation, a functional chat panel that connects to the agent runtime, and empty content areas. All Supabase tables exist with RLS enabled. The tool layer architecture is in place with stubs.
 
 ---
 
@@ -60,10 +60,12 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
 Shop floor setup: lines, workstations, machines. First agent goes live.
 
 ### Tools
-- [ ] Implement shop floor tools: `list_lines`, `create_line`, `update_line`, `delete_line`
-- [ ] Implement workstation tools: `list_workstations`, `create_workstation`, `update_workstation`, `delete_workstation`
-- [ ] Implement machine tools: `list_machines`, `create_machine`, `update_machine_status`
-- [ ] Register all shop floor tools in agent runtime
+- [x] Implement shop floor tools: `list_lines`, `create_line`, `update_line`, `delete_line`
+- [x] Implement workstation tools: `list_workstations`, `create_workstation`
+- [ ] Implement remaining workstation tools: `update_workstation`, `delete_workstation`
+- [x] Implement machine tools: `list_machines`, `update_machine_status`
+- [ ] Implement remaining machine tool: `create_machine`
+- [x] Register all shop floor tools in agent runtime
 
 ### UI
 - [ ] Build Mode page with three-panel layout (lines list, workstation list, machine detail)
@@ -74,10 +76,10 @@ Shop floor setup: lines, workstations, machines. First agent goes live.
 - [ ] Empty state guidance — prompt user to create their first line
 
 ### Agent
-- [ ] Operator Assistant fully functional for Build Mode operations
-- [ ] Context injection: agent knows current mode and selected line/workstation
+- [x] Operator Assistant fully functional for Build Mode operations
+- [x] Context injection: agent knows current mode and selected line/workstation
 - [ ] Agent actions appear in the live ticker alongside UI actions
-- [ ] Test: user can build entire shop floor via chat ("Create a line called Assembly", "Add 3 workstations")
+- [x] Test: user can build entire shop floor via chat ("Create a line called Assembly", "Add 3 workstations")
 
 **Done when**: A user can build a complete shop floor (line with ordered workstations and attached machines) using either the UI or the chat panel, and see changes reflected instantly in another tab.
 

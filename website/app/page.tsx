@@ -40,7 +40,7 @@ const homeFaq = [
   {
     question: 'Is MESkit production-ready today?',
     answer:
-      'MESkit is currently in pre-M1 implementation phase with a finalized architecture and a public six-milestone roadmap (M1 through M6). The simulation-first execution model means teams can validate line flow and quality thresholds before connecting real hardware via MQTT in milestone M6.',
+      'MESkit has completed M1 (project scaffold and tool layer) and is actively building M2 (Build Mode and Operator Assistant). Shop floor tools and the chat-driven agent are functional. The public six-milestone roadmap (M1 through M6) tracks progress toward full production readiness, with the simulation-first model letting teams validate line flow before connecting real hardware via MQTT in M6.',
   },
 ];
 

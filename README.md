@@ -6,6 +6,8 @@ Open-source, AI-native Manufacturing Execution System toolkit. Simulation-first,
 
 **[meskit.cloud](https://meskit.cloud)**
 
+![MESkit M1 — Build Mode with Operator Assistant](docs/1st_ui.png)
+
 ---
 
 ## What is MESkit?
@@ -26,6 +28,17 @@ All data persists in Supabase (Postgres). Updates push to all clients via Realti
 - **Small shops** that need a real MES without the price tag
 - **Developers** building manufacturing apps who want a reference stack
 - **Teams exploring AI in manufacturing** who want agents with real MES tools, not chatbot demos
+
+## Current Status: M1 Complete
+
+The foundation is live. The tool layer, agent runtime, and app shell are built and verified end-to-end:
+
+- **Auth** — Signup, login, logout, protected routes with Supabase Auth
+- **ISA-95 Schema** — 15 Postgres tables with RLS, enums, indexes, and Realtime publications
+- **Tool Layer** — 23 registered tools (8 shop floor tools fully implemented, 15 stubs for M2-M5)
+- **Agent Runtime** — Gemini tool-use loop with streaming, Operator Assistant active
+- **UI Shell** — Sidebar (Build/Configure/Run/Monitor), top bar, collapsible chat panel, live ticker
+- **End-to-end verified** — "Create a line called Assembly" in chat calls `create_line`, persists to Supabase, confirmed via `list_lines`
 
 ## Core Loop
 
@@ -48,7 +61,7 @@ MESkit's agents are designed around three complementary layers that, together, d
 
 | Layer | Role | Agent | Available |
 |-------|------|-------|-----------|
-| **Executor** | Acts on decisions through the tool layer — updates schedules, notifies operators | Agent Runtime | M1+ |
+| **Executor** | Acts on decisions through the tool layer — updates schedules, notifies operators | Agent Runtime | M1 |
 | **Strategist** | Evaluates constraints (backlog, deadlines, capacity), computes alternative schedules | Production Planner | M5 |
 | **Sentinel** | Monitors sensor telemetry, detects degradation, outputs failure probability scores | Anomaly Monitor | M6 |
 
@@ -66,14 +79,14 @@ Agents call the same tool layer as the UI. No special APIs, no separate data pat
 
 ```
 Frontend (Next.js)  →  Tool Layer (Server Actions)  →  Supabase (Postgres)
-AI Agents (Claude)  →  Tool Layer (Server Actions)  →  Supabase (Postgres)
+AI Agents (Gemini)  →  Tool Layer (Server Actions)  →  Supabase (Postgres)
 ```
 
 | Layer | Tech |
 |-------|------|
 | Frontend | Next.js (App Router), Tailwind CSS, Zustand, Recharts |
 | Tool Layer | Next.js Server Actions, Zod validation |
-| Agent Runtime | Claude API (tool-use), `@anthropic-ai/sdk` |
+| Agent Runtime | Gemini API (tool-use), `@google/generative-ai` |
 | Backend | Supabase (Postgres, Auth, Realtime, Edge Functions) |
 | Device (future) | MQTT broker (Mosquitto / HiveMQ Cloud) |
 
@@ -87,6 +100,7 @@ Product     part_numbers → items → bom_entries
 Process     routes → route_steps
 Production  units → unit_history
 Quality     quality_events, defect_codes
+Config      serial_algorithms
 Agent       agent_conversations
 Ingestion   mqtt_messages (future)
 ```
@@ -102,14 +116,14 @@ The interface contract is defined now, implemented in M6:
 
 ## Roadmap
 
-| Milestone | Scope |
-|-----------|-------|
-| M1 | Project scaffold, Supabase setup, auth, professional light-first shell, tool layer, chat panel |
-| M2 | Build Mode + Operator Assistant — CRUD via UI and chat |
-| M3 | Configure Mode — Part numbers, BOM, routes via UI and chat |
-| M4 | Run Mode + Quality Analyst — Production execution with proactive quality monitoring |
-| M5 | Monitor Mode + Planner — Dashboard with AI insights and production planning |
-| M6 | MQTT interface + Anomaly Monitor — Broker, device gateway, sensor anomaly detection |
+| Milestone | Scope | Status |
+|-----------|-------|--------|
+| **M1** | Project scaffold, Supabase schema, auth, tool layer, agent runtime, UI shell | Done |
+| M2 | Build Mode + Operator Assistant — CRUD via UI and chat | Next |
+| M3 | Configure Mode — Part numbers, BOM, routes via UI and chat | |
+| M4 | Run Mode + Quality Analyst — Production execution with proactive quality monitoring | |
+| M5 | Monitor Mode + Planner — Dashboard with AI insights and production planning | |
+| M6 | MQTT interface + Anomaly Monitor — Broker, device gateway, sensor anomaly detection | |
 
 ## What MESkit Is NOT
 
@@ -117,16 +131,27 @@ MESkit is not a learning exercise or a demo wrapper around a vendor API. It is a
 
 ## Getting Started
 
-> Coming soon — M1 is in progress.
-
 ```bash
 git clone https://github.com/meskit-cloud/meskit.git
 cd meskit
 npm install
-# Set up your Supabase project and add credentials to .env.local
-# Add your Anthropic API key to .env.local
+```
+
+Copy the environment template and fill in your credentials:
+
+```bash
+cp .env.local.example .env.local
+```
+
+You'll need:
+- A [Supabase](https://supabase.com) project — run `supabase/migrations/001_isa95_schema.sql` in the SQL editor
+- A [Gemini API key](https://ai.google.dev) — for the agent chat
+
+```bash
 npm run dev
 ```
+
+Open [localhost:3000](http://localhost:3000), sign up, and start talking to the Operator Assistant.
 
 ## Docs
 

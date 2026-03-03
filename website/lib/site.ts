@@ -133,7 +133,7 @@ export const coreFacts = [
   'Tool layer: 20+ Zod-validated server actions shared by UI and agents.',
   'Agents: Operator Assistant, Quality Analyst, Production Planner (3 agents).',
   'North Star: Predict machine failure and reschedule autonomously via three AI layers (Sentinel, Strategist, Executor).',
-  'Roadmap: 6 milestones (M1 scaffold through M6 MQTT integration).',
+  'Roadmap: 6 milestones (M1 complete, M2 in progress, through M6 MQTT integration).',
   'Stack: Next.js, Supabase, Claude API (tool-use), TypeScript.',
 ];
 
