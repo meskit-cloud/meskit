@@ -32,7 +32,7 @@ const facts = [
   'Frontend uses Next.js App Router with SSR/SSG-friendly rendering.',
   'Tool layer is the single source of truth for UI and agents.',
   'Agent runtime uses Claude tool-use with explicit tool registration.',
-  'Three AI layers (Sentinel, Strategist, Executor) target autonomous predictive rescheduling.',
+  'Three AI layers (Sentinel, Strategist, Executor) target agent-driven predictive rescheduling.',
   'Supabase provides Postgres, auth, realtime, and edge functions.',
   'MQTT bridge is planned for milestone M6 using the same operational contracts.',
 ];
@@ -112,8 +112,8 @@ export default function ArchitecturePage() {
           </div>
         </Section>
 
-        <Section title="North Star architecture" subtitle="Three AI layers building toward autonomous rescheduling.">
-          <SummaryBlock summary="The product vision is autonomous predictive rescheduling: predict a machine failure and reschedule the entire shop floor before the failure happens. Three agent layers build toward this." />
+        <Section title="North Star architecture" subtitle="Three AI layers building toward agent-driven rescheduling.">
+          <SummaryBlock summary="The product vision is agent-driven predictive rescheduling: predict a machine failure and coordinate the shop floor response before it happens. Three agent layers build toward this — operators stay in command." />
           <div className="diagram" style={{ marginTop: '1rem' }}>
             <code>{`Sentinel (Anomaly Monitor, M6)
   → detects degradation, outputs failure probability
@@ -126,7 +126,7 @@ Executor (Agent Runtime, M1+)
           </div>
           <p style={{ marginTop: '0.8rem' }}>
             In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the
-            Strategist, which triggers the Executor — closing the autonomous loop. See{' '}
+            Strategist, which triggers the Executor — closing the coordination loop. See{' '}
             <Link href="/agents">agents</Link> for detailed profiles.
           </p>
         </Section>

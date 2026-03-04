@@ -21,7 +21,7 @@ export const metadata = buildPageMetadata({
     'open source MES',
     'ISA-95 MES',
     'manufacturing AI agents',
-    'autonomous MES',
+    'agent-augmented MES',
     'simulation-first MES',
   ],
 });
@@ -30,7 +30,7 @@ const homeFaq = [
   {
     question: 'What is MESkit?',
     answer:
-      'MESkit is the AI-Native MES — an open-source Manufacturing Execution System toolkit aligned to the ISA-95 standard. It routes both human UI actions and AI agent commands through a single typed tool layer — 20+ Zod-validated server actions backed by 12 ISA-95-mapped Postgres tables. Built on Next.js, Supabase, and Claude API tool-use, MESkit ships with three specialized agents (Operator Assistant, Quality Analyst, Production Planner) and a North Star vision of autonomous predictive rescheduling.',
+      'MESkit is the AI-Native MES — an open-source Manufacturing Execution System toolkit aligned to the ISA-95 standard. It routes both human UI actions and AI agent commands through a single typed tool layer — 20+ Zod-validated server actions backed by 12 ISA-95-mapped Postgres tables. Built on Next.js, Supabase, and Claude API tool-use, MESkit ships with three specialized agents (Operator Assistant, Quality Analyst, Production Planner) that augment human operators by removing coordination bottlenecks.',
   },
   {
     question: 'How do agents work in MESkit?',
@@ -70,11 +70,11 @@ export default function HomePage() {
           <p className="eyebrow">Open-source MES toolkit</p>
           <h1>The AI-Native MES</h1>
           <p className="lead" style={{ fontSize: '1.18rem', color: 'var(--text-primary)', fontWeight: 500 }}>
-            An MES, but an Autonomous one.
+            An MES, but an Agent-Augmented one.
           </p>
           <p className="lead" style={{ marginTop: '0.8rem' }}>
             ISA-95 aligned, simulation-first, and MQTT-ready. One typed tool layer for UI actions and
-            AI agent commands. Three specialized agents that operate as peers to human operators.
+            AI agent commands. Three specialized agents that augment human operators — removing coordination bottlenecks, not replacing decisions.
           </p>
           <p className="updated">Last updated: {siteConfig.lastUpdated}</p>
           <div style={{ marginTop: '1.1rem' }}>
@@ -87,7 +87,7 @@ export default function HomePage() {
 
         <Section
           title="What is MESkit?"
-          subtitle="The AI-Native MES — an MES, but an Autonomous one."
+          subtitle="The AI-Native MES — an MES, but an Agent-Augmented one."
         >
           <SummaryBlock summary="MESkit is an open-source MES toolkit where AI agents and human operators execute the same typed manufacturing operations. Unlike traditional MES platforms where AI is bolted on as an afterthought, MESkit routes both UI actions and agent commands through one Zod-validated tool layer backed by an ISA-95-aligned Postgres schema. The result: every button has a voice equivalent, and every voice command follows the same guardrails as a button click." />
           <div className="table-wrap" style={{ marginTop: '1rem' }}>
@@ -128,7 +128,7 @@ export default function HomePage() {
           title="North Star"
           subtitle="The product vision MESkit is building toward."
         >
-          <SummaryBlock summary="Predict a machine failure and reschedule the entire shop floor autonomously — before the failure happens, without human intervention." />
+          <SummaryBlock summary="Predict a machine failure and coordinate the shop floor response before it happens — agents handle detection, planning, and execution while operators stay in command." />
           <div className="grid-3" style={{ marginTop: '1rem' }}>
             <article className="card">
               <h3>Sentinel</h3>
@@ -163,7 +163,7 @@ export default function HomePage() {
           </div>
           <p style={{ marginTop: '0.8rem' }}>
             In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist,
-            which triggers the Executor — closing the autonomous loop. See the{' '}
+            which triggers the Executor — closing the coordination loop. See the{' '}
             <Link href="/roadmap">roadmap</Link> for milestone details.
           </p>
         </Section>

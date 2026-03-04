@@ -79,7 +79,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: 'Boundary conditions and guardrails',
         paragraphs: [
-          'AI-native does not imply autonomous control. MESkit agents operate with human oversight and through explicit tool calls. They do not bypass process constraints or invent hidden state transitions.',
+          'AI-native does not imply autonomous control. MESkit agents are force multipliers for human operators — they remove coordination bottlenecks through explicit tool calls, not replace decision-making. They do not bypass process constraints or invent hidden state transitions.',
           'MVP scope is focused on discrete manufacturing workflows. The schema is ready for batch and continuous types, but those UI experiences are post-MVP.',
           'If you are evaluating AI in manufacturing, ask one question first: are AI actions routed through the same validated operations as UI actions? If not, you are likely looking at an AI-enhanced layer, not an AI-native MES.',
         ],

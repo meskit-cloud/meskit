@@ -34,7 +34,7 @@ const facts = [
   'Operator Assistant is chat-triggered with access to all shop-floor tools.',
   'Quality Analyst triggers on yield below 90%, defect clusters, or elevated scrap.',
   'Production Planner analyzes capacity across routes and shift windows.',
-  'Three AI layers (Sentinel, Strategist, Executor) build toward autonomous predictive rescheduling.',
+  'Three AI layers (Sentinel, Strategist, Executor) build toward agent-driven predictive rescheduling.',
   'All agent actions are Zod-validated — no hidden APIs or uncontrolled authority.',
 ];
 
@@ -75,8 +75,8 @@ export default function AgentsPage() {
           <SummaryBlock summary="In MESkit, AI capability is defined by tool contracts. The Operator Assistant, Quality Analyst, and Production Planner use the same operations used by UI buttons. This keeps behavior consistent, testable, and auditable." />
         </Section>
 
-        <Section title="Three AI layers" subtitle="The architecture behind autonomous manufacturing.">
-          <SummaryBlock summary="MESkit agents are designed around three complementary roles that, together, deliver the North Star: predict a machine failure and reschedule the entire shop floor autonomously." />
+        <Section title="Three AI layers" subtitle="The architecture behind agent-augmented manufacturing.">
+          <SummaryBlock summary="MESkit agents are designed around three complementary roles that, together, deliver the North Star: predict a machine failure and coordinate the shop floor response — agents handle detection, planning, and execution while operators stay in command." />
           <div className="table-wrap" style={{ marginTop: '1rem' }}>
             <table>
               <thead>
@@ -111,7 +111,7 @@ export default function AgentsPage() {
           </div>
           <p style={{ marginTop: '0.8rem' }}>
             In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist,
-            which triggers the Executor — closing the autonomous loop.
+            which triggers the Executor — closing the coordination loop.
           </p>
         </Section>
 

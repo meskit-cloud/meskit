@@ -40,8 +40,9 @@ function SignupForm() {
   return (
     <div className="w-full max-w-sm bg-bg-surface rounded-xl border border-border p-8">
       <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold font-ui text-text-primary">
-          MESkit
+        <h1 className="text-2xl font-bold font-ui" aria-label="MESkit">
+          <span className="text-text-primary">MES</span>
+          <span className="text-[var(--accent)]">kit</span>
         </h1>
         <p className="text-sm text-text-secondary mt-1">
           Create your account

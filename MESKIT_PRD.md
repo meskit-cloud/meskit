@@ -8,19 +8,19 @@ MESkit follows the **ISA-95** standard data model — no proprietary API depende
 
 ### Brand Identity
 
-**The AI-Native MES.** An MES, but an Autonomous one.
+**The AI-Native MES.** An MES, but an Agent-Augmented one.
 
-MESkit is not an "AI-enhanced" bolt-on or a chatbot demo. It is a Manufacturing Execution System where AI agents are first-class operators — peers to humans, consuming the same tool layer, acting on the same data.
+MESkit is not an "AI-enhanced" bolt-on or a chatbot demo. It is a Manufacturing Execution System where AI agents augment human operators — consuming the same tool layer, removing coordination bottlenecks so operators can focus on decisions instead of data chasing.
 
 ### North Star
 
-Predict a machine failure and reschedule the entire shop floor autonomously — before the failure happens, without human intervention.
+Predict a machine failure and coordinate the shop floor response before it happens — agents handle detection, planning, and execution while operators stay in command.
 
 The product roadmap builds toward this: the Anomaly Monitor (Sentinel) detects degradation signals from sensor data, the Production Planner (Strategist) evaluates constraints and alternatives, and the Agent Runtime (Executor) acts through the tool layer to update schedules and notify operators.
 
 ### What "AI-Native" Means
 
-AI is not bolted on after the fact. Every MES operation — moving a lot, logging a defect, querying yield — flows through a **tool layer** that both the UI and AI agents consume. The same function that powers a button click also powers a natural-language command. Agents are peers to human operators, not assistants to the UI.
+AI is not bolted on after the fact. Every MES operation — moving a lot, logging a defect, querying yield — flows through a **tool layer** that both the UI and AI agents consume. The same function that powers a button click also powers a natural-language command. Agents are force multipliers for human operators, not assistants to the UI.
 
 ### Target Users
 
@@ -371,7 +371,7 @@ MESkit ships with three specialized agents. Each agent uses Claude's tool-use ca
 
 ### 5.1.1 Three AI Layers (North Star Architecture)
 
-The agents are designed around three complementary roles that, together, deliver the North Star: autonomous predictive rescheduling.
+The agents are designed around three complementary roles that, together, deliver the North Star: agent-driven predictive rescheduling.
 
 | Layer | Role | Agent | Milestone |
 |-------|------|-------|-----------|
@@ -379,7 +379,7 @@ The agents are designed around three complementary roles that, together, deliver
 | **Strategist** | Evaluates constraints (backlog, deadlines, capacity), computes alternative schedules | Production Planner | M5 |
 | **Executor** | Acts on decisions through the tool layer — updates schedules, notifies operators | Agent Runtime | M1+ |
 
-In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist, which triggers the Executor — closing the autonomous loop.
+In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist, which triggers the Executor — closing the coordination loop.
 
 ### 5.2 Operator Assistant
 

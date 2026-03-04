@@ -69,7 +69,7 @@ MVP product scope focuses on discrete manufacturing UX (Build, Configure, Run, M
 
 ### Brand tagline
 
-**The AI-Native MES.** An MES, but an Autonomous one.
+**The AI-Native MES.** An MES, but an Agent-Augmented one.
 
 ### Core promise
 
@@ -77,23 +77,23 @@ MVP product scope focuses on discrete manufacturing UX (Build, Configure, Run, M
 
 ### North Star
 
-Predict a machine failure and reschedule the entire shop floor autonomously. Three AI layers build toward this: the Sentinel (Anomaly Monitor) detects degradation, the Strategist (Production Planner) evaluates alternatives, and the Executor (Agent Runtime) acts through the tool layer.
+Predict a machine failure and coordinate the shop floor response before it happens. Three AI layers build toward this: the Sentinel (Anomaly Monitor) detects degradation, the Strategist (Production Planner) evaluates alternatives, and the Executor (Agent Runtime) acts through the tool layer — operators stay in command.
 
 Use the North Star as aspirational vision in hero and brand messaging. Current MVP claims must remain accurate — see messaging guardrails.
 
 ### Key proof points
 
-1. **AI-native architecture**: Every MES operation is a typed tool that both the UI and AI agents call — agents are peers to human operators, not wrappers around the UI.
+1. **AI-native architecture**: Every MES operation is a typed tool that both the UI and AI agents call — agents augment human operators through the same tool layer, removing coordination bottlenecks.
 2. **Standards-based model**: ISA-95 terms (part number, route step, unit history) — not proprietary abstractions.
 3. **Real architecture**: Postgres, auth, realtime, tool layer — not a mock UI or chatbot demo.
 4. **Clear upgrade path**: Simulation to device-driven execution via MQTT using the same message schema and tool layer.
 5. **Three specialized agents**: Operator Assistant (chat), Quality Analyst (event-driven), Production Planner (on-demand) — each with defined tools, triggers, and roles.
-6. **Autonomous vision**: Three AI layers (Sentinel, Strategist, Executor) designed to close the loop from detection to rescheduling without human intervention.
+6. **Agent-augmented vision**: Three AI layers (Sentinel, Strategist, Executor) designed to close the coordination loop from detection to rescheduling — agents handle the chain, operators approve the decisions.
 
 ### Messaging guardrails
 
 1. Do not imply batch/continuous UI is fully available in MVP.
-2. Do not position agents as autonomous decision-makers in current MVP — they operate through the same tool layer as humans, with human oversight. The autonomous vision (North Star) can be referenced as the product direction, clearly distinguished from current capabilities.
+2. Do not position agents as autonomous decision-makers — they operate through the same tool layer as humans, with human oversight. Agents remove coordination bottlenecks; operators remain the decision-makers. The North Star can be referenced as the product direction, clearly distinguished from current capabilities.
 3. Avoid generic "AI manufacturing" or "AI-powered" claims without specifying what the agents actually do (which tools they call, what triggers them).
 4. Prioritize concrete technical language over vague marketing terms.
 5. Distinguish between "AI-native" (architecture-level, tool layer shared between UI and agents) and "AI-enhanced" (bolted-on chatbot) — MESkit is the former.
@@ -211,7 +211,7 @@ All colors are defined as design tokens. The website uses the same palette as th
 
 | Context | Tone | Example |
 |---------|------|---------|
-| Hero / homepage | Bold, declarative | "The AI-Native MES." / "An MES, but an Autonomous one." |
+| Hero / homepage | Bold, declarative | "The AI-Native MES." / "An MES, but an Agent-Augmented one." |
 | Product pages | Explanatory, specific | "Each agent calls typed tools through the same interface the UI uses." |
 | Technical pages (architecture, ISA-95) | Precise, neutral | "The tool layer validates inputs with Zod schemas before executing against Supabase." |
 | Blog posts | Authoritative, educational | "ISA-95 defines five levels of manufacturing integration. Here's how MESkit maps to each." |
@@ -378,7 +378,7 @@ Must include:
 3. Tool layer explanation — how the same typed functions serve UI buttons and agent tool-use.
 4. Architecture diagram (agent runtime → tool layer → Supabase).
 5. Concrete examples with tool call chains (user says X → agent calls Y → result Z).
-6. Guardrails: agents operate through the tool layer with human oversight, not autonomous.
+6. Guardrails: agents operate through the tool layer with human oversight — they remove coordination bottlenecks, not human decision-making.
 
 ### ISA-95 (`/isa-95`)
 

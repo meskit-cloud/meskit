@@ -24,7 +24,7 @@ export const metadata = buildPageMetadata({
     'MESkit agents',
     'ISA-95 support',
     'MES MQTT integration',
-    'autonomous MES',
+    'agent-augmented MES',
     'MESkit North Star',
   ],
 });
@@ -45,7 +45,7 @@ const faqEntries = [
   {
     question: 'What is MESkit\'s North Star?',
     answer:
-      'Predict a machine failure and reschedule the entire shop floor autonomously — before the failure happens, without human intervention. Three AI layers build toward this: the Sentinel (Anomaly Monitor) detects degradation from sensor telemetry, the Strategist (Production Planner) evaluates constraints and computes alternatives, and the Executor (Agent Runtime) acts through the tool layer. In the MVP these layers operate independently; post-MVP they close the autonomous loop.',
+      'Predict a machine failure and coordinate the shop floor response before it happens — agents handle detection, planning, and execution while operators stay in command. Three AI layers build toward this: the Sentinel (Anomaly Monitor) detects degradation from sensor telemetry, the Strategist (Production Planner) evaluates constraints and computes alternatives, and the Executor (Agent Runtime) acts through the tool layer. In the MVP these layers operate independently; post-MVP they close the coordination loop.',
   },
   {
     question: 'Does MESkit support ISA-95?',

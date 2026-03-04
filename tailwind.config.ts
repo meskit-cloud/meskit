@@ -10,22 +10,22 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          app: "#F3F7FC",
-          surface: "#FFFFFF",
+          app: "#0B0F1A",
+          surface: "#141926",
         },
-        border: "#D6E0EA",
+        border: "#1E2738",
         accent: {
-          DEFAULT: "#0F6FF2",
-          hover: "#0A58C7",
+          DEFAULT: "#3B8BFF",
+          hover: "#5DA3FF",
         },
-        agent: "#7C3AED",
+        agent: "#9F67FF",
         text: {
-          primary: "#0F172A",
-          secondary: "#334155",
+          primary: "#E2E8F0",
+          secondary: "#94A3B8",
         },
-        success: "#15803D",
-        warning: "#B45309",
-        error: "#B91C1C",
+        success: "#22C55E",
+        warning: "#F59E0B",
+        error: "#EF4444",
       },
       fontFamily: {
         ui: ["var(--font-ui)", "sans-serif"],

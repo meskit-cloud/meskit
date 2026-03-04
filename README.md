@@ -1,8 +1,8 @@
 # MESkit
 
-**The AI-Native MES.** An MES, but an Autonomous one.
+**The AI-Native MES.** An MES, but an Agent-Augmented one.
 
-Open-source, AI-native Manufacturing Execution System toolkit. Simulation-first, agent-powered, MQTT-ready.
+Open-source, AI-native Manufacturing Execution System toolkit. Simulation-first, agent-powered, MQTT-ready. Agents handle coordination; operators stay in command.
 
 **[meskit.cloud](https://meskit.cloud)**
 
@@ -14,13 +14,13 @@ Open-source, AI-native Manufacturing Execution System toolkit. Simulation-first,
 
 MESkit is a complete, buildable Manufacturing Execution System built on the ISA-95 standard. It starts with simulation, uses AI agents as first-class operators, and is architecturally ready for real sensor input via MQTT.
 
-MESkit is not an "AI-enhanced" bolt-on or a chatbot demo. Every MES operation — moving a lot, logging a defect, querying yield — flows through a **tool layer** that both the UI and AI agents consume. The same function that powers a button click also powers a natural-language command. Agents are peers to human operators, not assistants to the UI.
+MESkit is not an "AI-enhanced" bolt-on or a chatbot demo. Every MES operation — moving a lot, logging a defect, querying yield — flows through a **tool layer** that both the UI and AI agents consume. The same function that powers a button click also powers a natural-language command. Agents are force multipliers for human operators — they remove the coordination bottleneck so one supervisor can manage twice the throughput.
 
 All data persists in Supabase (Postgres). Updates push to all clients via Realtime subscriptions.
 
 ### North Star
 
-> Predict a machine failure and reschedule the entire shop floor autonomously — before the failure happens, without human intervention.
+> Predict a machine failure and coordinate the shop floor response before it happens — agents handle detection, planning, and execution while operators stay in command.
 
 ## Who is it for?
 

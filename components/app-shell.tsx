@@ -48,11 +48,10 @@ export function Sidebar() {
               setActiveMode(mode.key);
               router.push(mode.href);
             }}
-            className={`w-12 h-12 rounded-lg flex flex-col items-center justify-center gap-0.5 text-xs transition-colors ${
-              isActive
+            className={`w-12 h-12 rounded-lg flex flex-col items-center justify-center gap-0.5 text-xs transition-colors ${isActive
                 ? "bg-accent/10 text-accent"
                 : "text-text-secondary hover:bg-bg-app"
-            }`}
+              }`}
             title={mode.label}
           >
             <mode.icon size={20} />
@@ -77,8 +76,9 @@ export function TopBar({ userEmail }: { userEmail: string }) {
   return (
     <header className="h-12 bg-bg-surface border-b border-border flex items-center justify-between px-4 shrink-0">
       <div className="flex items-center gap-3">
-        <span className="font-bold text-text-primary font-ui text-lg">
-          MESkit
+        <span className="font-bold font-ui text-lg" aria-label="MESkit">
+          <span className="text-text-primary">MES</span>
+          <span className="text-[var(--accent)]">kit</span>
         </span>
         <span className="text-xs text-text-secondary font-mono bg-bg-app px-2 py-0.5 rounded">
           M1
