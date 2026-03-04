@@ -79,8 +79,8 @@ export default function HomePage() {
           <p className="updated">Last updated: {siteConfig.lastUpdated}</p>
           <div style={{ marginTop: '1.1rem' }}>
             <CtaRow
-              primary={{ href: siteConfig.githubUrl, label: 'View on GitHub', external: true }}
-              secondary={{ href: '/docs', label: 'Read docs' }}
+              primary={{ href: `${siteConfig.appUrl}/signup`, label: 'Get Started Free', external: true }}
+              secondary={{ href: siteConfig.githubUrl, label: 'View on GitHub', external: true }}
             />
           </div>
         </header>

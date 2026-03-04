@@ -6,6 +6,7 @@ export const siteConfig = {
   description:
     'The AI-Native MES. Open-source Manufacturing Execution System toolkit — ISA-95 aligned, agent-powered, simulation-first, MQTT-ready.',
   url: 'https://meskit.cloud',
+  appUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   githubUrl: 'https://github.com/meskit-cloud/meskit',
   docsUrl: 'https://meskit.cloud/docs',
   lastUpdated: 'March 3, 2026',
@@ -46,6 +47,8 @@ export const footerGroups: FooterGroup[] = [
       { href: '/agents', label: 'Agents' },
       { href: '/architecture', label: 'Architecture' },
       { href: '/roadmap', label: 'Roadmap' },
+      { href: `${siteConfig.appUrl}/signup`, label: 'Sign up', external: true },
+      { href: `${siteConfig.appUrl}/login`, label: 'Sign in', external: true },
     ],
   },
   {
