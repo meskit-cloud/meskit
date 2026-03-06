@@ -254,6 +254,105 @@ export const blogPosts: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: 'meskit-brain-of-the-factory',
+    title: 'MESkit: Brain of the Factory — What Is MES Software and Why It Needs a Universal Tool Layer',
+    excerpt:
+      'A plain-language explainer of manufacturing execution systems, how MESkit turns every MES operation into a shared tool, and why that matters for human-AI collaboration on the factory floor.',
+    category: 'MES architecture',
+    author: 'MESkit Team',
+    publishedAt: '2026-03-05',
+    updatedAt: '2026-03-05',
+    keywords: [
+      'what is MES software',
+      'manufacturing execution system open source',
+      'AI factory software',
+      'universal tool layer MES',
+      'MES air traffic control',
+      'human AI manufacturing',
+      'MESkit architecture',
+      'ISA-95 open source',
+    ],
+    summary:
+      'A manufacturing execution system (MES) is the air-traffic-control software that tracks every product, machine, and operator across the factory floor. MESkit is an open-source, AI-native MES toolkit built on ISA-95 that wraps every operation in a typed, validated tool — so humans clicking buttons and AI agents issuing commands execute the exact same business logic through one secure front door.',
+    keyFacts: [
+      'An MES tracks every product from raw material to finished good across the factory floor.',
+      'MESkit is open-source (MIT), ISA-95 aligned, and self-hostable.',
+      'The universal tool layer ensures humans and AI agents call the same validated code.',
+      'Every tool follows a four-step process: register, find, validate with Zod, then execute.',
+      'ISA-95 support covers discrete, batch, and continuous manufacturing in one unified data model.',
+      'Stack: Next.js frontend, Supabase backend (Postgres + Realtime), AI tool-use agents.',
+    ],
+    miniFaq: [
+      {
+        question: 'What is an MES in simple terms?',
+        answer:
+          'A manufacturing execution system (MES) is software that acts as air traffic control for a factory — it guides every product from start to finish, tracks machines and operators, and keeps production lines running on time.',
+      },
+      {
+        question: 'What makes MESkit different from traditional MES software?',
+        answer:
+          'MESkit is open-source, AI-native, and built on the ISA-95 standard. Its universal tool layer means AI agents and human operators share the same validated operations — there is no separate API or backdoor for AI.',
+      },
+      {
+        question: 'Who is MESkit designed for?',
+        answer:
+          'Three groups: manufacturing engineers learning MES concepts, smaller shops that need a powerful alternative to expensive enterprise systems, and developers building custom manufacturing applications.',
+      },
+      {
+        question: 'What is the universal tool layer?',
+        answer:
+          'The tool layer wraps every MES operation — creating a line, moving a part, updating a machine — into a typed, schema-validated function. Both the UI and AI agents call the same tool, ensuring identical validation, audit trails, and business logic.',
+      },
+      {
+        question: 'Does the AI have special access that humans do not?',
+        answer:
+          'No. There is no separate API for AI, no backdoor, and no special privileges. AI agents use the exact same secure, validated entry point as every human user.',
+      },
+    ],
+    sections: [
+      {
+        heading: 'What is a manufacturing execution system?',
+        paragraphs: [
+          'A manufacturing execution system (MES) is the software that orchestrates everything happening on a factory floor — tracking every item, monitoring every machine, coordinating every operator, and keeping production lines moving without collisions or downtime. Think of it as air traffic control for production: it guides every product and lot from takeoff to landing, making sure nothing collides and everything arrives on time.',
+          'The scale of the problem an MES solves is staggering. A single factory contains countless machines, tons of raw materials, and hundreds of operators in a constant whirlwind of activity. Without an MES, tracking individual items, maintaining quality, and preventing line stoppages becomes nearly impossible. The MES is the central nervous system that holds it all together.',
+          'Traditional MES products are expensive, proprietary, and rigid. MESkit offers a modern, open-source alternative — one that speaks the same language as enterprise systems thanks to its ISA-95 foundation, while being flexible enough for small shops to self-host and developers to extend.',
+        ],
+      },
+      {
+        heading: 'Who is MESkit built for?',
+        paragraphs: [
+          'MESkit serves three distinct audiences. For manufacturing engineers, it is an accessible sandbox to learn the core concepts behind MES software without enterprise license costs. For smaller shops, it is a self-hosted alternative to expensive proprietary systems — install it on your own servers and own your data. For developers, it is a launch pad for building custom manufacturing applications on a proven data model.',
+          'This flexibility is possible because MESkit is built on the ISA-95 standard, the universal translator for manufacturing software. ISA-95 defines how the factory floor and the business office talk to each other. By following this standard, MESkit speaks the same language as the biggest enterprise systems while remaining open and extensible.',
+          'ISA-95 breaks production into three main types: discrete manufacturing for countable items like smartphones, batch production for mixed materials like paint or medicine, and continuous production for non-stop flows like chemicals or paper. MESkit\'s data model handles all three through one unified schema.',
+        ],
+      },
+      {
+        heading: 'How is MESkit architected?',
+        paragraphs: [
+          'MESkit follows a clean three-layer architecture. The frontend is the user interface that operators see and interact with, built with Next.js. The backend is the brain of the operation, powered by Supabase — which provides a Postgres database ideal for structured ISA-95 data, real-time subscriptions so every screen updates instantly when state changes, built-in authentication, and edge functions for on-demand logic. The planned device layer will connect to real-world sensors and machines via MQTT.',
+          'Supabase was chosen deliberately. Postgres handles the highly structured, relational data that ISA-95 demands. The real-time feature means when a part moves on the factory floor, every operator\'s screen updates instantly — no manual refresh needed. Authentication and edge functions come built in, making the entire stack efficient to develop and deploy.',
+          'But the real innovation is not in the stack choices — it is in the layer that sits between the frontend, the agents, and the database. That layer is the universal tool layer.',
+        ],
+      },
+      {
+        heading: 'What is the universal tool layer?',
+        paragraphs: [
+          'The universal tool layer is MESkit\'s core architectural innovation. It takes every possible MES action — creating a production line, moving a part between stations, updating a machine status, recording a quality event — and wraps each one into a self-contained, typed, validated function called a tool. The critical insight: it does not matter whether a human clicks a button or an AI agent issues a command. Both call the exact same tool through the exact same secure entry point.',
+          'Every tool follows a strict four-step execution process. First, all tools are registered in a central registry. Second, when an action is triggered, the system locates the correct tool. Third — and this is the critical safety gate — inputs are validated using Zod, a schema validation library that acts as a bouncer checking every piece of data before it enters. If the data fails validation, the action is rejected. Only after validation passes does the tool\'s code actually execute against the database.',
+          'Consider the Create Line tool as a concrete example. Its input schema requires a name (string) and optionally accepts a description. Its output is the newly created line object. The contract is simple, self-documenting, and completely unambiguous — whether you are a human developer reading the code or an AI agent discovering available tools at runtime.',
+        ],
+      },
+      {
+        heading: 'Why does tool-centric architecture matter beyond the factory?',
+        paragraphs: [
+          'The universal tool layer delivers three concrete benefits. First, unified execution: one codebase serves both human and AI interfaces, which drastically reduces code duplication and maintenance burden. Second, type safety doubles as live documentation — an AI agent can ask the system "what tools do you have?" and receive a perfect, always-current list with validated schemas. That is automatic discoverability. Third, because every action routes through the central tool layer, audit logging is trivial — you know exactly who or what did what, and when.',
+          'This pattern points toward a broader shift in software design. By creating a common, secure, and discoverable language for both humans and AI to execute operations, tool-centric architecture may become a blueprint for how we build all complex software — not just manufacturing systems. When AI does not need a separate API or special backdoor, and when every action is validated and auditable regardless of who initiated it, the result is safer, more maintainable, and more transparent systems.',
+          'MESkit demonstrates that the right abstraction is not "AI features bolted onto existing software" but rather a shared operational interface where human and machine are peers. The same button click, the same voice command, the same guardrails. One front door for everyone.',
+        ],
+      },
+    ],
+  },
 ];
 
 export function getPostBySlug(slug: string) {

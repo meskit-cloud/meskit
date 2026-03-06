@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
       systemPrompt,
       toolNames,
       messages: body.messages,
+      agentName: body.agent,
     });
 
     return new Response(stream, {

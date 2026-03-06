@@ -9,6 +9,7 @@
 Foundation: app shell, auth, database schema, dark theme, tool layer architecture, chat panel.
 
 ### App & Infrastructure
+
 - [x] Initialize Next.js (App Router) project with TypeScript
 - [x] Configure Tailwind CSS with MESkit design tokens (dark theme, cyan accent, agent violet)
 - [x] Set up Supabase project (Postgres, Auth, Realtime)
@@ -16,6 +17,7 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
 - [ ] Deploy to Vercel (frontend) + Supabase Cloud (backend)
 
 ### Database Schema
+
 - [x] Create all database tables with ISA-95 schema
   - [x] Physical model: `lines`, `workstations`, `machines`
   - [x] Product model: `part_numbers`, `items`, `bom_entries`
@@ -28,15 +30,18 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
 - [x] Set up Row Level Security (RLS) policies
 
 ### Auth
+
 - [x] Implement auth flow (login, signup, logout) with Supabase Auth
 
 ### Tool Layer
+
 - [x] Set up tool layer architecture (`lib/tools/`)
 - [x] Define Zod schemas for all tool inputs
 - [x] Implement tool registration pattern (shared between Server Actions and agent runtime)
 - [x] Create initial tool stubs for all categories (shop floor, product, production, quality, analytics)
 
 ### UI Shell
+
 - [x] Build app shell layout
   - [x] Sidebar — mode switcher (Build / Configure / Run / Monitor)
   - [x] Top bar — MESkit branding, simulation controls placeholder, user menu
@@ -45,6 +50,7 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
 - [x] Set up Zustand stores for UI state (active mode, panel state, chat state)
 
 ### Agent Runtime
+
 - [x] Install `@google/generative-ai` (Gemini 2.0 Flash)
 - [x] Create agent runtime scaffold (`lib/agents/`)
 - [x] Define agent system prompts and tool registrations
@@ -60,25 +66,28 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
 Shop floor setup: lines, workstations, machines. First agent goes live.
 
 ### Tools
+
 - [x] Implement shop floor tools: `list_lines`, `create_line`, `update_line`, `delete_line`
 - [x] Implement workstation tools: `list_workstations`, `create_workstation`
-- [ ] Implement remaining workstation tools: `update_workstation`, `delete_workstation`
+- [x] Implement remaining workstation tools: `update_workstation`, `delete_workstation`
 - [x] Implement machine tools: `list_machines`, `update_machine_status`
-- [ ] Implement remaining machine tool: `create_machine`
+- [x] Implement remaining machine tool: `create_machine`
 - [x] Register all shop floor tools in agent runtime
 
 ### UI
-- [ ] Build Mode page with three-panel layout (lines list, workstation list, machine detail)
-- [ ] Lines CRUD — UI calling tool layer (not Supabase directly)
-- [ ] Workstations CRUD — add/reorder/remove workstations within a line, assign operator names
-- [ ] Machines CRUD — register machines with name, type, status (idle/running/down), attach to workstation
-- [ ] Supabase Realtime subscriptions — UI updates live across browser tabs
-- [ ] Empty state guidance — prompt user to create their first line
+
+- [x] Build Mode page with three-panel layout (lines list, workstation list, machine detail)
+- [x] Lines CRUD — UI calling tool layer (not Supabase directly)
+- [x] Workstations CRUD — add/reorder/remove workstations within a line, assign operator names
+- [x] Machines CRUD — register machines with name, type, status (idle/running/down), attach to workstation
+- [x] Supabase Realtime subscriptions — UI updates live across browser tabs
+- [x] Empty state guidance — prompt user to create their first line
 
 ### Agent
+
 - [x] Operator Assistant fully functional for Build Mode operations
 - [x] Context injection: agent knows current mode and selected line/workstation
-- [ ] Agent actions appear in the live ticker alongside UI actions
+- [x] Agent actions appear in the live ticker alongside UI actions
 - [x] Test: user can build entire shop floor via chat ("Create a line called Assembly", "Add 3 workstations")
 
 **Done when**: A user can build a complete shop floor (line with ordered workstations and attached machines) using either the UI or the chat panel, and see changes reflected instantly in another tab.
@@ -90,6 +99,7 @@ Shop floor setup: lines, workstations, machines. First agent goes live.
 Product and process definition: part numbers, BOMs, routes, serial algorithms.
 
 ### Tools
+
 - [ ] Implement product tools: `list_part_numbers`, `create_part_number`, `get_bom`, `set_bom_entry`
 - [ ] Implement item tools: `list_items`, `create_item`
 - [ ] Implement route tools: `list_routes`, `create_route`, `update_route`
@@ -97,6 +107,7 @@ Product and process definition: part numbers, BOMs, routes, serial algorithms.
 - [ ] Register all product/process tools in agent runtime
 
 ### UI
+
 - [ ] Part Numbers CRUD — name, description
 - [ ] Items & BOM assembly UI — add components to a part number with quantities
 - [ ] Serial Algorithm config — prefix, padding per part number (e.g., `SMX-00001`)
@@ -105,6 +116,7 @@ Product and process definition: part numbers, BOMs, routes, serial algorithms.
 - [ ] Validation: route steps must reference workstations that exist in Build Mode
 
 ### Agent
+
 - [ ] Operator Assistant handles all Configure Mode operations via chat
 - [ ] Context injection: agent sees current part number and route being edited
 - [ ] Test: user can define a complete product via chat ("Create part number Smartphone X", "Add route with 5 steps through my assembly line")
@@ -118,11 +130,13 @@ Product and process definition: part numbers, BOMs, routes, serial algorithms.
 Production execution: unit generation, WIP movement, quality gates. Quality monitoring agent goes live.
 
 ### Tools
+
 - [ ] Implement production tools: `generate_units`, `move_unit`, `scrap_unit`, `get_wip_status`, `search_units`
 - [ ] Implement quality tools: `create_quality_event`, `list_defect_codes`, `create_defect_code`
 - [ ] Register all production and quality tools in agent runtime
 
 ### Production Engine
+
 - [ ] Unit generation — create N units for a part number; serials auto-assigned via algorithm
 - [ ] Manual WIP movement — user clicks "Move" or tells assistant "move SMX-00042"
 - [ ] Auto-run engine — units auto-advance at configurable interval (simulated cycle time)
@@ -133,6 +147,7 @@ Production execution: unit generation, WIP movement, quality gates. Quality moni
 - [ ] Simulation controls in top bar — Start, Pause, Auto-run toggle with speed config
 
 ### Quality Analyst Agent
+
 - [ ] Implement event-driven trigger system (Supabase Realtime → agent invocation)
 - [ ] Yield threshold monitoring — alert when workstation yield drops below 90%
 - [ ] Defect clustering detection — alert when same defect code appears 3+ times in 30 min
@@ -140,6 +155,7 @@ Production execution: unit generation, WIP movement, quality gates. Quality moni
 - [ ] Configurable alert thresholds
 
 ### Agent
+
 - [ ] Operator Assistant handles all Run Mode operations ("generate 100 units of Smartphone X", "scrap SMX-00044")
 - [ ] Quality Analyst runs alongside production, surfacing alerts proactively
 
@@ -152,10 +168,12 @@ Production execution: unit generation, WIP movement, quality gates. Quality moni
 Dashboard: live charts, lot traceability, AI-generated insights, production planning.
 
 ### Tools
+
 - [ ] Implement analytics tools: `get_throughput`, `get_yield_report`, `get_unit_history`
 - [ ] Register analytics tools in agent runtime
 
 ### Dashboard UI
+
 - [ ] WIP tracker — real-time count of units at each workstation (Supabase Realtime)
 - [ ] Throughput chart — units completed over time (Recharts line chart)
 - [ ] Yield summary — pass/fail ratio per workstation (Recharts bar chart)
@@ -164,6 +182,7 @@ Dashboard: live charts, lot traceability, AI-generated insights, production plan
 - [ ] Auto-refresh — all charts update as new data flows in from Run Mode
 
 ### Production Planner Agent
+
 - [ ] Planner agent with access to analytics + shop floor tools
 - [ ] Capacity analysis: estimate completion time based on historical throughput
 - [ ] Route comparison: suggest optimal line/route for a production order
@@ -179,6 +198,7 @@ Dashboard: live charts, lot traceability, AI-generated insights, production plan
 Device layer: broker, message schema, gateway edge function, sensor anomaly detection.
 
 ### MQTT Infrastructure
+
 - [ ] Set up MQTT broker (Mosquitto local or HiveMQ Cloud)
 - [ ] Implement Supabase Edge Function as MQTT → Postgres bridge
   - [ ] Subscribe to `meskit/{line_id}/{workstation_id}/{event_type}` topics
@@ -187,6 +207,7 @@ Device layer: broker, message schema, gateway edge function, sensor anomaly dete
   - [ ] Call tool layer to trigger downstream processing (move_unit, create_quality_event)
 
 ### Virtual Device
+
 - [ ] Virtual device module — publishes simulated MQTT messages using the production schema
   - [ ] `cycle_complete` events
   - [ ] `measurement` events (temperature, torque, etc.)
@@ -194,6 +215,7 @@ Device layer: broker, message schema, gateway edge function, sensor anomaly dete
 - [ ] Toggle between simulation engine (M4) and MQTT-driven execution
 
 ### Anomaly Monitor Agent
+
 - [ ] Anomaly Monitor agent activated by MQTT message ingestion
 - [ ] Out-of-range sensor value detection (configurable thresholds)
 - [ ] Pattern detection: degradation trends in measurement data

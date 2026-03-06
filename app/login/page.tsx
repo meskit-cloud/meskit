@@ -42,7 +42,7 @@ function LoginForm() {
       <div className="mb-8 text-center">
         <h1 className="text-2xl font-bold font-ui" aria-label="MESkit">
           <span className="text-text-primary">MES</span>
-          <span className="text-[var(--accent)]">kit</span>
+          <span className="text-accent">kit</span>
         </h1>
         <p className="text-sm text-text-secondary mt-1">
           AI-Native Manufacturing Execution System
@@ -63,7 +63,7 @@ function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 rounded-lg border border-border bg-bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+            className="w-full px-3 py-2 rounded-lg border border-border bg-bg-app text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             placeholder="you@company.com"
           />
         </div>
@@ -81,7 +81,7 @@ function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full px-3 py-2 rounded-lg border border-border bg-bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+            className="w-full px-3 py-2 rounded-lg border border-border bg-bg-app text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             placeholder="••••••••"
           />
         </div>
@@ -89,6 +89,15 @@ function LoginForm() {
         {error && (
           <p className="text-sm text-error">{error}</p>
         )}
+
+        <div className="flex justify-end">
+          <Link
+            href="/forgot-password"
+            className="text-xs text-text-secondary hover:text-accent transition-colors"
+          >
+            Forgot password?
+          </Link>
+        </div>
 
         <button
           type="submit"

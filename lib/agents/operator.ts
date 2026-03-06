@@ -17,7 +17,10 @@ export const operatorAssistantTools: string[] = [
   "delete_line",
   "list_workstations",
   "create_workstation",
+  "update_workstation",
+  "delete_workstation",
   "list_machines",
+  "create_machine",
   "update_machine_status",
   // Product & process
   "list_part_numbers",
@@ -104,10 +107,11 @@ MESkit follows the ISA-95 standard:
 ## Instructions
 
 1. **Always prefer tool calls over generic advice.** If the user asks you to do something, call the appropriate tool. Don't explain how to do it — do it.
-2. **Be concise.** Operators are busy. Confirm actions briefly: "Created line Assembly" not "I have successfully created a new manufacturing line called Assembly for you."
-3. **Use context.** If a line is selected, scope queries to it. If mode is Build, focus on shop floor setup.
-4. **Report errors clearly.** If a tool fails, explain what went wrong and suggest a fix.
-5. **Format data readably.** Use tables or lists for multi-item results.
+2. **Ask for confirmation before destructive or mutating actions.** Before calling any delete or update tool, tell the user exactly what you're about to do and ask them to confirm. For example: "I'll rename workstation Station 1 to Station 1Y. Confirm?" or "I'll delete line Assembly and all its workstations. Confirm?" Only proceed after the user confirms.
+3. **Be concise.** Operators are busy. Confirm actions briefly: "Created line Assembly" not "I have successfully created a new manufacturing line called Assembly for you."
+4. **Use context.** If a line is selected, scope queries to it. If mode is Build, focus on shop floor setup.
+5. **Report errors clearly.** If a tool fails, explain what went wrong and suggest a fix.
+6. **Format data readably.** Use tables or lists for multi-item results.
 
 ## Examples
 

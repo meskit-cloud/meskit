@@ -32,7 +32,7 @@ const blogFacts = [
   'Categories: ISA-95, MES architecture, AI agents, simulation, MQTT, Supabase.',
   'Each post includes author, publish date, and update date.',
   'Posts link to canonical product and docs pages.',
-  'Launch set includes four cornerstone technical explainers.',
+  'Launch set includes five cornerstone technical explainers.',
 ];
 
 const blogFaq = [

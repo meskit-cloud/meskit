@@ -14,6 +14,7 @@ export function ChatPanel() {
   const [input, setInput] = useState("");
   const [agentMenuOpen, setAgentMenuOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const {
     activeAgent,
     setActiveAgent,
@@ -31,6 +32,12 @@ export function ChatPanel() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (!isStreaming) {
+      inputRef.current?.focus();
+    }
+  }, [isStreaming]);
 
   if (!chatPanelOpen) return null;
 
@@ -205,6 +212,7 @@ export function ChatPanel() {
         className="px-3 py-2 border-t border-border flex gap-2"
       >
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}

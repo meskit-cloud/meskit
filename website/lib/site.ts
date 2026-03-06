@@ -9,7 +9,7 @@ export const siteConfig = {
   appUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   githubUrl: 'https://github.com/meskit-cloud/meskit',
   docsUrl: 'https://meskit.cloud/docs',
-  lastUpdated: 'March 3, 2026',
+  lastUpdated: 'March 5, 2026',
   author: 'MESkit Team',
 };
 

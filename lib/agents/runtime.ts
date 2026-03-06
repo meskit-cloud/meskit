@@ -19,13 +19,14 @@ export interface AgentRequest {
   systemPrompt: string;
   toolNames: string[];
   messages: AgentMessage[];
+  agentName?: string;
 }
 
 export async function runAgent(
   request: AgentRequest,
 ): Promise<ReadableStream<Uint8Array>> {
   const mesTools = getToolsByNames(request.toolNames);
-  const tools = toAISDKTools(mesTools);
+  const tools = toAISDKTools(mesTools, request.agentName);
   const encoder = new TextEncoder();
 
   const messages: ModelMessage[] = request.messages.map((m) => ({

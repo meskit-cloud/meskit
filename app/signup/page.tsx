@@ -10,6 +10,7 @@ function SignupForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next");
@@ -24,6 +25,9 @@ function SignupForm() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`,
+      },
     });
 
     if (error) {
@@ -32,17 +36,47 @@ function SignupForm() {
       return;
     }
 
-    router.push(redirectTo);
+    setSubmitted(true);
+    setLoading(false);
   }
 
   const loginHref = next && next.startsWith("/") ? `/login?next=${encodeURIComponent(next)}` : "/login";
+
+  if (submitted) {
+    return (
+      <div className="w-full max-w-sm bg-bg-surface rounded-xl border border-border p-8">
+        <div className="mb-8 text-center">
+          <h1 className="text-2xl font-bold font-ui" aria-label="MESkit">
+            <span className="text-text-primary">MES</span>
+            <span className="text-accent">kit</span>
+          </h1>
+          <p className="text-sm text-text-secondary mt-1">Check your email</p>
+        </div>
+        <div className="text-center space-y-4">
+          <p className="text-sm text-text-secondary">
+            We sent a confirmation link to <strong className="text-text-primary">{email}</strong>.
+            Click the link to activate your account.
+          </p>
+          <p className="text-xs text-text-secondary">
+            Didn&apos;t receive it? Check your spam folder.
+          </p>
+          <Link
+            href={loginHref}
+            className="inline-block text-sm text-accent hover:underline"
+          >
+            Back to sign in
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-sm bg-bg-surface rounded-xl border border-border p-8">
       <div className="mb-8 text-center">
         <h1 className="text-2xl font-bold font-ui" aria-label="MESkit">
           <span className="text-text-primary">MES</span>
-          <span className="text-[var(--accent)]">kit</span>
+          <span className="text-accent">kit</span>
         </h1>
         <p className="text-sm text-text-secondary mt-1">
           Create your account
@@ -63,7 +97,7 @@ function SignupForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 rounded-lg border border-border bg-bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+            className="w-full px-3 py-2 rounded-lg border border-border bg-bg-app text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             placeholder="you@company.com"
           />
         </div>
@@ -82,7 +116,7 @@ function SignupForm() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full px-3 py-2 rounded-lg border border-border bg-bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+            className="w-full px-3 py-2 rounded-lg border border-border bg-bg-app text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             placeholder="••••••••"
           />
         </div>
