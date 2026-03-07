@@ -1,6 +1,6 @@
 # MESkit Roadmap
 
-> Status: M3 in progress — M1 + M2 complete, Configure Mode tools, UI, and context injection implemented.
+> Status: M3 complete — M1 scaffold, M2 Build Mode, and M3 Configure Mode all done. M4 — Run Mode + Quality Analyst next.
 
 ---
 
@@ -100,29 +100,32 @@ Product and process definition: part numbers, BOMs, routes, serial algorithms.
 
 ### Tools
 
+<<<<<<< Updated upstream
+
+### Tools
+
 - [x] Implement product tools: `list_part_numbers`, `create_part_number`, `update_part_number`, `delete_part_number`, `get_bom`, `set_bom_entry`, `delete_bom_entry`
 - [x] Implement item tools: `list_items`, `create_item`
 - [x] Implement route tools: `list_routes`, `create_route`, `update_route`, `delete_route`
 - [x] Implement serial algorithm tools: `configure_serial_algorithm`, `get_serial_algorithm`
-- [x] Register all product/process tools in intelligence layer
+- [x] Register all product/process tools in agent runtime
 
 ### UI
-
 - [x] Part Numbers CRUD — name, description
 - [x] Items & BOM assembly UI — add components to a part number with quantities
 - [x] Serial Algorithm config — prefix, padding per part number (e.g., `SMX-00001`)
 - [x] Route designer — create a route for a part number
 - [x] Route step editor — add/reorder steps, assign workstations, toggle pass/fail gates
 - [x] Validation: route steps must reference workstations that exist in Build Mode
-- [x] Supabase Realtime subscriptions — UI updates live across browser tabs
+- [x] Supabase Realtime subscriptions — live cross-tab updates for all Configure Mode entities
 
-### Ask MESkit (Natural Language)
+### Agent
+- [x] Operator Assistant handles all Configure Mode operations via chat
+- [x] Context injection: agent sees current part number and route being edited
+- [x] Test: user can define a complete product via chat ("Create part number Smartphone X", "Add route with 5 steps through my assembly line")
 
-- [x] Ask MESkit handles all Configure Mode operations via chat
-- [x] Context injection: MESkit sees current part number and route being edited
-- [ ] Test: user can define a complete product via chat ("Create part number Smartphone X", "Add route with 5 steps through my assembly line")
 
-**Done when**: A user can define a product (e.g., "Smartphone X"), attach a BOM, configure a serial number algorithm, and design a multi-step route — through the UI or chat.
+**Done** ✓ (2026-03-07): A user can define a product (e.g., "Smartphone X"), attach a BOM, configure a serial number algorithm, and design a multi-step route — through the UI or chat. Full test suite passed; 3 bugs found and fixed during testing.
 
 ---
 
@@ -376,6 +379,7 @@ Expose the tool registry as structured JavaScript actions for complex workflows:
 MESkit will **not** fork into separate repos for discrete, process, and batch manufacturing. The three types share ~80% of the codebase (auth, shop floor, configure, quality, intelligence layer, realtime) and differ mainly in how units are tracked. Forking would triple the maintenance surface before product-market fit.
 
 **Strategy:**
+
 - Ship discrete manufacturing first (serial-tracked units) through M6.
 - Add batch and process as **tracking modes**, not forks — a `tracking_type` field on `part_numbers` controls behavior while the route/step engine, intelligence layer, and tool layer stay shared.
 - The ISA-95 schema already supports this: the abstraction boundary is the unit/lot/batch tracking layer (~10-15% of code). Everything above (intelligence layer, chat, quality rules, analytics) and below (Supabase, auth, realtime) remains common.
