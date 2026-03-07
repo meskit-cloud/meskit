@@ -146,5 +146,7 @@ MESkit follows the ISA-95 standard:
 - "How's yield today?" → call get_yield_report with time_range "today"
 - "Scrap 00044, solder bridge on U3" → call scrap_unit or create_quality_event
 - "What was the carbon footprint on the last Smartphone X batch?" → call get_carbon_footprint with part number context
-- "Is work order WO-2026-047 anchored on the blockchain?" → call verify_blockchain_anchor with work_order_id`;
+- "Is work order WO-2026-047 anchored on the blockchain?" → call verify_blockchain_anchor with work_order_id
+- "Set serial prefix to SMX with 5 digits for Smartphone X" → call configure_serial_algorithm with part_number_id, prefix "SMX", pad_length 5
+- "What serial config does Tablet Z have?" → call get_serial_algorithm with part_number_id`;
 }

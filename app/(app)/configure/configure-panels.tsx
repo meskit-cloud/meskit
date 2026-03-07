@@ -101,6 +101,7 @@ export function ConfigurePanels() {
   const { selectedPartNumberId, selectPartNumber, selectRoute } = useUiStore();
 
   const [partNumbers, setPartNumbers] = useState<PartNumber[]>([]);
+  const [partNumbersLoaded, setPartNumbersLoaded] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
   const [bomEntries, setBomEntries] = useState<BomEntry[]>([]);
   const [routes, setRoutes] = useState<MfgRoute[]>([]);
@@ -118,6 +119,7 @@ export function ConfigurePanels() {
   const loadPartNumbers = useCallback(async () => {
     const data = await fetchPartNumbers();
     setPartNumbers(data as PartNumber[]);
+    setPartNumbersLoaded(true);
   }, []);
 
   const loadItems = useCallback(async () => {
@@ -228,6 +230,7 @@ export function ConfigurePanels() {
     <div className="flex h-full gap-px bg-border">
       <PartNumbersPanel
         partNumbers={partNumbers}
+        isLoaded={partNumbersLoaded}
         selectedId={selectedPartNumberId}
         onSelect={(pn) => selectPartNumber(pn.id, pn.name)}
         onReload={loadPartNumbers}
@@ -255,11 +258,13 @@ export function ConfigurePanels() {
 
 function PartNumbersPanel({
   partNumbers,
+  isLoaded,
   selectedId,
   onSelect,
   onReload,
 }: {
   partNumbers: PartNumber[];
+  isLoaded: boolean;
   selectedId: string | null;
   onSelect: (pn: PartNumber) => void;
   onReload: () => void;
@@ -360,7 +365,7 @@ function PartNumbersPanel({
           </div>
         )}
 
-        {partNumbers.length === 0 && !showAdd && (
+        {isLoaded && partNumbers.length === 0 && !showAdd && (
           <EmptyState
             icon={<Package size={28} />}
             message="No part numbers"
@@ -1045,6 +1050,7 @@ function RouteStepEditor({
   const [newStepName, setNewStepName] = useState("");
   const [newStepWsId, setNewStepWsId] = useState("");
   const [newStepGate, setNewStepGate] = useState(true);
+  const [deletingStepIndex, setDeletingStepIndex] = useState<number | null>(null);
   const [pending, startTransition] = useTransition();
 
   const sortedSteps = [...route.route_steps].sort(
@@ -1167,13 +1173,31 @@ function RouteStepEditor({
           >
             {step.pass_fail_gate ? <Shield size={12} /> : <ShieldOff size={12} />}
           </button>
-          <button
-            onClick={() => handleRemoveStep(index)}
-            disabled={pending}
-            className="hidden group-hover:block p-1 rounded hover:bg-error/10 text-text-secondary hover:text-error"
-          >
-            <Trash2 size={10} />
-          </button>
+          {deletingStepIndex === index ? (
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => { setDeletingStepIndex(null); handleRemoveStep(index); }}
+                disabled={pending}
+                className="p-1 rounded bg-error/10 text-error hover:bg-error/20"
+              >
+                <Check size={10} />
+              </button>
+              <button
+                onClick={() => setDeletingStepIndex(null)}
+                className="p-1 rounded hover:bg-bg-app text-text-secondary"
+              >
+                <X size={10} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setDeletingStepIndex(index)}
+              disabled={pending}
+              className="hidden group-hover:block p-1 rounded hover:bg-error/10 text-text-secondary hover:text-error"
+            >
+              <Trash2 size={10} />
+            </button>
+          )}
         </div>
       ))}
 
