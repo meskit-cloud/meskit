@@ -32,7 +32,7 @@ const facts = [
   'MESkit maps ISA-95 terms directly to relational tables.',
   'Discrete production is the default UX in MVP.',
   'Batch and continuous are schema-ready but UI-future.',
-  'Agents operate at ISA-95 Level 3 through the same tool layer as humans.',
+  'Smart features operate at ISA-95 Level 3 through the same tool layer as humans.',
 ];
 
 const miniFaq = [
@@ -41,9 +41,9 @@ const miniFaq = [
     answer: 'No. MESkit keeps ISA-95 language explicit in schema and documentation.',
   },
   {
-    question: 'Can agents operate below Level 3 equipment control?',
+    question: 'Does automation operate below Level 3 equipment control?',
     answer:
-      'No. Agents operate in Level 3 coordination through MES tools, with MQTT bridge planned for future ingestion.',
+      'No. Automation operates in Level 3 coordination through MES tools, with MQTT bridge planned for future ingestion.',
   },
 ];
 
@@ -140,10 +140,10 @@ export default function Isa95Page() {
           </div>
         </Section>
 
-        <Section title="Agent operations at Level 3" subtitle="Same level as human operators and supervisors.">
+        <Section title="Automation at Level 3" subtitle="Same level as human operators and supervisors.">
           <div className="callout">
             <p>
-              MESkit agents operate at ISA-95 Level 3 through the tool layer. They orchestrate execution and
+              MESkit smart features operate at ISA-95 Level 3 through the tool layer. They orchestrate execution and
               analysis but do not directly replace equipment-level control logic.
             </p>
           </div>
@@ -157,7 +157,7 @@ export default function Isa95Page() {
           <div style={{ marginTop: '1rem' }}>
             <CtaRow
               primary={{ href: '/architecture', label: 'View architecture' }}
-              secondary={{ href: '/agents', label: 'See agent runtime' }}
+              secondary={{ href: '/agents', label: 'See smart features' }}
             />
           </div>
         </Section>
@@ -169,7 +169,7 @@ export default function Isa95Page() {
                 <Link href="/architecture">Architecture: tool layer and runtime design</Link>
               </li>
               <li>
-                <Link href="/agents">Agents: triggers, roles, tool-call examples</Link>
+                <Link href="/agents">Smart features: how they work</Link>
               </li>
               <li>
                 <Link href="/docs">Docs entry: implementation and setup sources</Link>

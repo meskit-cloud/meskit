@@ -18,8 +18,8 @@ export default function HelpPage() {
             Help
           </h1>
           <p className="mt-1 text-sm text-text-secondary">
-            Learn how to use MESkit — the AI-native Manufacturing Execution
-            System.
+            Learn how to use MESkit — open-source MES with built-in analytics
+            and natural language queries.
           </p>
         </div>
 
@@ -77,17 +77,17 @@ export default function HelpPage() {
           </div>
         </section>
 
-        {/* Chat / Operator Assistant */}
+        {/* Chat / Ask MESkit */}
         <section className="space-y-3">
           <h2 className="text-lg font-semibold font-ui text-text-primary flex items-center gap-2">
             <MessageSquare size={20} className="text-accent" />
-            Operator Assistant
+            Ask MESkit
           </h2>
           <div className="bg-bg-surface border border-border rounded-lg p-4 space-y-3 text-sm text-text-secondary">
             <p>
-              The chat panel on the right side gives you access to the Operator
-              Assistant. It can perform every operation available in the UI
-              through natural language.
+              The chat panel on the right side lets you ask MESkit anything. It
+              can perform every operation available in the UI through natural
+              language.
             </p>
             <div>
               <p className="font-medium text-text-primary mb-1">
@@ -112,9 +112,8 @@ export default function HelpPage() {
               </ul>
             </div>
             <p>
-              The assistant asks for confirmation before any delete or update
-              operation. All agent actions appear in the live ticker at the
-              bottom.
+              MESkit asks for confirmation before any delete or update
+              operation. All actions appear in the live ticker at the bottom.
             </p>
           </div>
         </section>

@@ -26,32 +26,32 @@ export type BlogPost = {
 export const blogPosts: BlogPost[] = [
   {
     slug: 'what-is-an-ai-native-mes',
-    title: 'What is an AI-native MES?',
+    title: 'Why your MES needs a universal tool layer',
     excerpt:
-      'A practical definition of AI-native MES, and why shared tool interfaces matter more than chat widgets.',
-    category: 'AI agents',
+      'A practical look at why shared tool interfaces matter more than chat widgets in modern manufacturing software.',
+    category: 'MES architecture',
     author: 'MESkit Team',
     publishedAt: '2026-03-03',
     updatedAt: '2026-03-03',
     keywords: [
-      'AI-native MES',
-      'AI manufacturing execution system',
-      'MES with AI agents',
       'open source MES',
+      'MES with natural language',
+      'MES tool layer',
+      'manufacturing execution system',
     ],
     summary:
-      'An AI-native MES is built so AI agents and humans execute the same typed manufacturing operations. MESkit uses a shared tool layer, so natural-language commands and UI clicks trigger identical business logic.',
+      'MESkit uses a shared tool layer so natural-language commands and UI clicks trigger identical business logic. This architecture-level integration keeps operations consistent, testable, and auditable.',
     keyFacts: [
-      'AI-native means architecture-level integration, not a chatbot wrapper.',
+      'Architecture-level integration means one tool layer, not a chatbot bolted on.',
       'In MESkit, every operation is a typed tool with validation.',
-      'Agents and UI both call the same tool layer.',
+      'Natural language and UI both call the same tool layer.',
       'Human oversight remains mandatory for operational decisions.',
     ],
     miniFaq: [
       {
-        question: 'Is AI-native the same as AI-enhanced?',
+        question: 'Is this the same as adding a chatbot to an MES?',
         answer:
-          'No. AI-enhanced usually means adding AI on top of an existing stack. AI-native means AI and UI are peers on one tool interface.',
+          'No. A chatbot wrapper sits on top of existing logic. MESkit routes both UI and natural language through the same validated tool functions — one execution path, not two.',
       },
       {
         question: 'Can operators still use normal screens?',
@@ -63,79 +63,79 @@ export const blogPosts: BlogPost[] = [
       {
         heading: 'Why manufacturing teams should care',
         paragraphs: [
-          'Most MES products add AI as a sidecar. A sidecar can summarize data, but it usually cannot execute the same trusted operations your operators use. That creates drift between what the UI can do and what the AI can do.',
-          'An AI-native MES removes that split. The operation to move a unit, create a quality event, or fetch WIP is defined once. Humans trigger it via UI actions. Agents trigger it via tool-use. The output path is identical and auditable.',
+          'Most MES products add natural language as a sidecar. A sidecar can summarize data, but it usually cannot execute the same trusted operations your operators use. That creates drift between what the UI can do and what the natural language interface can do.',
+          'MESkit removes that split. The operation to move a unit, create a quality event, or fetch WIP is defined once. Humans trigger it via UI actions. The natural language interface triggers it via the same tool layer. The output path is identical and auditable.',
           'This architecture lowers operational risk because there is one source of truth for validation, permission checks, and side effects.',
         ],
       },
       {
         heading: 'The MESkit implementation pattern',
         paragraphs: [
-          'MESkit places the tool layer between both clients and persistence. The frontend, Operator Assistant, Quality Analyst, and Production Planner all call typed functions validated with schemas before execution against Supabase.',
-          'Because tools are typed and testable, the same function can be used in server actions, agent registrations, and isolated tests. This is how MESkit keeps behavior consistent across Build, Configure, Run, and Monitor workflows.',
+          'MESkit places the tool layer between both clients and persistence. The frontend, Ask MESkit, Quality Monitor, and Production Planner all call typed functions validated with schemas before execution against Supabase.',
+          'Because tools are typed and testable, the same function can be used in server actions, smart feature registrations, and isolated tests. This is how MESkit keeps behavior consistent across Build, Configure, Run, and Monitor workflows.',
           'The result is simple: every button has a voice equivalent, and every voice command has the same guardrails as a button.',
         ],
       },
       {
         heading: 'Boundary conditions and guardrails',
         paragraphs: [
-          'AI-native does not imply autonomous control. MESkit agents are force multipliers for human operators — they remove coordination bottlenecks through explicit tool calls, not replace decision-making. They do not bypass process constraints or invent hidden state transitions.',
+          'Natural language does not imply autonomous control. MESkit smart features are force multipliers for human operators — they remove coordination bottlenecks through explicit tool calls, not replace decision-making. They do not bypass process constraints or invent hidden state transitions.',
           'MVP scope is focused on discrete manufacturing workflows. The schema is ready for batch and continuous types, but those UI experiences are post-MVP.',
-          'If you are evaluating AI in manufacturing, ask one question first: are AI actions routed through the same validated operations as UI actions? If not, you are likely looking at an AI-enhanced layer, not an AI-native MES.',
+          'If you are evaluating MES software, ask one question first: are natural language actions routed through the same validated operations as UI actions? If not, you are likely looking at a chatbot wrapper, not architecture-level integration.',
         ],
       },
     ],
   },
   {
     slug: 'how-meskit-agents-call-mes-tools',
-    title: 'How MESkit agents call MES tools',
+    title: 'How MESkit smart features call MES tools',
     excerpt:
-      'Technical deep dive into tool registration, call chains, and event-driven quality analysis.',
+      'Technical deep dive into tool registration, call chains, and event-driven quality monitoring.',
     category: 'MES architecture',
     author: 'MESkit Team',
     publishedAt: '2026-03-03',
     updatedAt: '2026-03-03',
-    keywords: ['MES API', 'programmable MES', 'MES tool layer', 'Claude tool-use'],
+    keywords: ['MES API', 'programmable MES', 'MES tool layer', 'MES natural language'],
     summary:
-      'MESkit agents are configured with explicit tool definitions that map to the same typed functions used by UI server actions. A user prompt resolves into deterministic tool calls, then writes to Supabase through validated operations.',
+      'MESkit smart features are configured with explicit tool definitions that map to the same typed functions used by UI server actions. A user prompt resolves into deterministic tool calls, then writes to Supabase through validated operations.',
     keyFacts: [
       'Tool contracts are typed and validated before execution.',
-      'Operator Assistant can call all shop-floor and execution tools.',
-      'Quality Analyst is event-driven and threshold-based.',
+      'Ask MESkit can call all shop-floor and execution tools.',
+      'Quality Monitor is event-driven and threshold-based.',
       'Production Planner is on-demand and analytics-oriented.',
     ],
     miniFaq: [
       {
-        question: 'Do agents have a private API?',
-        answer: 'No. Agents use the same tool layer as the UI.',
+        question: 'Does the natural language interface have a private API?',
+        answer: 'No. Smart features use the same tool layer as the UI.',
       },
       {
         question: 'Can quality alerts trigger automatically?',
         answer:
-          'Yes. The Quality Analyst listens to realtime conditions and runs when thresholds are breached.',
+          'Yes. The Quality Monitor listens to realtime conditions and runs when thresholds are breached.',
       },
     ],
     sections: [
       {
         heading: 'From intent to function call',
         paragraphs: [
-          'When a user writes a command in chat, the runtime forwards structured context: current mode, selected line, and related IDs when available. Claude tool-use then selects from registered tools and emits a call payload.',
-          'The runtime executes the selected tool using schema-validated input. If validation fails, the call is rejected with a clear error, and no state mutation occurs.',
-          'Once execution completes, the result is returned to the model for final response generation and to the UI for direct rendering in the conversation timeline.',
+          'When a user writes a command in chat, the intelligence layer forwards structured context: current mode, selected line, and related IDs when available. It then selects from registered tools and emits a call payload.',
+          'The system executes the selected tool using schema-validated input. If validation fails, the call is rejected with a clear error, and no state mutation occurs.',
+          'Once execution completes, the result is returned for final response generation and to the UI for direct rendering in the conversation timeline.',
         ],
       },
       {
         heading: 'Tool chain example: scrap a defective unit',
         paragraphs: [
-          'A user asks: scrap SMX-00044 due to solder bridge. The runtime resolves this into a sequence: `search_units` to locate the unit, `create_quality_event` to store defect context, then `scrap_unit` to set terminal state.',
+          'A user asks: scrap SMX-00044 due to solder bridge. MESkit resolves this into a sequence: `search_units` to locate the unit, `create_quality_event` to store defect context, then `scrap_unit` to set terminal state.',
           'Because each call is explicit, the audit trail shows exactly what happened and in which order. This is critical for manufacturing QA workflows and post-incident analysis.',
           'The same operations are available in direct UI actions. The difference is only interface, not business logic.',
         ],
       },
       {
-        heading: 'Event-driven analyst flow',
+        heading: 'Event-driven quality monitoring',
         paragraphs: [
-          'Quality Analyst is not prompt-only. It can activate on realtime events when yield drops below threshold, when defect clusters form within a window, or when scrap rates rise unexpectedly.',
+          'The Quality Monitor is not prompt-only. It can activate on realtime events when yield drops below threshold, when defect clusters form within a window, or when scrap rates rise unexpectedly.',
           'After activation, it uses read-focused tools like `get_yield_report`, `get_unit_history`, and `search_units`, then publishes a concise alert with likely root causes and suggested checks.',
           'This keeps monitoring proactive while preserving operator control over corrective actions.',
         ],
@@ -153,7 +153,7 @@ export const blogPosts: BlogPost[] = [
     updatedAt: '2026-03-03',
     keywords: ['ISA-95 MES example', 'ISA-95 software model', 'manufacturing data model'],
     summary:
-      'MESkit maps ISA-95 terms directly into a Postgres schema so engineers can reason about lines, routes, units, and quality without proprietary abstractions. Agents operate at ISA-95 Level 3 through the same tool contracts as human users.',
+      'MESkit maps ISA-95 terms directly into a Postgres schema so engineers can reason about lines, routes, units, and quality without proprietary abstractions. Smart features operate at ISA-95 Level 3 through the same tool contracts as human users.',
     keyFacts: [
       'Physical assets map to `lines`, `workstations`, and `machines`.',
       'Product and process definitions map to `part_numbers`, `bom_entries`, `routes`, and `route_steps`.',
@@ -166,7 +166,7 @@ export const blogPosts: BlogPost[] = [
         answer: 'No. MESkit implements ISA-95-aligned concepts in a developer-friendly stack.',
       },
       {
-        question: 'At which level do agents operate?',
+        question: 'At which level do smart features operate?',
         answer: 'Level 3, the same coordination layer as human operators and supervisors.',
       },
     ],
@@ -183,7 +183,7 @@ export const blogPosts: BlogPost[] = [
         heading: 'Execution traceability by default',
         paragraphs: [
           'In many systems, traceability is bolted on. In MESkit, `unit_history` is foundational. Every movement, pass/fail result, and defect context can be queried as a timeline.',
-          'That trace is what powers both dashboard analytics and agent reasoning. The Quality Analyst and Planner both depend on it for diagnostics and capacity guidance.',
+          'That trace is what powers both dashboard analytics and smart feature reasoning. The Quality Monitor and Planner both depend on it for diagnostics and capacity guidance.',
           'By standardizing this model early, teams can scale from simulation to real deployments without rewriting core data relationships.',
         ],
       },
@@ -213,7 +213,7 @@ export const blogPosts: BlogPost[] = [
       'MQTT interface is scheduled for milestone M6.',
       'Topic convention follows `meskit/{line_id}/{workstation_id}/{event_type}`.',
       'Edge functions validate and bridge MQTT payloads into Postgres.',
-      'Anomaly Monitor extends event-driven analysis for sensor streams.',
+      'Machine Health Monitor extends event-driven analysis for sensor streams.',
     ],
     miniFaq: [
       {
@@ -248,7 +248,7 @@ export const blogPosts: BlogPost[] = [
         heading: 'Operational rollout path',
         paragraphs: [
           'Teams can start by validating line flow and quality thresholds in simulation, then progressively mirror selected machines via MQTT topics.',
-          'During mixed-mode operation, planner and quality agents continue to reason over one normalized execution history, not fragmented data streams.',
+          'During mixed-mode operation, the planner and quality monitor continue to reason over one normalized execution history, not fragmented data streams.',
           'When M6 lands, the transport changes. The core tools, schema, and operator workflows remain consistent.',
         ],
       },
@@ -274,14 +274,14 @@ export const blogPosts: BlogPost[] = [
       'ISA-95 open source',
     ],
     summary:
-      'A manufacturing execution system (MES) is the air-traffic-control software that tracks every product, machine, and operator across the factory floor. MESkit is an open-source, AI-native MES toolkit built on ISA-95 that wraps every operation in a typed, validated tool — so humans clicking buttons and AI agents issuing commands execute the exact same business logic through one secure front door.',
+      'A manufacturing execution system (MES) is the air-traffic-control software that tracks every product, machine, and operator across the factory floor. MESkit is an open-source MES toolkit built on ISA-95 that wraps every operation in a typed, validated tool — so humans clicking buttons and natural language commands execute the exact same business logic through one secure front door.',
     keyFacts: [
       'An MES tracks every product from raw material to finished good across the factory floor.',
-      'MESkit is open-source (MIT), ISA-95 aligned, and self-hostable.',
-      'The universal tool layer ensures humans and AI agents call the same validated code.',
+      'MESkit is open-source, ISA-95 aligned, and self-hostable.',
+      'The universal tool layer ensures humans and natural language commands call the same validated code.',
       'Every tool follows a four-step process: register, find, validate with Zod, then execute.',
       'ISA-95 support covers discrete, batch, and continuous manufacturing in one unified data model.',
-      'Stack: Next.js frontend, Supabase backend (Postgres + Realtime), AI tool-use agents.',
+      'Stack: Next.js frontend, Supabase backend (Postgres + Realtime), built-in smart features.',
     ],
     miniFaq: [
       {
@@ -292,7 +292,7 @@ export const blogPosts: BlogPost[] = [
       {
         question: 'What makes MESkit different from traditional MES software?',
         answer:
-          'MESkit is open-source, AI-native, and built on the ISA-95 standard. Its universal tool layer means AI agents and human operators share the same validated operations — there is no separate API or backdoor for AI.',
+          'MESkit is open-source and built on the ISA-95 standard. Its universal tool layer means natural language commands and human operators share the same validated operations — there is no separate API or backdoor.',
       },
       {
         question: 'Who is MESkit designed for?',
@@ -302,12 +302,12 @@ export const blogPosts: BlogPost[] = [
       {
         question: 'What is the universal tool layer?',
         answer:
-          'The tool layer wraps every MES operation — creating a line, moving a part, updating a machine — into a typed, schema-validated function. Both the UI and AI agents call the same tool, ensuring identical validation, audit trails, and business logic.',
+          'The tool layer wraps every MES operation — creating a line, moving a part, updating a machine — into a typed, schema-validated function. Both the UI and the natural language interface call the same tool, ensuring identical validation, audit trails, and business logic.',
       },
       {
-        question: 'Does the AI have special access that humans do not?',
+        question: 'Does the natural language interface have special access that humans do not?',
         answer:
-          'No. There is no separate API for AI, no backdoor, and no special privileges. AI agents use the exact same secure, validated entry point as every human user.',
+          'No. There is no separate API, no backdoor, and no special privileges. Natural language commands use the exact same secure, validated entry point as every human user.',
       },
     ],
     sections: [
@@ -332,23 +332,23 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           'MESkit follows a clean three-layer architecture. The frontend is the user interface that operators see and interact with, built with Next.js. The backend is the brain of the operation, powered by Supabase — which provides a Postgres database ideal for structured ISA-95 data, real-time subscriptions so every screen updates instantly when state changes, built-in authentication, and edge functions for on-demand logic. The planned device layer will connect to real-world sensors and machines via MQTT.',
           'Supabase was chosen deliberately. Postgres handles the highly structured, relational data that ISA-95 demands. The real-time feature means when a part moves on the factory floor, every operator\'s screen updates instantly — no manual refresh needed. Authentication and edge functions come built in, making the entire stack efficient to develop and deploy.',
-          'But the real innovation is not in the stack choices — it is in the layer that sits between the frontend, the agents, and the database. That layer is the universal tool layer.',
+          'But the real innovation is not in the stack choices — it is in the layer that sits between the frontend, the smart features, and the database. That layer is the universal tool layer.',
         ],
       },
       {
         heading: 'What is the universal tool layer?',
         paragraphs: [
-          'The universal tool layer is MESkit\'s core architectural innovation. It takes every possible MES action — creating a production line, moving a part between stations, updating a machine status, recording a quality event — and wraps each one into a self-contained, typed, validated function called a tool. The critical insight: it does not matter whether a human clicks a button or an AI agent issues a command. Both call the exact same tool through the exact same secure entry point.',
+          'The universal tool layer is MESkit\'s core architectural innovation. It takes every possible MES action — creating a production line, moving a part between stations, updating a machine status, recording a quality event — and wraps each one into a self-contained, typed, validated function called a tool. The critical insight: it does not matter whether a human clicks a button or types a natural language command. Both call the exact same tool through the exact same secure entry point.',
           'Every tool follows a strict four-step execution process. First, all tools are registered in a central registry. Second, when an action is triggered, the system locates the correct tool. Third — and this is the critical safety gate — inputs are validated using Zod, a schema validation library that acts as a bouncer checking every piece of data before it enters. If the data fails validation, the action is rejected. Only after validation passes does the tool\'s code actually execute against the database.',
-          'Consider the Create Line tool as a concrete example. Its input schema requires a name (string) and optionally accepts a description. Its output is the newly created line object. The contract is simple, self-documenting, and completely unambiguous — whether you are a human developer reading the code or an AI agent discovering available tools at runtime.',
+          'Consider the Create Line tool as a concrete example. Its input schema requires a name (string) and optionally accepts a description. Its output is the newly created line object. The contract is simple, self-documenting, and completely unambiguous — whether you are a human developer reading the code or MESkit discovering available tools at runtime.',
         ],
       },
       {
         heading: 'Why does tool-centric architecture matter beyond the factory?',
         paragraphs: [
-          'The universal tool layer delivers three concrete benefits. First, unified execution: one codebase serves both human and AI interfaces, which drastically reduces code duplication and maintenance burden. Second, type safety doubles as live documentation — an AI agent can ask the system "what tools do you have?" and receive a perfect, always-current list with validated schemas. That is automatic discoverability. Third, because every action routes through the central tool layer, audit logging is trivial — you know exactly who or what did what, and when.',
-          'This pattern points toward a broader shift in software design. By creating a common, secure, and discoverable language for both humans and AI to execute operations, tool-centric architecture may become a blueprint for how we build all complex software — not just manufacturing systems. When AI does not need a separate API or special backdoor, and when every action is validated and auditable regardless of who initiated it, the result is safer, more maintainable, and more transparent systems.',
-          'MESkit demonstrates that the right abstraction is not "AI features bolted onto existing software" but rather a shared operational interface where human and machine are peers. The same button click, the same voice command, the same guardrails. One front door for everyone.',
+          'The universal tool layer delivers three concrete benefits. First, unified execution: one codebase serves both human and natural language interfaces, which drastically reduces code duplication and maintenance burden. Second, type safety doubles as live documentation — the system can discover available tools and receive a perfect, always-current list with validated schemas. That is automatic discoverability. Third, because every action routes through the central tool layer, audit logging is trivial — you know exactly who or what did what, and when.',
+          'This pattern points toward a broader shift in software design. By creating a common, secure, and discoverable language for both humans and automation to execute operations, tool-centric architecture may become a blueprint for how we build all complex software — not just manufacturing systems. When natural language does not need a separate API or special backdoor, and when every action is validated and auditable regardless of who initiated it, the result is safer, more maintainable, and more transparent systems.',
+          'MESkit demonstrates that the right abstraction is not "smart features bolted onto existing software" but rather a shared operational interface where clicks and conversation are peers. The same button click, the same voice command, the same guardrails. One front door for everyone.',
         ],
       },
     ],
@@ -372,12 +372,12 @@ export const blogPosts: BlogPost[] = [
       'AI MES product setup',
     ],
     summary:
-      'Milestone 3 adds Configure Mode to MESkit — the product and process definition layer. Users can create part numbers, assemble bills of materials, configure serial number algorithms, and design multi-step manufacturing routes. All operations work through both the UI and the Operator Assistant via natural language. 15 new tools power the feature, and Supabase Realtime keeps every browser tab in sync.',
+      'Milestone 3 adds Configure Mode to MESkit — the product and process definition layer. Users can create part numbers, assemble bills of materials, configure serial number algorithms, and design multi-step manufacturing routes. All operations work through both the UI and Ask MESkit via natural language. 15 new tools power the feature, and Supabase Realtime keeps every browser tab in sync.',
     keyFacts: [
       '15 new tools implemented: part numbers, items, BOM entries, routes, route steps, and serial algorithms.',
       'Three-panel Configure Mode UI: part number list, product detail (BOM + serial config), and route designer.',
-      'Operator Assistant now handles all Configure Mode operations via chat.',
-      'Agent context injection includes selected part number and route.',
+      'Ask MESkit now handles all Configure Mode operations via chat.',
+      'Context injection includes selected part number and route.',
       'Supabase Realtime subscriptions keep Configure Mode live across browser tabs.',
       'Route steps validate against workstations created in Build Mode.',
     ],
@@ -385,7 +385,7 @@ export const blogPosts: BlogPost[] = [
       {
         question: 'Can I define a product entirely through chat?',
         answer:
-          'Yes. The Operator Assistant can create part numbers, add BOM entries, configure serial algorithms, and design routes with steps — all through natural language commands.',
+          'Yes. Ask MESkit can create part numbers, add BOM entries, configure serial algorithms, and design routes with steps — all through natural language commands.',
       },
       {
         question: 'What happens if I mix UI and chat?',
@@ -404,14 +404,14 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           'Configure Mode is the second functional mode in MESkit, following Build Mode (M2). Where Build Mode handles the physical shop floor — lines, workstations, and machines — Configure Mode handles the product and process layer: what you manufacture, what it is made of, how units are serialized, and which path they follow through the shop floor.',
           'The milestone delivers a complete product definition workflow. Users create part numbers (product definitions), attach bills of materials with items and quantities, configure serial number algorithms with prefix and padding, and design manufacturing routes with ordered steps assigned to workstations. Each step can optionally be a pass/fail quality gate.',
-          'Every operation is available through both the three-panel UI and the Operator Assistant chat interface. The same 15 typed tools serve both paths, maintaining the AI-native architecture established in M1.',
+          'Every operation is available through both the three-panel UI and the Ask MESkit chat interface. The same 15 typed tools serve both paths, maintaining the unified architecture established in M1.',
         ],
       },
       {
         heading: 'The tool layer: 15 new operations',
         paragraphs: [
           'M3 adds 15 tools to the MESkit tool layer, replacing the stubs created during the M1 scaffold. The tools cover five entity types: part numbers (list, create, update, delete), items (list, create), BOM entries (get, set as upsert, delete), routes (list, create, update, delete), and serial algorithms (configure as upsert, get).',
-          'Each tool follows the established pattern: a Zod schema for input validation, an async execute function against Supabase, and registration in the central tool registry. The Operator Assistant has access to all 15 tools, and agent context now includes the selected part number and route so the assistant can scope its actions.',
+          'Each tool follows the established pattern: a Zod schema for input validation, an async execute function against Supabase, and registration in the central tool registry. Ask MESkit has access to all 15 tools, and context injection now includes the selected part number and route so it can scope its actions.',
           'Route creation handles the multi-table insert (route + steps) with cleanup on failure — if step insertion fails, the orphaned route is deleted. Serial algorithm configuration uses an upsert pattern since it has a 1:1 relationship with part numbers. BOM entry setting checks for existing entries on the same part number and item combination, updating quantity and position rather than creating duplicates.',
         ],
       },
@@ -420,7 +420,7 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           'The UI follows the same three-panel layout established in Build Mode. The left panel lists part numbers with inline rename and delete. The center panel shows the selected product\'s detail: a BOM section where users add items from a dropdown (or create new items inline) with quantities, and a serial algorithm section with prefix, digit count, and a live preview of the generated format.',
           'The right panel is the route designer. Users create named routes, then expand them to add, reorder, or remove steps. Each step is assigned to a workstation via a dropdown populated from Build Mode, and has a pass/fail gate toggle shown as a shield icon. Steps can be reordered with up/down controls, and step counts are shown next to each route name.',
-          'All UI operations go through server actions that wrap the tool layer — the UI never calls Supabase directly. This preserves the four-layer architecture and ensures audit logging is consistent across human and agent actions.',
+          'All UI operations go through server actions that wrap the tool layer — the UI never calls Supabase directly. This preserves the four-layer architecture and ensures audit logging is consistent across all actions.',
         ],
       },
       {
@@ -435,8 +435,8 @@ export const blogPosts: BlogPost[] = [
         heading: 'What comes next: M4 Run Mode',
         paragraphs: [
           'With the physical shop floor (M2) and product definitions (M3) in place, M4 will bring Run Mode — production execution. Users will generate units from part numbers, move them through routes, encounter pass/fail quality gates, and track everything in real time.',
-          'M4 also introduces the Quality Analyst agent, an event-driven monitor that watches production in real time and alerts operators when yield drops or defect patterns emerge. The simulation engine will let users auto-run production at configurable speeds.',
-          'The foundation is set: the tools, schema, and agent architecture from M1 through M3 carry forward unchanged. M4 adds execution state on top of the definitions created in Configure Mode.',
+          'M4 also introduces the Quality Monitor, an event-driven feature that watches production in real time and alerts operators when yield drops or defect patterns emerge. The production simulator will let users auto-run production at configurable speeds.',
+          'The foundation is set: the tools, schema, and architecture from M1 through M3 carry forward unchanged. M4 adds execution state on top of the definitions created in Configure Mode.',
         ],
       },
     ],

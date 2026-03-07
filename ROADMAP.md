@@ -1,6 +1,6 @@
 # MESkit Roadmap
 
-> Status: M3 in progress — M1 + M2 complete, Configure Mode tools, UI, and agent context implemented.
+> Status: M3 in progress — M1 + M2 complete, Configure Mode tools, UI, and context injection implemented.
 
 ---
 
@@ -11,7 +11,7 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
 ### App & Infrastructure
 
 - [x] Initialize Next.js (App Router) project with TypeScript
-- [x] Configure Tailwind CSS with MESkit design tokens (dark theme, cyan accent, agent violet)
+- [x] Configure Tailwind CSS with MESkit design tokens (dark theme, cyan accent, smart feature violet)
 - [x] Set up Supabase project (Postgres, Auth, Realtime)
 - [x] Create Supabase client and environment config (`.env.local`)
 - [ ] Deploy to Vercel (frontend) + Supabase Cloud (backend)
@@ -25,7 +25,7 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
   - [x] Production model: `units`, `unit_history`
   - [x] Quality model: `quality_events`, `defect_codes`
   - [x] Config: `serial_algorithms`
-  - [x] Agent: `agent_conversations`
+  - [x] Chat: `agent_conversations`
   - [x] Future: `mqtt_messages` (table created, unused until M6)
 - [x] Set up Row Level Security (RLS) policies
 
@@ -37,7 +37,7 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
 
 - [x] Set up tool layer architecture (`lib/tools/`)
 - [x] Define Zod schemas for all tool inputs
-- [x] Implement tool registration pattern (shared between Server Actions and agent runtime)
+- [x] Implement tool registration pattern (shared between Server Actions and intelligence layer)
 - [x] Create initial tool stubs for all categories (shop floor, product, production, quality, analytics)
 
 ### UI Shell
@@ -45,25 +45,25 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
 - [x] Build app shell layout
   - [x] Sidebar — mode switcher (Build / Configure / Run / Monitor)
   - [x] Top bar — MESkit branding, simulation controls placeholder, user menu
-  - [x] Chat panel — collapsible right panel with message input, agent selector
+  - [x] Chat panel — collapsible right panel with message input, topic selector
   - [x] Bottom bar — live ticker placeholder
 - [x] Set up Zustand stores for UI state (active mode, panel state, chat state)
 
-### Agent Runtime
+### Intelligence Layer
 
 - [x] Install `@google/generative-ai` (Gemini 2.0 Flash)
-- [x] Create agent runtime scaffold (`lib/agents/`)
-- [x] Define agent system prompts and tool registrations
+- [x] Create intelligence layer scaffold (`lib/agents/`)
+- [x] Define system prompts and tool registrations
 - [x] Implement streaming chat API route (`app/api/chat/route.ts`)
-- [x] Wire chat panel to agent runtime with streaming responses
+- [x] Wire chat panel to intelligence layer with streaming responses
 
-**Done when**: A logged-in user sees the dark-themed shell with sidebar navigation, a functional chat panel that connects to the agent runtime, and empty content areas. All Supabase tables exist with RLS enabled. The tool layer architecture is in place with stubs.
+**Done when**: A logged-in user sees the dark-themed shell with sidebar navigation, a functional chat panel that connects to the intelligence layer, and empty content areas. All Supabase tables exist with RLS enabled. The tool layer architecture is in place with stubs.
 
 ---
 
-## M2 — Build Mode + Operator Assistant
+## M2 — Build Mode + Ask MESkit
 
-Shop floor setup: lines, workstations, machines. First agent goes live.
+Shop floor setup: lines, workstations, machines. Natural language interface goes live.
 
 ### Tools
 
@@ -72,7 +72,7 @@ Shop floor setup: lines, workstations, machines. First agent goes live.
 - [x] Implement remaining workstation tools: `update_workstation`, `delete_workstation`
 - [x] Implement machine tools: `list_machines`, `update_machine_status`
 - [x] Implement remaining machine tool: `create_machine`
-- [x] Register all shop floor tools in agent runtime
+- [x] Register all shop floor tools in intelligence layer
 
 ### UI
 
@@ -83,11 +83,11 @@ Shop floor setup: lines, workstations, machines. First agent goes live.
 - [x] Supabase Realtime subscriptions — UI updates live across browser tabs
 - [x] Empty state guidance — prompt user to create their first line
 
-### Agent
+### Ask MESkit (Natural Language)
 
-- [x] Operator Assistant fully functional for Build Mode operations
-- [x] Context injection: agent knows current mode and selected line/workstation
-- [x] Agent actions appear in the live ticker alongside UI actions
+- [x] Ask MESkit fully functional for Build Mode operations
+- [x] Context injection: MESkit knows current mode and selected line/workstation
+- [x] MESkit actions appear in the live ticker alongside UI actions
 - [x] Test: user can build entire shop floor via chat ("Create a line called Assembly", "Add 3 workstations")
 
 **Done when**: A user can build a complete shop floor (line with ordered workstations and attached machines) using either the UI or the chat panel, and see changes reflected instantly in another tab.
@@ -104,7 +104,7 @@ Product and process definition: part numbers, BOMs, routes, serial algorithms.
 - [x] Implement item tools: `list_items`, `create_item`
 - [x] Implement route tools: `list_routes`, `create_route`, `update_route`, `delete_route`
 - [x] Implement serial algorithm tools: `configure_serial_algorithm`, `get_serial_algorithm`
-- [x] Register all product/process tools in agent runtime
+- [x] Register all product/process tools in intelligence layer
 
 ### UI
 
@@ -116,25 +116,25 @@ Product and process definition: part numbers, BOMs, routes, serial algorithms.
 - [x] Validation: route steps must reference workstations that exist in Build Mode
 - [x] Supabase Realtime subscriptions — UI updates live across browser tabs
 
-### Agent
+### Ask MESkit (Natural Language)
 
-- [x] Operator Assistant handles all Configure Mode operations via chat
-- [x] Context injection: agent sees current part number and route being edited
+- [x] Ask MESkit handles all Configure Mode operations via chat
+- [x] Context injection: MESkit sees current part number and route being edited
 - [ ] Test: user can define a complete product via chat ("Create part number Smartphone X", "Add route with 5 steps through my assembly line")
 
 **Done when**: A user can define a product (e.g., "Smartphone X"), attach a BOM, configure a serial number algorithm, and design a multi-step route — through the UI or chat.
 
 ---
 
-## M4 — Run Mode + Simulator Agent + Quality Analyst
+## M4 — Run Mode + Production Simulator + Quality Monitor
 
-Production execution: unit generation, WIP movement, quality gates. Agent-driven simulation replaces traditional auto-run. Quality monitoring agent goes live. See [`docs/simulator.md`](docs/simulator.md) for the full Simulator Agent design.
+Production execution: unit generation, WIP movement, quality gates. Built-in simulator replaces traditional auto-run. Quality monitoring goes live. See [`docs/simulator.md`](docs/simulator.md) for the full Production Simulator design.
 
 ### Tools
 
 - [ ] Implement production tools: `generate_units`, `move_unit`, `scrap_unit`, `get_wip_status`, `search_units`
 - [ ] Implement quality tools: `create_quality_event`, `list_defect_codes`, `create_defect_code`
-- [ ] Register all production and quality tools in agent runtime
+- [ ] Register all production and quality tools in intelligence layer
 - [ ] Create `production_orders` and `job_orders` tables (ISA-95 F1) — migration with order_number, part_number_id, quantity_ordered, quantity_completed, status enum (new/scheduled/running/complete/closed)
 - [ ] Implement production order tools: `create_production_order`, `update_order_status`, `list_production_orders` (ISA-95 F1)
 - [ ] Add `ideal_cycle_time_seconds` column to `route_steps` (ISA-95 F3) — migration
@@ -142,18 +142,18 @@ Production execution: unit generation, WIP movement, quality gates. Agent-driven
 - [ ] Implement quality test tools: `create_test_definition`, `list_test_definitions`, `record_test_result` (ISA-95 F4)
 - [ ] Add route versioning — `version` column on `routes`, new version on structural changes (ISA-95 F10)
 
-### Simulator Agent (replaces auto-run engine)
+### Production Simulator (replaces auto-run engine)
 
-The Simulator Agent is an AI that role-plays as a factory — generating units, moving WIP, introducing realistic failures, and toggling machine statuses through the same tool layer that humans use. No separate simulation engine needed.
+The Production Simulator role-plays as a factory — generating units, moving WIP, introducing realistic failures, and toggling machine statuses through the same tool layer that humans use. No separate simulation engine needed.
 
 **Isolation rule**: The Simulator is a pure consumer of the MES — it lives in `lib/simulator/` and `app/api/simulation/`, uses only public tool APIs, and introduces no simulation-specific columns or conditionals in MES core code. Deleting all Simulator files must leave the MES fully functional. See [`docs/simulator.md` §8](docs/simulator.md) for full isolation rules.
 
-- [ ] Simulator Agent config, system prompt, and tool subset (`lib/agents/simulator.ts`)
+- [ ] Production Simulator config, system prompt, and tool subset (`lib/agents/simulator.ts`)
 - [ ] Simulation API routes (`/api/simulation/start`, `/pause`, `/reset`)
-- [ ] Simulation loop — server-side recurring agent invocations with configurable tick interval
-- [ ] Capacity-aware WIP movement — agent respects workstation capacity, won't pile units
+- [ ] Simulation loop — server-side recurring invocations with configurable tick interval
+- [ ] Capacity-aware WIP movement — respects workstation capacity, won't pile units
 - [ ] Contextual quality decisions — base yield ~95%, degrades over time, clusters defects realistically
-- [ ] Machine lifecycle — agent toggles machine statuses (running → fault → repair → idle)
+- [ ] Machine lifecycle — toggles machine statuses (running → fault → repair → idle)
 - [ ] Zustand `simulationStore` for simulation state (running, paused, speed)
 - [ ] Simulation controls in top bar — Start (`▶`), Pause (`⏸`), Speed selector (1x/2x/5x/10x), Reset (`↺`)
 - [ ] Simulator creates production orders before generating units (ISA-95 F1) — order-driven simulation
@@ -171,15 +171,15 @@ The Simulator Agent is an AI that role-plays as a factory — generating units, 
 - [ ] Live ticker — Supabase Realtime subscription renders scrolling event log
 - [ ] Order-driven unit generation — units linked to a production order, order tracks completion (ISA-95 F1)
 
-### Quality Analyst Agent
+### Quality Alerts / Quality Monitor
 
-- [ ] Implement event-driven trigger system (Supabase Realtime → agent invocation)
+- [ ] Implement event-driven trigger system (Supabase Realtime → monitor invocation)
 - [ ] Yield threshold monitoring — alert when workstation yield drops below 90%
 - [ ] Defect clustering detection — alert when same defect code appears 3+ times in 30 min
 - [ ] Natural-language quality alerts displayed in the live ticker and chat panel
 - [ ] Configurable alert thresholds
 - [ ] Reacts to Simulator-generated patterns (defect clusters, yield drops) in real-time
-- [ ] Quality Analyst references test definitions when evaluating pass/fail (ISA-95 F4) — alerts include tolerance context
+- [ ] Quality Monitor references test definitions when evaluating pass/fail (ISA-95 F4) — alerts include tolerance context
 
 ### Machine State Model (ISA-88 PackML aligned)
 
@@ -198,20 +198,20 @@ Auto-generate REST endpoints from the tool registry — every registered tool be
 - [ ] Pagination, filtering, and sorting for list endpoints
 - [ ] Webhooks for real-time event notifications (unit moved, quality event, machine status change)
 
-### Agent
+### Intelligence Layer
 
-- [ ] Operator Assistant handles all Run Mode operations ("generate 100 units of Smartphone X", "scrap SMX-00044")
-- [ ] Simulator Agent drives autonomous production when simulation is running
-- [ ] Quality Analyst runs alongside production (manual or simulated), surfacing alerts proactively
+- [ ] Ask MESkit handles all Run Mode operations ("generate 100 units of Smartphone X", "scrap SMX-00044")
+- [ ] Production Simulator drives automated production when simulation is running
+- [ ] Quality Monitor runs alongside production (manual or simulated), surfacing alerts proactively
 
 ### Onboarding — First-Run Experience
 
-Agent-guided onboarding for new users. See [`docs/onboarding-plan.md`](docs/onboarding-plan.md) for full design.
+Guided onboarding for new users. See [`docs/onboarding-plan.md`](docs/onboarding-plan.md) for full design.
 
 - [ ] Detect empty shop floor on first login (zero lines)
-- [ ] Auto-open chat panel with Operator Assistant welcome message
-- [ ] Offer one-click demo shop floor (agent creates sample line, workstations, machines via tool layer)
-- [ ] Guided step-by-step option (agent walks through Build → Configure → Run)
+- [ ] Auto-open chat panel with MESkit welcome message
+- [ ] Offer one-click demo shop floor (creates sample line, workstations, machines via tool layer)
+- [ ] Guided step-by-step option (MESkit walks through Build → Configure → Run)
 - [ ] Cross-mode progress checklist (optional)
 
 ### Demo Environment — 7-Day Data Retention
@@ -219,20 +219,20 @@ Agent-guided onboarding for new users. See [`docs/onboarding-plan.md`](docs/onbo
 - [ ] pg_cron job to delete user data after 7 days (migration: `004_demo_data_cleanup_cron.sql`)
 - [ ] Signup page notice: "Demo environment — data deleted after 7 days"
 - [ ] Top bar banner with days-remaining countdown (amber → red)
-- [ ] Agent welcome message mentions the 7-day limit
+- [ ] MESkit welcome message mentions the 7-day limit
 
-**Done when**: A user can start a simulation, watch units flow through workstations driven by the Simulator Agent, see realistic quality events and machine faults, receive proactive quality alerts from the analyst, and follow everything in the live ticker. Manual production via UI and chat also works independently of the simulation. All tools are accessible via REST endpoints with OpenAPI documentation. New users are greeted by the Operator Assistant and can have a working demo shop floor within 30 seconds of signup.
+**Done when**: A user can start a simulation, watch units flow through workstations driven by the Production Simulator, see realistic quality events and machine faults, receive proactive quality alerts from the Quality Monitor, and follow everything in the live ticker. Manual production via UI and chat also works independently of the simulation. All tools are accessible via REST endpoints with OpenAPI documentation. New users are greeted by MESkit and can have a working demo shop floor within 30 seconds of signup.
 
 ---
 
 ## M5 — Monitor Mode + Production Planner
 
-Dashboard: live charts, lot traceability, AI-generated insights, production planning.
+Dashboard: live charts, lot traceability, automated insights, production planning.
 
 ### Tools
 
 - [ ] Implement analytics tools: `get_throughput`, `get_yield_report`, `get_unit_history`
-- [ ] Register analytics tools in agent runtime
+- [ ] Register analytics tools in intelligence layer
 - [ ] Implement `get_oee` tool — computes Availability × Performance × Quality over a time window (ISA-95, requires F2 + F3 from M4)
 - [ ] Implement `get_order_summary` tool — order completion %, units remaining, estimated time (ISA-95 F1)
 - [ ] Implement `get_capability_snapshot` tool — workstation availability/committed/unattainable status (ISA-95 F6)
@@ -243,38 +243,38 @@ Dashboard: live charts, lot traceability, AI-generated insights, production plan
 - [ ] Throughput chart — units completed over time (Recharts line chart)
 - [ ] Yield summary — pass/fail ratio per workstation (Recharts bar chart)
 - [ ] Unit lookup — search by serial number, view full route history from `unit_history`
-- [ ] Quality insights panel — natural-language summaries from Quality Analyst rendered alongside charts
+- [ ] Alerts & Insights panel — natural-language summaries from Quality Monitor rendered alongside charts
 - [ ] Auto-refresh — all charts update as new data flows in from Run Mode
 - [ ] Production order tracker — order progress bar, completion %, estimated finish (ISA-95 F1)
 - [ ] OEE gauge — Availability × Performance × Quality with factor breakdown (ISA-95, requires `get_oee` tool)
 
-### Production Planner Agent
+### Production Planner
 
-- [ ] Planner agent with access to analytics + shop floor tools
+- [ ] Planner with access to analytics + shop floor tools
 - [ ] Capacity analysis: estimate completion time based on historical throughput
 - [ ] Route comparison: suggest optimal line/route for a production order
 - [ ] Chat-based planning: "I need to build 500 units by end of shift"
-- [ ] Agent selector in chat panel — switch between Operator Assistant and Planner
+- [ ] Topic selector in chat panel — switch between Production, Quality, and Planning
 - [ ] Planner uses capability model to check resource availability before scheduling (ISA-95 F6)
 - [ ] Planner references production orders for demand-aware planning (ISA-95 F1)
 - [ ] Planner estimates order completion using ideal cycle times and current throughput (ISA-95 F3)
 
-### Agent-as-API (integration layer 2 of 3)
+### MESkit API — Natural Language Endpoint (integration layer 2 of 3)
 
-Public agent endpoint with API key auth — external systems send natural language requests instead of mapping to 50+ REST endpoints. The agent resolves intent, calls tools, and returns structured results.
+Public natural language endpoint with API key auth — external systems send plain English requests instead of mapping to 50+ REST endpoints. MESkit resolves intent, calls tools, and returns structured results.
 
-- [ ] Public agent endpoint with API key auth (no browser session required)
-- [ ] Structured response mode — agent returns JSON alongside natural language
+- [ ] Public natural language endpoint with API key auth (no browser session required)
+- [ ] Structured response mode — returns JSON alongside natural language
 - [ ] Webhook callbacks for async operations (e.g., "notify me when production order completes")
 - [ ] Multi-turn conversation support for complex queries
 
-**Done when**: A user running a simulation in one tab can open Monitor Mode in another and see live WIP, throughput, yield, AI-generated insights, and drill into any unit's history. The Planner agent can answer capacity and scheduling questions based on real simulation data. External systems can query the MES via natural language through the Agent-as-API endpoint.
+**Done when**: A user running a simulation in one tab can open Monitor Mode in another and see live WIP, throughput, yield, automated insights, and drill into any unit's history. The Planner can answer capacity and scheduling questions based on real simulation data. External systems can query the MES via natural language through the MESkit API endpoint.
 
 ---
 
-## M6 — MQTT Interface + Anomaly Monitor
+## M6 — MQTT Interface + Machine Health Monitor
 
-Device layer: broker, message schema, gateway edge function, sensor anomaly detection.
+Device layer: broker, message schema, gateway edge function, predictive maintenance.
 
 ### MQTT Infrastructure
 
@@ -285,43 +285,43 @@ Device layer: broker, message schema, gateway edge function, sensor anomaly dete
   - [ ] Write to `mqtt_messages` table
   - [ ] Call tool layer to trigger downstream processing (move_unit, create_quality_event)
 
-### Simulator Agent — Telemetry Extension
+### Production Simulator — Telemetry Extension
 
-The Simulator Agent (introduced in M4) gains telemetry generation capabilities, producing sensor data alongside production events:
+The Production Simulator (introduced in M4) gains telemetry generation capabilities, producing sensor data alongside production events:
 
-- [ ] Simulator generates `cycle_complete` MQTT messages via tool layer
-- [ ] Simulator generates `measurement` events (temperature, torque, vibration) with realistic drift
-- [ ] Simulator generates `fault` events with pre-fault degradation signals (e.g., temperature climb before failure)
-- [ ] Toggle between Simulator-driven and real MQTT-driven execution
-- [ ] Simulator generates ISA-95 aligned measurement payloads with property/unit/value/timestamp structure (ISA-95 F3)
+- [ ] Production Simulator generates `cycle_complete` MQTT messages via tool layer
+- [ ] Production Simulator generates `measurement` events (temperature, torque, vibration) with realistic drift
+- [ ] Production Simulator generates `fault` events with pre-fault degradation signals (e.g., temperature climb before failure)
+- [ ] Toggle between simulated and real MQTT-driven execution
+- [ ] Production Simulator generates ISA-95 aligned measurement payloads with property/unit/value/timestamp structure (ISA-95 F3)
 
-### Anomaly Monitor Agent
+### Machine Health Monitor / Predictive Maintenance
 
-- [ ] Anomaly Monitor agent activated by MQTT message ingestion
+- [ ] Machine Health Monitor activated by MQTT message ingestion
 - [ ] Out-of-range sensor value detection (configurable thresholds)
 - [ ] Pattern detection: degradation trends in measurement data
 - [ ] Alerts surfaced in chat panel and live ticker
 - [ ] MQTT message viewer in Monitor Mode — raw message log from `mqtt_messages` table
-- [ ] Anomaly Monitor generates maintenance requests when fault patterns detected (ISA-95 F9) — creates maintenance work order linked to machine
+- [ ] Machine Health Monitor generates maintenance requests when fault patterns detected (ISA-95 F9) — creates maintenance work order linked to machine
 - [ ] `maintenance_requests` table — machine_id, request_type (corrective/preventive), priority, status, description (ISA-95 F9)
 - [ ] Implement maintenance tools: `create_maintenance_request`, `list_maintenance_requests`, `update_maintenance_status` (ISA-95 F9)
 
 ### MCP Server (integration layer 3 of 3)
 
-Expose the full tool layer as an MCP (Model Context Protocol) server. External AI agents — customer copilots, ERP assistants, supply chain planners — can discover and call MESkit tools natively. The AI-native differentiator.
+Expose the full tool layer as an MCP (Model Context Protocol) server. External systems — ERP assistants, supply chain planners, customer copilots — can discover and call MESkit tools natively.
 
-- [ ] MCP server exposing all registered tools with JSON Schema descriptions
+- [ ] MCP server exposing all registered tools with JSON Schema descriptions (developer/integration audience)
 - [ ] Auth layer — API keys or OAuth tokens scoped per customer/integration
-- [ ] Tool-level permissions — restrict which tools an external agent can call
+- [ ] Tool-level permissions — restrict which tools an external integration can call
 - [ ] Rate limiting and usage tracking per integration
 
-**Done when**: The Simulator Agent generates MQTT-format telemetry that flows through the broker, gets ingested by the Edge Function, and shows up as unit movements and quality events in the UI. The Anomaly Monitor agent flags unusual sensor readings. Same Simulator Agent from M4, now with telemetry capabilities — same tool layer, different data types. The MCP server exposes the complete MES tool suite for external AI agent integration.
+**Done when**: The Production Simulator generates MQTT-format telemetry that flows through the broker, gets ingested by the Edge Function, and shows up as unit movements and quality events in the UI. The Machine Health Monitor flags unusual sensor readings and alerts before failures happen. Same Simulator from M4, now with telemetry capabilities — same tool layer, different data types. The MCP server exposes the complete MES tool suite for external integration.
 
 ---
 
-## M7 — WebMCP: Browser Agent Integration
+## M7 — WebMCP: Browser Automation Integration
 
-Make MESkit pages directly accessible to browser-based AI agents via the [WebMCP standard](https://developer.chrome.com/blog/webmcp-epp). Completes the agent accessibility story from server-side (MCP Server, M6) to client-side. See [`docs/webmcp-integration.md`](docs/webmcp-integration.md) for full design.
+Make MESkit pages directly accessible to browser-based automation via the [WebMCP standard](https://developer.chrome.com/blog/webmcp-epp). Completes the integration story from server-side (MCP Server, M6) to client-side. See [`docs/webmcp-integration.md`](docs/webmcp-integration.md) for full design.
 
 ### Prerequisites
 
@@ -331,7 +331,7 @@ Make MESkit pages directly accessible to browser-based AI agents via the [WebMCP
 
 ### Declarative API — Form Annotations
 
-Annotate existing forms so browser agents can discover and interact with them natively:
+Annotate existing forms so browser-based automation can discover and interact with them natively:
 
 - [ ] Configure Mode: Part Number CRUD forms
 - [ ] Configure Mode: BOM assembly forms
@@ -355,30 +355,30 @@ Expose the tool registry as structured JavaScript actions for complex workflows:
 
 ### Security and UX
 
-- [ ] Confirmation dialogs for destructive operations (delete, scrap) — agents must not bypass
+- [ ] Confirmation dialogs for destructive operations (delete, scrap) — automation must not bypass
 - [ ] Auth boundary — WebMCP actions respect user session and RLS policies
 - [ ] Scope control — restrict available actions per page context
-- [ ] Rate limiting for agent-initiated actions
+- [ ] Rate limiting for automation-initiated actions
 
 ### Testing
 
-- [ ] Test with Chrome's built-in AI agent
-- [ ] Test with third-party browser agents
+- [ ] Test with Chrome's built-in automation
+- [ ] Test with third-party browser automation tools
 - [ ] Validate Supabase Realtime propagation from WebMCP-triggered actions
 - [ ] Performance benchmarks — no latency impact on normal UI usage
 
-**Done when**: Any browser-based AI agent can discover and execute MESkit actions on any page — creating shop floors, configuring products, running production, and querying dashboards — through the WebMCP standard, with the same auth and safety guarantees as the native UI.
+**Done when**: Any browser-based automation can discover and execute MESkit actions on any page — creating shop floors, configuring products, running production, and querying dashboards — through the WebMCP standard, with the same auth and safety guarantees as the native UI.
 
 ---
 
 ## Architecture Note — One Repo, All Manufacturing Types
 
-MESkit will **not** fork into separate repos for discrete, process, and batch manufacturing. The three types share ~80% of the codebase (auth, shop floor, configure, quality, agents, realtime) and differ mainly in how units are tracked. Forking would triple the maintenance surface before product-market fit.
+MESkit will **not** fork into separate repos for discrete, process, and batch manufacturing. The three types share ~80% of the codebase (auth, shop floor, configure, quality, intelligence layer, realtime) and differ mainly in how units are tracked. Forking would triple the maintenance surface before product-market fit.
 
 **Strategy:**
 - Ship discrete manufacturing first (serial-tracked units) through M6.
-- Add batch and process as **tracking modes**, not forks — a `tracking_type` field on `part_numbers` controls behavior while the route/step engine, agent runtime, and tool layer stay shared.
-- The ISA-95 schema already supports this: the abstraction boundary is the unit/lot/batch tracking layer (~10-15% of code). Everything above (agents, chat, quality rules, analytics) and below (Supabase, auth, realtime) remains common.
+- Add batch and process as **tracking modes**, not forks — a `tracking_type` field on `part_numbers` controls behavior while the route/step engine, intelligence layer, and tool layer stay shared.
+- The ISA-95 schema already supports this: the abstraction boundary is the unit/lot/batch tracking layer (~10-15% of code). Everything above (intelligence layer, chat, quality rules, analytics) and below (Supabase, auth, realtime) remains common.
 
 A separate repo would only make sense if process manufacturing required a fundamentally different UX metaphor (e.g., continuous flow diagrams instead of discrete route steps). Even then, that's a new mode page — not a new codebase.
 
@@ -390,26 +390,26 @@ Not scoped, not scheduled. Ideas for after M7 is solid.
 
 ### OEE Dashboard
 
-OEE (Overall Equipment Effectiveness) = Availability × Performance × Quality. The Simulator Agent naturally produces all three OEE components. Requires:
+OEE (Overall Equipment Effectiveness) = Availability × Performance × Quality. The Production Simulator naturally produces all three OEE components. Requires:
 
 - `ideal_cycle_time_seconds` field on `route_steps`
 - `machine_events` table for downtime tracking (fault, maintenance, changeover, recovery)
 - `get_oee` analytics tool that computes the three factors over a time window
-- Simulator Agent enhanced to model planned maintenance windows and changeover times
+- Production Simulator enhanced to model planned maintenance windows and changeover times
 - Dashboard UI in Monitor Mode with OEE gauge, factor breakdown, and bottleneck identification
 
 ### Simulation Scenarios
 
-Pre-configured behavior profiles that modify the Simulator Agent's system prompt:
+Pre-configured behavior profiles that modify the Production Simulator's system prompt:
 
 | Scenario | Behavior | Purpose |
 |---|---|---|
 | Steady State | 95% yield, rare faults, consistent throughput | Baseline demo, happy path |
-| Quality Crisis | Yield drops to 80% at one station, defect clustering | Showcase Quality Analyst alerts |
+| Quality Crisis | Yield drops to 80% at one station, defect clustering | Showcase Quality Monitor alerts |
 | Machine Breakdown | A machine goes down mid-run, WIP backs up | Test bottleneck handling and recovery |
 | Ramp-Up | Start slow, gradually increase throughput | Realistic shift start pattern |
 | Mixed Product | Multiple part numbers running simultaneously | Test multi-product scheduling |
-| Cascade Failure | One fault triggers downstream problems | North Star demo — multi-agent coordination |
+| Cascade Failure | One fault triggers downstream problems | North Star demo — automated coordination |
 
 ### Full PackML State Model (ISA-88)
 
@@ -438,12 +438,36 @@ Pre-configured behavior profiles that modify the Simulator Agent's system prompt
 - [ ] Parallel step execution support — branch and merge in routes (ISA-95)
 - [ ] Process parameter inheritance — parent segments pass parameters to children (ISA-95)
 
+### Product Carbon Footprint per Work Order
+
+Automatically compute kgCO2e per unit for every closed work order by combining MESkit's existing operational data (time at each route step, machines used, scrap rate) with emission factors configured per machine and site. Surfaces carbon intensity in Monitor Mode, enables AI-driven carbon optimization in the Production Planner, and exports Pathfinder Framework 2.0 JSON for direct B2B data exchange with customers. Aligned with ISO 14067, GHG Protocol, EU CSRD, and the EU Digital Product Passport. See [`docs/carbon-footprint-per-work-order.md`](docs/carbon-footprint-per-work-order.md) for the full feature spec and implementation guide.
+
+- [ ] Migration: `power_consumption_kw` on `machines`, `emission_factors` config table, `carbon_footprint_kgco2e_per_unit` and `carbon_breakdown_json` on `production_orders`
+- [ ] Supabase Edge Function triggered on work order `complete` — computes PCF, writes result and step breakdown
+- [ ] Carbon tools: `get_carbon_footprint`, `compare_carbon_by_line`, `export_pathfinder_json`
+- [ ] Register carbon tools in Production Planner — enables natural language carbon analysis in chat
+- [ ] `<CarbonBadge>` and `<CarbonBreakdownChart>` components in Monitor Mode
+- [ ] Carbon dashboard tab with trends, top emitting steps, and Pathfinder export button
+- [ ] Carbon Monitor alert: flag batches exceeding configurable kgCO2e/unit threshold in live ticker
+- [ ] Ship reference table of IEA 2024 national grid emission factors for quick setup
+
+### Blockchain Production Batch Anchoring
+
+Anchor a cryptographic hash of every completed work order to a public blockchain (Polygon PoS). Gives regulated manufacturers — pharma, medical devices, aerospace, food — an independently verifiable, tamper-proof production record without exposing any production data on-chain. See [`docs/blockchain-batch-anchoring.md`](docs/blockchain-batch-anchoring.md) for the full feature spec and implementation guide.
+
+- [ ] Deploy `MeskitAnchor.sol` contract to Polygon Amoy testnet
+- [ ] Supabase Edge Function triggered on work order `complete` — hashes batch certificate and writes to chain
+- [ ] Store `blockchain_anchor_tx` on `production_orders` row
+- [ ] `<BlockchainBadge>` UI component in Monitor Mode — explorer link + verification status
+- [ ] Public verification endpoint — anyone can re-hash and compare without system access
+- [ ] Migrate from Amoy testnet to Polygon PoS mainnet for production deployments
+
 ### Other Ideas
 
 | Feature | Notes |
 |---------|-------|
-| Multi-agent orchestration | Agents coordinate: Quality Analyst triggers Planner to reschedule when yield drops |
-| Agent memory / learning | Agents learn from historical patterns and operator feedback |
+| Smart feature coordination | Quality Monitor triggers Planner to reschedule when yield drops |
+| Context learning | System learns from historical patterns and operator feedback |
 | Voice input for operators | Speech-to-text input for the chat panel — hands-free shop floor |
 | Batch manufacturing UI | Schema is ready (`tracking_type: batch`); needs quantity-aware UX |
 | Continuous manufacturing UI | Schema is ready (`tracking_type: continuous`); needs time-window tracking |
@@ -453,6 +477,6 @@ Pre-configured behavior profiles that modify the Simulator Agent's system prompt
 | Shift management | Operator schedules, workstation assignments by shift |
 | Global Command-K search | Search units, machines, part numbers from anywhere |
 | Mobile operator view | Responsive UI for tablet-based shop floor interaction |
-| Custom agent creation | Users define domain-specific agents with custom system prompts and tool subsets |
+| Custom monitors | Users define domain-specific monitors with custom rules and tool subsets |
 | ISA-95 Operations Performance | Track actual vs planned performance per order with KPIs (ISA-95) |
 | ISA-95 Operations Response | Formal response messages when orders complete — supports ERP integration (ISA-95) |

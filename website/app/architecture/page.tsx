@@ -16,7 +16,7 @@ import { breadcrumbJsonLd, softwareSourceCodeJsonLd } from '@/lib/structured-dat
 export const metadata = buildPageMetadata({
   title: 'Architecture',
   description:
-    'MESkit architecture: frontend, shared tool layer, agent runtime, Supabase backend, and MQTT-ready transport model.',
+    'MESkit architecture: frontend, shared tool layer, intelligence layer, Supabase backend, and MQTT-ready transport model.',
   path: '/architecture',
   keywords: [
     'MES architecture',
@@ -30,9 +30,9 @@ const breadcrumbs = [{ name: 'Architecture', path: '/architecture' }];
 
 const facts = [
   'Frontend uses Next.js App Router with SSR/SSG-friendly rendering.',
-  'Tool layer is the single source of truth for UI and agents.',
-  'Agent runtime uses Claude tool-use with explicit tool registration.',
-  'Three AI layers (Sentinel, Strategist, Executor) target agent-driven predictive rescheduling.',
+  'Tool layer is the single source of truth for UI and smart features.',
+  'Intelligence layer uses Claude tool-use with explicit tool registration.',
+  'Three automation layers (Monitor, Plan, Act) target automated predictive rescheduling.',
   'Supabase provides Postgres, auth, realtime, and edge functions.',
   'MQTT bridge is planned for milestone M6 using the same operational contracts.',
 ];
@@ -67,7 +67,7 @@ export default function ArchitecturePage() {
         />
 
         <Section title="Summary" subtitle="Design principle: one operation path, multiple interfaces.">
-          <SummaryBlock summary="UI clicks and natural-language commands both resolve to typed tool functions. Those functions validate inputs and execute against Supabase-backed ISA-95 tables. Agent runtime logic and transport layers remain composable around that stable core." />
+          <SummaryBlock summary="UI clicks and natural-language commands both resolve to typed tool functions. Those functions validate inputs and execute against Supabase-backed ISA-95 tables. Intelligence layer logic and transport layers remain composable around that stable core." />
         </Section>
 
         <Section title="Four-layer design" subtitle="Current stack plus planned device transport.">
@@ -78,8 +78,8 @@ export default function ArchitecturePage() {
 │ Tool Layer (Server Actions + Zod validation)            │
 │ UI calls tools • Agents call tools • same interfaces    │
 ├──────────────────────────────────────────────────────────┤
-│ Agent Runtime (Claude tool-use)                         │
-│ Operator Assistant • Quality Analyst • Planner          │
+│ Intelligence Layer                                      │
+│ Ask MESkit • Quality Monitor • Planner                  │
 ├──────────────────────────────────────────────────────────┤
 │ Supabase (Postgres + Auth + Realtime + Edge Functions)  │
 ├──────────────────────────────────────────────────────────┤
@@ -106,32 +106,32 @@ export default function ArchitecturePage() {
             <article className="card">
               <h3>Auditability</h3>
               <p>
-                Tool-level call traces provide clear accountability for user and agent actions.
+                Tool-level call traces provide clear accountability for user and automated actions.
               </p>
             </article>
           </div>
         </Section>
 
-        <Section title="North Star architecture" subtitle="Three AI layers building toward agent-driven rescheduling.">
-          <SummaryBlock summary="The product vision is agent-driven predictive rescheduling: predict a machine failure and coordinate the shop floor response before it happens. Three agent layers build toward this — operators stay in command." />
+        <Section title="North Star architecture" subtitle="Three automation layers building toward automated rescheduling.">
+          <SummaryBlock summary="The product vision is automated predictive rescheduling: predict a machine failure and coordinate the shop floor response before it happens. Three automation layers (Monitor, Plan, Act) build toward this — operators stay in command." />
           <div className="diagram" style={{ marginTop: '1rem' }}>
-            <code>{`Sentinel (Anomaly Monitor, M6)
+            <code>{`Monitor (Machine Health, M6)
   → detects degradation, outputs failure probability
       ↓
-Strategist (Production Planner, M5)
+Plan (Production Planner, M5)
   → evaluates constraints, computes alternative schedules
       ↓
-Executor (Agent Runtime, M1+)
+Act (Intelligence Layer, M1+)
   → acts through tool layer, updates schedules, notifies operators`}</code>
           </div>
           <p style={{ marginTop: '0.8rem' }}>
-            In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the
-            Strategist, which triggers the Executor — closing the coordination loop. See{' '}
-            <Link href="/agents">agents</Link> for detailed profiles.
+            In the MVP, these layers operate independently. Post-MVP, Monitor triggers Plan,
+            which triggers Act — closing the coordination loop. See{' '}
+            <Link href="/agents">smart features</Link> for detailed profiles.
           </p>
         </Section>
 
-        <Section title="Agent runtime" subtitle="Claude tool-use with explicit constraints.">
+        <Section title="Intelligence layer" subtitle="Claude tool-use with explicit constraints.">
           <div className="grid-2">
             <div className="card">
               <h3>Runtime behavior</h3>
@@ -186,7 +186,7 @@ Executor (Agent Runtime, M1+)
           </div>
           <div style={{ marginTop: '1rem' }}>
             <CtaRow
-              primary={{ href: '/agents', label: 'Meet the agents' }}
+              primary={{ href: '/agents', label: 'See smart features' }}
               secondary={{ href: '/docs', label: 'Read docs' }}
             />
           </div>
@@ -196,7 +196,7 @@ Executor (Agent Runtime, M1+)
           <div className="card">
             <ul className="clean-list">
               <li>
-                <Link href="/agents">Agents: runtime and call-chain examples</Link>
+                <Link href="/agents">Smart features: how they work</Link>
               </li>
               <li>
                 <Link href="/isa-95">ISA-95 mapping and terminology table</Link>

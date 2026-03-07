@@ -57,16 +57,17 @@ export async function POST(request: NextRequest) {
           activeMode: body.context.activeMode,
           currentWipSummary: null,
           shiftEndTime: null,
+          carbonTrackingEnabled: false,
         });
         toolNames = plannerTools;
         break;
       }
       case "quality_analyst": {
-        // Quality analyst is event-driven — not available via chat yet
+        // Quality Monitor is event-driven — not available via chat yet
         return new Response(
           JSON.stringify({
             error:
-              "Quality Analyst is event-driven and not available via chat in M1",
+              "Quality Monitor is event-driven and not available via chat yet",
           }),
           { status: 400, headers: { "Content-Type": "application/json" } },
         );

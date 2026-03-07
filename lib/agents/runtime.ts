@@ -9,6 +9,8 @@ import "@/lib/tools/product";
 import "@/lib/tools/production";
 import "@/lib/tools/quality";
 import "@/lib/tools/analytics";
+import "@/lib/tools/carbon";     // PCF: get_carbon_footprint, compare_carbon_by_line, export_pathfinder_json
+import "@/lib/tools/blockchain"; // Blockchain: verify_blockchain_anchor
 
 export interface AgentMessage {
   role: "user" | "assistant";

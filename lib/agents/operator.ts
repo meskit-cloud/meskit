@@ -1,8 +1,8 @@
-// --- Agent Configuration ---
+// --- Ask MESkit Configuration ---
 
 export const operatorAssistantConfig = {
-  name: "Operator Assistant",
-  description: "Conversational co-pilot for shop floor operators",
+  name: "Ask MESkit",
+  description: "Natural language interface for shop floor operations",
   agentType: "operator_assistant" as const,
   triggerType: "user_initiated" as const,
 };
@@ -52,6 +52,10 @@ export const operatorAssistantTools: string[] = [
   "get_throughput",
   "get_yield_report",
   "get_unit_history",
+  // Carbon footprint (PCF feature)
+  "get_carbon_footprint",
+  // Blockchain verification
+  "verify_blockchain_anchor",
 ];
 
 // --- System Prompt Builder ---
@@ -99,11 +103,11 @@ export function buildOperatorAssistantSystemPrompt(
     contextSection += `\nActive production run: **${context.activeProductionRun.partNumberName}** — ${context.activeProductionRun.unitCount} units`;
   }
 
-  return `You are the **Operator Assistant** — an AI co-pilot for MESkit, an AI-native Manufacturing Execution System.
+  return `You are **MESkit** — the natural language interface for an open-source Manufacturing Execution System.
 
 ## Your Role
 
-You help shop floor operators manage manufacturing operations through natural language. Instead of clicking through menus, operators talk to you. You call the MES tool layer to execute operations — creating lines, moving units, checking yield, logging defects.
+You help shop floor operators manage manufacturing operations through natural language. Instead of clicking through menus, operators ask you questions and give you instructions. You execute operations — creating lines, moving units, checking yield, logging defects.
 
 ## Current Context
 
@@ -121,6 +125,8 @@ MESkit follows the ISA-95 standard:
 - **Route Step**: A single step in a route, assigned to a workstation, optionally a pass/fail gate
 - **Unit**: A single manufactured item with a serial number, moving through a route
 - **Quality Event**: An inspection, rework, or scrap event logged at a workstation
+- **PCF (Product Carbon Footprint)**: kgCO2e per unit computed from energy consumption across route steps (ISO 14067)
+- **Blockchain Anchor**: A SHA-256 hash of a closed work order's batch certificate written to Polygon — independently verifiable proof of record integrity
 
 ## Instructions
 
@@ -138,5 +144,7 @@ MESkit follows the ISA-95 standard:
 - "Add 3 workstations to Assembly" → call create_workstation 3 times with sequential positions
 - "What machines are down?" → call list_machines with status "down"
 - "How's yield today?" → call get_yield_report with time_range "today"
-- "Scrap 00044, solder bridge on U3" → call scrap_unit or create_quality_event`;
+- "Scrap 00044, solder bridge on U3" → call scrap_unit or create_quality_event
+- "What was the carbon footprint on the last Smartphone X batch?" → call get_carbon_footprint with part number context
+- "Is work order WO-2026-047 anchored on the blockchain?" → call verify_blockchain_anchor with work_order_id`;
 }

@@ -16,15 +16,15 @@ import { breadcrumbJsonLd, faqJsonLd } from '@/lib/structured-data';
 export const metadata = buildPageMetadata({
   title: 'FAQ',
   description:
-    'MESkit FAQ: concise answers about AI-native architecture, ISA-95 support, agent capabilities, roadmap status, and MQTT integration path.',
+    'MESkit FAQ: concise answers about architecture, ISA-95 support, smart features, roadmap status, and MQTT integration path.',
   path: '/faq',
   keywords: [
     'MESkit FAQ',
-    'what is AI-native MES',
-    'MESkit agents',
+    'open source MES features',
+    'MES natural language',
     'ISA-95 support',
     'MES MQTT integration',
-    'agent-augmented MES',
+    'MES smart features',
     'MESkit North Star',
   ],
 });
@@ -35,37 +35,37 @@ const faqEntries = [
   {
     question: 'What is MESkit?',
     answer:
-      'MESkit is the AI-Native MES — an open-source Manufacturing Execution System toolkit aligned to the ISA-95 standard. It provides 20+ typed tool operations backed by 12 ISA-95-mapped Postgres tables, with three specialized AI agents that share the same tool layer as the UI. Built on Next.js, Supabase, and Claude API tool-use under the MIT license.',
+      'MESkit is an open-source Manufacturing Execution System toolkit aligned to the ISA-95 standard. It provides 20+ typed tool operations backed by 15 ISA-95-mapped Postgres tables. Built on Next.js and Supabase, it includes quality alerts, production planning, and a natural language interface — all sharing the same tool layer as the UI.',
   },
   {
-    question: 'What is an AI-native MES?',
+    question: 'How does MESkit\'s natural language interface work?',
     answer:
-      'An AI-native MES routes both UI actions and AI agent commands through the same typed operational interface — one source of execution logic, validation, and audit trail. This is different from AI-enhanced systems where AI is bolted onto an existing stack. In MESkit, every button has a voice equivalent and every voice command follows the same guardrails as a button click.',
+      'MESkit routes both UI actions and natural language commands through the same typed operational interface — one source of execution logic, validation, and audit trail. Every button has a voice equivalent and every voice command follows the same guardrails as a button click. This is architecture-level integration, not a chatbot bolted onto an existing stack.',
   },
   {
     question: 'What is MESkit\'s North Star?',
     answer:
-      'Predict a machine failure and coordinate the shop floor response before it happens — agents handle detection, planning, and execution while operators stay in command. Three AI layers build toward this: the Sentinel (Anomaly Monitor) detects degradation from sensor telemetry, the Strategist (Production Planner) evaluates constraints and computes alternatives, and the Executor (Agent Runtime) acts through the tool layer. In the MVP these layers operate independently; post-MVP they close the coordination loop.',
+      'See problems before they stop your line. MESkit monitors machine health, surfaces quality trends, and helps you plan production. Three automation layers build toward this: the Monitor detects degradation from sensor telemetry, the Planner evaluates constraints and computes alternatives, and the Act layer executes through the tool layer. In the MVP these layers operate independently; post-MVP they close the coordination loop.',
   },
   {
     question: 'Does MESkit support ISA-95?',
     answer:
-      'Yes. MESkit maps ISA-95 concepts directly into 12 Postgres tables: physical assets (lines, workstations, machines), product definitions (part_numbers, bom_entries, routes, route_steps), execution state (units, unit_history), and quality tracking (quality_events, defect_codes). Agents operate at ISA-95 Level 3, the same coordination layer as human operators.',
+      'Yes. MESkit maps ISA-95 concepts directly into 15 Postgres tables: physical assets (lines, workstations, machines), product definitions (part_numbers, bom_entries, routes, route_steps), execution state (units, unit_history), and quality tracking (quality_events, defect_codes). Smart features operate at ISA-95 Level 3, the same coordination layer as human operators.',
   },
   {
-    question: 'What AI agents does MESkit include?',
+    question: 'What smart features does MESkit include?',
     answer:
-      'MESkit ships with three specialized agents: the Operator Assistant (chat-triggered, always available for WIP, movement, and quality logging), the Quality Analyst (event-driven, activated by yield thresholds below 90%, defect clusters, or elevated scrap), and the Production Planner (on-demand chat for capacity analysis and shift-level planning).',
+      'MESkit includes three smart features: Ask MESkit (chat-triggered, always available for WIP, movement, and quality logging), Quality Monitor (event-driven, activated by yield thresholds below 90%, defect clusters, or elevated scrap), and Production Planner (on-demand chat for capacity analysis and shift-level planning).',
   },
   {
-    question: 'How do MESkit agents work?',
+    question: 'How do smart features work?',
     answer:
-      'Agents use Claude tool-use to select from 20+ registered tool operations, validate input against Zod schemas, and execute against Supabase. The agent runtime forwards context (current mode, selected line, related IDs) so tool selection is grounded in real MES state. If validation fails, the call is rejected with no state mutation.',
+      'Smart features use the same typed operations as UI buttons — selecting from 20+ registered tool operations, validating input against Zod schemas, and executing against Supabase. The intelligence layer forwards context (current mode, selected line, related IDs) so tool selection is grounded in real MES state. If validation fails, the call is rejected with no state mutation.',
   },
   {
     question: 'Is MESkit production-ready or simulation-only today?',
     answer:
-      'MESkit is in pre-M1 implementation with a finalized architecture and public six-milestone roadmap (M1 scaffold through M6 MQTT integration). The simulation-first model lets teams validate line flow and quality thresholds before connecting real hardware, reducing pilot failure risk.',
+      'MESkit is in active development with M3 (Configure Mode) in progress. M1 and M2 are complete. The public six-milestone roadmap runs from M1 scaffold through M6 MQTT integration. The simulation-first model lets teams validate line flow and quality thresholds before connecting real hardware, reducing pilot failure risk.',
   },
   {
     question: 'How does MESkit integrate with MQTT?',
@@ -75,7 +75,7 @@ const faqEntries = [
   {
     question: 'Can I control MESkit with natural language?',
     answer:
-      'Yes. Natural-language commands are interpreted by agents and translated into explicit tool calls such as move_unit, get_wip_status, and create_quality_event. Each call is schema-validated before execution, and the full tool chain is visible in the conversation timeline for auditability.',
+      'Yes. Natural-language commands are interpreted by smart features and translated into explicit tool calls such as move_unit, get_wip_status, and create_quality_event. Each call is schema-validated before execution, and the full tool chain is visible in the conversation timeline for auditability.',
   },
 ];
 
@@ -135,7 +135,7 @@ export default function FaqPage() {
                   <Link href="/product">Product overview</Link>
                 </li>
                 <li>
-                  <Link href="/agents">Agents and tool-call architecture</Link>
+                  <Link href="/agents">Smart features and architecture</Link>
                 </li>
                 <li>
                   <Link href="/architecture">System architecture</Link>

@@ -15,8 +15,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MESkit — AI-Native MES",
-  description: "Open-source, AI-native Manufacturing Execution System toolkit",
+  title: "MESkit — Open-Source MES",
+  description: "Open-source Manufacturing Execution System with built-in analytics, quality alerts, and natural language queries",
 };
 
 export default function RootLayout({

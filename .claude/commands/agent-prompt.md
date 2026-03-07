@@ -1,6 +1,6 @@
 # Agent System Prompt Builder
 
-Generate an agent configuration and system prompt for MESkit's AI-native runtime.
+Generate an agent configuration and system prompt for MESkit's Intelligence Layer.
 
 ## Input
 
@@ -58,7 +58,7 @@ export const {agentType}Triggers = {
 
 Generate agents matching these definitions from the PRD:
 
-**Operator Assistant** (`operator_assistant`)
+**Ask MESkit** (`operator_assistant`)
 - **Trigger**: User-initiated via chat panel (always available)
 - **Role**: Conversational co-pilot for shop floor operators. Replaces clicking through menus with natural-language commands and queries.
 - **Tools**: ALL tools from the catalog
@@ -82,7 +82,7 @@ System prompt should include:
 - Instruction to prefer tool calls over generic advice
 - Examples: "What's stuck at assembly?", "Scrap 00044, solder bridge on U3", "How's yield today?"
 
-**Quality Analyst** (`quality_analyst`)
+**Quality Monitor** (`quality_analyst`)
 - **Trigger**: Event-driven (Supabase Realtime on `quality_events` and `unit_history`)
 - **Role**: Monitors production data continuously, surfaces insights proactively. Detects yield drops, defect pattern clusters, and anomalies.
 - **Tools**: `get_yield_report`, `get_unit_history`, `search_units`, `list_defect_codes`, `get_wip_status`, `get_throughput`
@@ -144,7 +144,7 @@ System prompt should include:
 - Instruction to present options, not make unilateral decisions
 - Examples: "I need to build 500 units of Smartphone X by end of shift"
 
-**Anomaly Monitor** (`anomaly_monitor`)
+**Machine Health Monitor** (`anomaly_monitor`)
 - **Trigger**: Event-driven via MQTT message ingestion (M6)
 - **Role**: Monitors sensor data from the MQTT stream for out-of-range values, unusual patterns, and equipment degradation signals.
 - **Tools**: Analytics tools + MQTT-specific query tools (defined in M6)
@@ -173,18 +173,18 @@ export const anomalyMonitorTriggers = {
 ```
 
 System prompt should include:
-- Role as a predictive maintenance sentinel
+- Role as a predictive maintenance monitor
 - North Star context: detect degradation before failure, trigger rescheduling
 - MQTT topic convention: `meskit/{line_id}/{workstation_id}/{event_type}`
 - Instruction to escalate to Production Planner when rescheduling may be needed
 
 ### Three AI Layers (North Star Architecture)
 
-| Layer | Role | Agent |
-|-------|------|-------|
-| **Sentinel** | Monitor sensor telemetry, detect degradation | Anomaly Monitor |
-| **Strategist** | Evaluate constraints, compute alternative schedules | Production Planner |
-| **Executor** | Act through the tool layer, update schedules, notify | Agent Runtime (all agents) |
+| Layer | Role | Feature |
+|-------|------|---------|
+| **Monitor** | Monitor sensor telemetry, detect degradation | Machine Health Monitor |
+| **Plan** | Evaluate constraints, compute alternative schedules | Production Planner |
+| **Act** | Act through the tool layer, update schedules, notify | Intelligence Layer (all features) |
 
 ### Conventions
 

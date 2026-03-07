@@ -22,7 +22,7 @@ Before writing anything, read the relevant source-of-truth files to extract accu
    - Products / Configure Mode → `lib/tools/product.ts`, `app/(app)/configure/`
    - Production / Run Mode → `lib/tools/production.ts`, `app/(app)/run/`
    - Monitoring / Monitor Mode → `lib/tools/analytics.ts`, `app/(app)/monitor/`
-   - Agents → `lib/agents/`, `app/api/chat/`
+   - Smart features → `lib/agents/`, `app/api/chat/`
    - Architecture → `lib/tools/registry.ts`, `lib/agents/runtime.ts`
    - Self-hosting / Setup → `package.json`, `supabase/`, `.env.example` or `.env.local.example`
 
@@ -148,7 +148,7 @@ Use these when the user asks for a specific topic. Each maps to a page type and 
 | `configure-mode` | Configure Mode — Products & Routes | Guide | PRD §Configure Mode, product.ts |
 | `run-mode` | Run Mode — Production Execution | Guide | PRD §Run Mode, production.ts |
 | `monitor-mode` | Monitor Mode — Analytics Dashboard | Guide | PRD §Monitor Mode, analytics.ts |
-| `agents` | Working with AI Agents | Concept | PRD §Agent Runtime, agents/ dir |
+| `smart-features` | Working with Smart Features | Concept | PRD §Intelligence Layer, agents/ dir |
 | `tool-layer` | The Tool Layer | Concept | PRD §Tool Layer, registry.ts, tools/ |
 | `isa-95` | ISA-95 Data Model | Reference | PRD §ISA-95, migrations/ |
 | `self-hosting` | Self-Hosting Guide | Guide | README, supabase/, .env |

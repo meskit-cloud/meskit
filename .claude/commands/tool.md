@@ -1,6 +1,6 @@
 # Tool Layer Generator
 
-Generate a tool layer function for MESkit's AI-native architecture.
+Generate a tool layer function for MESkit's architecture.
 
 ## Input
 

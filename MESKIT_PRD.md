@@ -2,36 +2,36 @@
 
 ## 1. Project Identity & Vision
 
-**MESkit** is an open-source, AI-native Manufacturing Execution System toolkit. It provides a complete, buildable MES that starts with simulation, uses AI agents as first-class operators, and is architecturally ready for real sensor input via MQTT.
+**MESkit** is an open-source Manufacturing Execution System toolkit with built-in analytics, quality alerts, and natural language queries. It provides a complete, buildable MES that starts with simulation, includes smart features powered by an intelligence layer, and is architecturally ready for real sensor input via MQTT.
 
 MESkit follows the **ISA-95** standard data model — no proprietary API dependencies.
 
 ### Brand Identity
 
-**The AI-Native MES.** An MES, but an Agent-Augmented one.
+**Finally, an MES that's as easy to use as asking a question.** Open-source MES with built-in analytics.
 
-MESkit is not an "AI-enhanced" bolt-on or a chatbot demo. It is a Manufacturing Execution System where AI agents augment human operators — consuming the same tool layer, removing coordination bottlenecks so operators can focus on decisions instead of data chasing.
+MESkit is not a chatbot demo or a thin wrapper. It is a Manufacturing Execution System with smart features — quality alerts, production planning, and natural language queries — that route through the same typed tool layer as UI buttons, removing coordination bottlenecks so operators can focus on decisions instead of chasing data.
 
 ### North Star
 
-Predict a machine failure and coordinate the shop floor response before it happens — agents handle detection, planning, and execution while operators stay in command.
+See problems before they stop your line. MESkit monitors machine health, surfaces quality trends, and helps you plan production — so your team acts on insights instead of chasing data.
 
-The product roadmap builds toward this: the Anomaly Monitor (Sentinel) detects degradation signals from sensor data, the Production Planner (Strategist) evaluates constraints and alternatives, and the Agent Runtime (Executor) acts through the tool layer to update schedules and notify operators.
+The product roadmap builds toward this: the Machine Health Monitor detects degradation signals from sensor data, the Production Planner evaluates constraints and alternatives, and the intelligence layer acts through the tool layer to update schedules and notify operators.
 
-### What "AI-Native" Means
+### How MESkit Works
 
-AI is not bolted on after the fact. Every MES operation — moving a lot, logging a defect, querying yield — flows through a **tool layer** that both the UI and AI agents consume. The same function that powers a button click also powers a natural-language command. Agents are force multipliers for human operators, not assistants to the UI.
+Every MES operation — moving a lot, logging a defect, querying yield — flows through a **tool layer** that both the UI and smart features consume. The same function that powers a button click also powers a natural-language command. Smart features are force multipliers for human operators, not assistants to the UI.
 
 ### Target Users
 
 - **Manufacturing engineers** learning MES concepts and ISA-95 patterns
 - **Small shops** that need a lightweight, self-hosted MES without enterprise pricing
 - **Developers** building manufacturing applications who need a reference implementation
-- **Teams exploring AI in manufacturing** who want a real MES with agents, not a chatbot demo
+- **Teams exploring smart manufacturing** who want a real MES with built-in analytics, not a chatbot demo
 
 ### What MESkit Is NOT
 
-MESkit is not a learning exercise or a demo wrapper around a vendor API. It is a standalone product with its own persistence layer, authentication, real-time infrastructure, and agent runtime.
+MESkit is not a learning exercise or a demo wrapper around a vendor API. It is a standalone product with its own persistence layer, authentication, real-time infrastructure, and intelligence layer.
 
 ---
 
@@ -46,9 +46,9 @@ MESkit is not a learning exercise or a demo wrapper around a vendor API. It is a
 │  Typed MES operations — single source of truth          │
 │  UI calls tools · Agents call tools · Same interface    │
 ├─────────────────────────────────────────────────────────┤
-│  Agent Runtime                                          │
+│  Intelligence Layer                                     │
 │  Claude API (tool-use) · @anthropic-ai/sdk              │
-│  Operator Assistant · Quality Analyst · Planner         │
+│  Ask MESkit · Quality Monitor · Planner                 │
 ├─────────────────────────────────────────────────────────┤
 │  Supabase (Persistence + Realtime)                      │
 │  Postgres · Auth · Realtime subscriptions · Edge Fns    │
@@ -64,31 +64,31 @@ MESkit is not a learning exercise or a demo wrapper around a vendor API. It is a
 | Layer | Role | Key Tech |
 |-------|------|----------|
 | **Frontend** | UI rendering, local state, user interaction, chat panel | Next.js (App Router), Tailwind, Zustand, Recharts |
-| **Tool Layer** | Typed MES operations consumed by UI and agents alike | Next.js Server Actions, Zod validation |
-| **Agent Runtime** | AI agents that observe, reason, and act on the MES | Claude API (tool-use), `@anthropic-ai/sdk` |
+| **Tool Layer** | Typed MES operations consumed by UI and smart features alike | Next.js Server Actions, Zod validation |
+| **Intelligence Layer** | Smart features that observe, reason, and act on the MES | Claude API (tool-use), `@anthropic-ai/sdk` |
 | **Backend** | Persistence, auth, real-time push, serverless logic | Supabase (Postgres, Auth, Realtime, Edge Functions) |
 | **Device Layer** | Sensor data ingestion (future) | MQTT broker, Supabase Edge Function as bridge |
 
 ### Why a Tool Layer
 
-In the original design, the UI called Supabase directly. In the AI-native design, a **tool layer** sits between all consumers and the database:
+In the original design, the UI called Supabase directly. In the current design, a **tool layer** sits between all consumers and the database:
 
 ```
 Before:   UI → Supabase
 After:    UI ──→ Tool Layer → Supabase
-          Agent → Tool Layer → Supabase
+          Smart Features → Tool Layer → Supabase
 ```
 
 Benefits:
 - **Single source of truth**: Business logic lives in one place, not duplicated between UI handlers and agent tools
-- **Type safety**: Zod schemas validate inputs regardless of whether a human or agent triggered the action
-- **Testability**: Tools are pure functions — easy to unit test without UI or agent dependencies
-- **Auditability**: Every tool invocation can be logged with caller identity (user or agent)
+- **Type safety**: Zod schemas validate inputs regardless of whether a human or smart feature triggered the action
+- **Testability**: Tools are pure functions — easy to unit test without UI or smart feature dependencies
+- **Auditability**: Every tool invocation can be logged with caller identity (user or smart feature)
 
 ### Why Supabase
 
 - **Postgres**: ISA-95 data model maps cleanly to relational tables with foreign keys and constraints
-- **Realtime**: Supabase Realtime subscriptions replace polling — lots moving through workstations push updates to all connected clients and to monitoring agents
+- **Realtime**: Supabase Realtime subscriptions replace polling — lots moving through workstations push updates to all connected clients and to monitoring features
 - **Auth**: Built-in auth with Row Level Security (RLS) means multi-user is free from day one
 - **Edge Functions**: Deno-based serverless functions serve as the MQTT → Postgres bridge in M6
 
@@ -255,7 +255,7 @@ mqtt_messages
 
 The tool layer is the central nervous system of MESkit. Every MES operation is a typed Server Action that validates inputs, executes the operation against Supabase, and returns a structured result.
 
-Both the UI and agents consume these tools through the same interface. The UI calls them as Server Actions; the agent runtime registers them as Claude tool definitions.
+Both the UI and smart features consume these tools through the same interface. The UI calls them as Server Actions; the intelligence layer registers them as Claude tool definitions.
 
 ### 4.1 Tool Catalog
 
@@ -337,24 +337,24 @@ export async function generateUnits(
 
 The same function is:
 1. Called by the UI via `"use server"` Server Actions
-2. Registered as a Claude tool definition in the agent runtime
+2. Registered as a Claude tool definition in the intelligence layer
 3. Directly testable in isolation
 
 ---
 
-## 5. Agent Runtime — AI Operators
+## 5. Intelligence Layer — Smart Features
 
-MESkit ships with three specialized agents. Each agent uses Claude's tool-use capability to call MES tools based on natural-language input or event triggers.
+MESkit ships with three smart features. Each uses Claude's tool-use capability to call MES tools based on natural-language input or event triggers.
 
-### 5.1 Agent Architecture
+### 5.1 Intelligence Layer Architecture
 
 ```
 ┌──────────────────────────────────────────────┐
-│  Agent Runtime (server-side)                 │
+│  Intelligence Layer (server-side)            │
 │                                              │
 │  ┌────────────┐  ┌──────────┐  ┌──────────┐ │
-│  │  Operator   │  │ Quality  │  │ Planner  │ │
-│  │  Assistant  │  │ Analyst  │  │          │ │
+│  │ Ask MESkit │  │ Quality  │  │ Planner  │ │
+│  │            │  │ Monitor  │  │          │ │
 │  └─────┬──────┘  └────┬─────┘  └────┬─────┘ │
 │        │              │              │       │
 │        └──────────────┼──────────────┘       │
@@ -369,23 +369,23 @@ MESkit ships with three specialized agents. Each agent uses Claude's tool-use ca
 └──────────────────────────────────────────────┘
 ```
 
-### 5.1.1 Three AI Layers (North Star Architecture)
+### 5.1.1 Three Automation Layers (North Star Architecture)
 
-The agents are designed around three complementary roles that, together, deliver the North Star: agent-driven predictive rescheduling.
+The smart features are designed around three complementary roles that, together, deliver the North Star: predictive rescheduling.
 
-| Layer | Role | Agent | Milestone |
-|-------|------|-------|-----------|
-| **Sentinel** | Monitors sensor telemetry, detects degradation, outputs failure probability scores | Anomaly Monitor | M6 |
-| **Strategist** | Evaluates constraints (backlog, deadlines, capacity), computes alternative schedules | Production Planner | M5 |
-| **Executor** | Acts on decisions through the tool layer — updates schedules, notifies operators | Agent Runtime | M1+ |
+| Layer | Role | Feature | Milestone |
+|-------|------|---------|-----------|
+| **Monitor** | Monitors sensor telemetry, detects degradation, outputs failure probability scores | Machine Health Monitor | M6 |
+| **Plan** | Evaluates constraints (backlog, deadlines, capacity), computes alternative schedules | Production Planner | M5 |
+| **Act** | Acts on decisions through the tool layer — updates schedules, notifies operators | Intelligence Layer | M1+ |
 
-In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist, which triggers the Executor — closing the coordination loop.
+In the MVP, these layers operate independently. Post-MVP, the Monitor triggers the Plan, which triggers the Act — closing the coordination loop.
 
-### 5.2 Operator Assistant
+### 5.2 Ask MESkit (Natural Language Interface)
 
 **Trigger**: User-initiated via chat panel (always available in the UI shell).
 
-**Role**: A conversational co-pilot for shop floor operators. Replaces clicking through menus with natural-language commands and queries.
+**Role**: A natural language interface for shop floor operators. Replaces clicking through menus with plain-English commands and queries.
 
 **System prompt context**: Current mode, selected line/workstation, active production run.
 
@@ -393,28 +393,28 @@ In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers 
 
 ```
 User: "What's stuck at assembly?"
-Agent: calls get_wip_status(workstation_id='assembly-ws-id')
+MESkit: calls get_wip_status(workstation_id='assembly-ws-id')
 → "3 units at Assembly: SMX-00042, SMX-00043, SMX-00044. All in_progress."
 
 User: "Scrap 00044, solder bridge on U3"
-Agent: calls search_units(serial_number='SMX-00044')
-       calls create_quality_event(unit_id=..., event_type='scrap',
-             result='fail', defect_code_id=..., notes='Solder bridge on U3')
-       calls scrap_unit(unit_id=...)
+MESkit: calls search_units(serial_number='SMX-00044')
+        calls create_quality_event(unit_id=..., event_type='scrap',
+              result='fail', defect_code_id=..., notes='Solder bridge on U3')
+        calls scrap_unit(unit_id=...)
 → "SMX-00044 scrapped. Defect logged: solder bridge (critical). 2 units remain at Assembly."
 
 User: "How's yield today?"
-Agent: calls get_yield_report(time_range='today')
+MESkit: calls get_yield_report(time_range='today')
 → "Overall yield: 94.2%. Station 3 (Test) is the bottleneck at 88% — 7 failures, 5 are 'test fixture contact' defects."
 ```
 
 **Available tools**: All tools from the catalog.
 
-### 5.3 Quality Analyst
+### 5.3 Quality Monitor
 
 **Trigger**: Event-driven. Activated by Supabase Realtime events when quality thresholds are breached.
 
-**Role**: Monitors production data continuously and surfaces insights proactively. Detects yield drops, defect pattern clusters, and anomalies.
+**Role**: Monitors production data continuously and surfaces alerts proactively. Detects yield drops, defect pattern clusters, and anomalies.
 
 **Trigger conditions**:
 - Yield at any workstation drops below configurable threshold (default: 90%)
@@ -442,9 +442,9 @@ Recommendation: Check solder paste viscosity and stencil alignment at Station 3.
 
 ```
 User: "I need to build 500 units of Smartphone X by end of shift. What's my plan?"
-Agent: calls list_routes(part_number_id=...)
-       calls list_workstations(line_id=...)
-       calls get_throughput(line_id=..., time_range='last_8_hours')
+MESkit: calls list_routes(part_number_id=...)
+        calls list_workstations(line_id=...)
+        calls get_throughput(line_id=..., time_range='last_8_hours')
 → "Route 'SMX-Standard' has 5 steps. Based on today's throughput (62 units/hr),
    500 units will take ~8.1 hours. You're 6.5 hours from end of shift.
    Options:
@@ -454,11 +454,11 @@ Agent: calls list_routes(part_number_id=...)
 
 **Available tools**: `list_routes`, `list_workstations`, `list_machines`, `get_throughput`, `get_yield_report`, `get_wip_status`, `generate_units`.
 
-### 5.5 Anomaly Monitor (Future — M6)
+### 5.5 Machine Health Monitor (Future — M6)
 
 **Trigger**: Event-driven via MQTT message ingestion.
 
-**Role**: Monitors sensor data from the MQTT stream for out-of-range values, unusual patterns, and equipment degradation signals.
+**Role**: Monitors sensor data from the MQTT stream for out-of-range values, unusual patterns, and equipment degradation signals. Surfaces predictive maintenance alerts before failures happen.
 
 **Available tools**: Analytics tools + MQTT-specific query tools (added in M6).
 
@@ -468,7 +468,7 @@ Agent: calls list_routes(part_number_id=...)
 
 The core loop remains: **define a product → build a route → move a unit through workstations → collect quality/production data → visualize results**.
 
-The AI-native difference: users can execute the entire core loop through conversation. The UI and the chat panel are parallel interfaces to the same tool layer.
+The natural language difference: users can execute the entire core loop through conversation. The UI and the chat panel are parallel interfaces to the same tool layer.
 
 ### 6.1 Build Mode — Shop Floor Setup
 
@@ -476,7 +476,7 @@ The AI-native difference: users can execute the entire core loop through convers
 - **Workstations**: Add workstations to a line with ordered positions, assign operator names
 - **Machines**: Register machines with name, type, status; optionally attach to a workstation
 
-All operations flow through the tool layer. The UI subscribes to Realtime changes so multiple browser tabs stay in sync. The Operator Assistant can also perform all Build Mode operations via chat.
+All operations flow through the tool layer. The UI subscribes to Realtime changes so multiple browser tabs stay in sync. Ask MESkit can also perform all Build Mode operations via chat.
 
 ### 6.2 Configure Mode — Product & Process
 
@@ -489,7 +489,7 @@ All operations flow through the tool layer. The UI subscribes to Realtime change
 
 - **Unit Generation**: Generate N units for a part number; serial numbers auto-assigned via the algorithm; units written to Supabase
 - **WIP Movement**: Move units step-by-step through their route
-  - **Manual**: User clicks "Move" per unit, or tells the assistant "move SMX-00042"
+  - **Manual**: User clicks "Move" per unit, or tells MESkit "move SMX-00042"
   - **Auto-run**: Units auto-advance at a configurable interval (simulated cycle time)
 - **Quality Gates**: At each pass/fail step, randomly inject outcomes based on a configurable yield rate (default 95%); failed units are scrapped and logged
 - **Live Ticker**: Supabase Realtime subscription renders a scrolling event log of every unit creation, move, and quality event
@@ -500,13 +500,13 @@ All operations flow through the tool layer. The UI subscribes to Realtime change
 - **Throughput Chart**: Units completed over time (line chart via Recharts)
 - **Yield Summary**: Pass/fail ratio per workstation (bar chart)
 - **Unit Lookup**: Search by serial number to view full route history from `unit_history`
-- **Quality Insights**: Quality Analyst agent surfaces natural-language insights alongside charts
+- **Quality Insights**: Quality Monitor surfaces natural-language insights alongside charts
 
 ### 6.5 Chat Panel — Always Available
 
 - Persistent chat panel in the UI shell (collapsible, right side or bottom)
 - Context-aware: knows which mode is active, which line/workstation is selected
-- Defaults to Operator Assistant; user can switch to Planner
+- Defaults to Ask MESkit (Production); user can switch to Planning topic
 - Conversation history persisted in `agent_conversations` table
 - Streaming responses via Claude API
 
@@ -525,9 +525,9 @@ All operations flow through the tool layer. The UI subscribes to Realtime change
 | Work Instructions authoring | Content authoring scope |
 | OEE (full Availability x Performance x Quality) | Needs downtime & ideal cycle time model |
 | Time control (2x, 5x, 10x simulation speed) | Can be layered on top of auto-run later |
-| Multi-agent orchestration | Agents work independently in MVP; coordination comes later |
+| Multi-feature orchestration | Smart features work independently in MVP; coordination comes later |
 | Voice input for operators | Chat-first; voice is a future input modality |
-| Agent memory across sessions | Conversations persist, but no long-term learning in MVP |
+| Cross-session memory | Conversations persist, but no long-term learning in MVP |
 
 ---
 
@@ -573,7 +573,7 @@ MQTT Broker
     → Validates message against schema
     → Writes to mqtt_messages table
     → Calls tool layer (move_unit, create_quality_event)
-    → Anomaly Monitor agent evaluates sensor data
+    → Machine Health Monitor evaluates sensor data
 ```
 
 ### 8.4 Simulation Mode — Virtual Device
@@ -592,11 +592,11 @@ A "virtual device" module publishes fake MQTT messages at configurable intervals
 | # | Milestone | Deliverable | Key Details |
 |---|-----------|-------------|-------------|
 | **M1** | Project scaffold + Tool Layer | Next.js app, Supabase project, auth, professional light-first shell, tool layer scaffold, chat panel | Design tokens, Zustand stores, Supabase client, sidebar + top bar + ticker + chat panel layout, login/signup, tool layer architecture with Zod schemas |
-| **M2** | Build Mode + Operator Assistant | CRUD for lines, workstations, machines via UI and chat | Shop floor tools implemented, Operator Assistant wired to Claude tool-use, Realtime subscriptions |
-| **M3** | Configure Mode | Part numbers, BOM, routes, serial algorithms via UI and chat | Product & process tools, route step designer, BOM assembly UI, all operations available via assistant |
-| **M4** | Run Mode + Quality Analyst | Unit generation, WIP movement, quality gates, proactive quality monitoring | Production tools, auto-run engine, yield injection, Quality Analyst agent with event-driven triggers |
-| **M5** | Monitor Mode + Planner | Dashboard with live charts, natural-language insights, production planning | Analytics tools, Recharts dashboards, Quality Analyst insights in UI, Production Planner agent |
-| **M6** | MQTT Interface + Anomaly Monitor | Broker setup, message schema, device gateway, sensor anomaly detection | Mosquitto/HiveMQ Cloud, Edge Function bridge, virtual device module, Anomaly Monitor agent |
+| **M2** | Build Mode + Ask MESkit | CRUD for lines, workstations, machines via UI and chat | Shop floor tools implemented, Ask MESkit wired to Claude tool-use, Realtime subscriptions |
+| **M3** | Configure Mode | Part numbers, BOM, routes, serial algorithms via UI and chat | Product & process tools, route step designer, BOM assembly UI, all operations available via natural language |
+| **M4** | Run Mode + Quality Monitor | Unit generation, WIP movement, quality gates, proactive quality alerts | Production tools, auto-run engine, yield injection, Quality Monitor with event-driven triggers |
+| **M5** | Monitor Mode + Planner | Dashboard with live charts, natural-language insights, production planning | Analytics tools, Recharts dashboards, Quality Monitor insights in UI, Production Planner |
+| **M6** | MQTT Interface + Machine Health Monitor | Broker setup, message schema, device gateway, sensor anomaly detection | Mosquitto/HiveMQ Cloud, Edge Function bridge, virtual device module, Machine Health Monitor |
 
 ---
 
@@ -618,7 +618,7 @@ MESkit uses a professional, engineering-first visual identity: clean information
 | Success | `#15803D` | Pass results and healthy status |
 | Warning | `#B45309` | Attention states and warnings |
 | Error | `#B91C1C` | Fail results and faults |
-| Agent | `#7C3AED` (Violet 600) | Agent-originated accents and tags |
+| Smart feature | `#7C3AED` (Violet 600) | Smart-feature-originated accents and tags |
 | Font | `Manrope` + `IBM Plex Mono` | UI/content + technical data text |
 
 ### 10.2 UI Structure
@@ -630,8 +630,8 @@ MESkit uses a professional, engineering-first visual identity: clean information
 │        │                                       │                 │
 │  Mode  │         Main Content Area             │   Chat Panel    │
 │  ------│                                       │   ───────────   │
-│  Build │  (changes based on selected mode)     │   Operator      │
-│  Config│                                       │   Assistant     │
+│  Build │  (changes based on selected mode)     │   Ask MESkit    │
+│  Config│                                       │                 │
 │  Run   │                                       │                 │
 │  Monitor│                                      │   [message...]  │
 │        │                                       │   [> type here] │
@@ -643,8 +643,8 @@ MESkit uses a professional, engineering-first visual identity: clean information
 - **Sidebar**: Mode switcher (Build / Configure / Run / Monitor)
 - **Top bar**: MESkit branding, simulation controls (Start, Pause, Auto-run toggle), user menu
 - **Main area**: Context-dependent content per selected mode
-- **Chat panel**: Persistent, collapsible agent interface (right side). Context-aware — agent sees current mode and selections
-- **Bottom bar**: Live event ticker — Supabase Realtime subscription renders a scrolling log (includes both human and agent actions)
+- **Chat panel**: Persistent, collapsible natural language interface (right side). Context-aware — sees current mode and selections
+- **Bottom bar**: Live event ticker — Supabase Realtime subscription renders a scrolling log (includes both human and MESkit actions)
 - **Surface style**: White cards on neutral background with subtle border and elevation; avoid neon/glow treatments
 
 ---
@@ -658,7 +658,7 @@ MESkit uses a professional, engineering-first visual identity: clean information
 | Client state | Zustand | Lightweight, no boilerplate — UI state + chat state |
 | Backend | Supabase | Postgres + Auth + Realtime + Edge Functions in one platform |
 | Tool layer | Next.js Server Actions + Zod | Typed operations, single source of truth for UI and agents |
-| Agent runtime | Claude API (tool-use) via `@anthropic-ai/sdk` | Best-in-class tool-use, streaming, structured outputs |
+| Intelligence layer | Claude API (tool-use) via `@anthropic-ai/sdk` | Best-in-class tool-use, streaming, structured outputs |
 | Charts | Recharts | React-native charting, covers bar/line/area charts |
 | Auth | Supabase Auth | Built-in, supports email + OAuth, ties into RLS |
 | Real-time | Supabase Realtime | Postgres changes broadcast to subscribed clients and agent triggers |
@@ -680,6 +680,6 @@ MESkit's data model maps to the ISA-95 hierarchy:
 | **Level 3**: Quality operations | Inspections, defects, scrap | `quality_events`, `defect_codes` |
 | **Level 1-2** (future): Device integration | Sensor data from the floor | `mqtt_messages` |
 
-The AI agents operate at Level 3 — the same level as human operators and supervisors. They don't replace the ISA-95 model; they consume it through the tool layer, just as a human operator would through the UI.
+MESkit's smart features operate at Level 3 — the same level as human operators and supervisors. They don't replace the ISA-95 model; they consume it through the tool layer, just as a human operator would through the UI.
 
-This alignment means MESkit speaks the same language as enterprise MES systems, making it useful for learning and as a foundation for real deployments — with the added capability of AI-powered operations from day one.
+This alignment means MESkit speaks the same language as enterprise MES systems, making it useful for learning and as a foundation for real deployments — with built-in analytics, quality alerts, and natural language queries from day one.

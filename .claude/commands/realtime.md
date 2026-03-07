@@ -97,8 +97,8 @@ These tables should have Realtime enabled (via `ALTER PUBLICATION supabase_realt
 | `machines` | INSERT, UPDATE | Machine status changes (idle/running/down) |
 | `units` | INSERT, UPDATE | Live WIP tracking, unit generation events |
 | `unit_history` | INSERT | Live ticker — unit movements and quality gate results |
-| `quality_events` | INSERT | Quality Analyst trigger — yield drop and defect clustering |
-| `mqtt_messages` | INSERT | Anomaly Monitor trigger (M6) |
+| `quality_events` | INSERT | Quality Monitor trigger — yield drop and defect clustering |
+| `mqtt_messages` | INSERT | Machine Health Monitor trigger (M6) |
 
 ### Filter Patterns
 
@@ -141,9 +141,9 @@ if (payload.eventType === "DELETE") {
 
 Some Realtime events should trigger agent evaluation. Use the `onAgentTrigger` option:
 
-- `quality_events` INSERT -> Quality Analyst evaluates yield thresholds
-- `mqtt_messages` INSERT -> Anomaly Monitor evaluates sensor data
-- `units` UPDATE (status = 'scrapped') -> Quality Analyst logs defect pattern
+- `quality_events` INSERT -> Quality Monitor evaluates yield thresholds
+- `mqtt_messages` INSERT -> Machine Health Monitor evaluates sensor data
+- `units` UPDATE (status = 'scrapped') -> Quality Monitor logs defect pattern
 
 ### Conventions
 

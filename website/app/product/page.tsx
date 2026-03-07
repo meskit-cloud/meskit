@@ -56,13 +56,13 @@ const pageFacts = [
 
 const miniFaq = [
   {
-    question: 'Can I use MESkit without AI agents?',
+    question: 'Can I use MESkit without the natural language interface?',
     answer: 'Yes. The full UI workflow works independently of chat commands.',
   },
   {
     question: 'What does "every button has a voice equivalent" mean?',
     answer:
-      'Core UI operations map to the same function signatures exposed to agent tool-use.',
+      'Core UI operations map to the same function signatures exposed to the natural language interface.',
   },
   {
     question: 'Are batch and continuous flows fully available in MVP?',
@@ -111,13 +111,13 @@ export default function ProductPage() {
             <div className="code-block agent-border">
               <div className="code-head">
                 <span>Chat equivalent</span>
-                <span>Operator Assistant</span>
+                <span>Ask MESkit</span>
               </div>
               <div className="code-body">
                 <pre>{`User: Move SMX-00042 to the next station
 → search_units(serial_number='SMX-00042')
 → move_unit(unit_id=...)
-Agent: SMX-00042 moved to Station 3.`}</pre>
+MESkit: SMX-00042 moved to Station 3.`}</pre>
               </div>
             </div>
           </div>
@@ -129,8 +129,8 @@ Agent: SMX-00042 moved to Station 3.`}</pre>
               <h3>In MVP</h3>
               <ul className="clean-list">
                 <li>Discrete manufacturing flow with route-based unit progression.</li>
-                <li>Operator Assistant in chat.</li>
-                <li>Quality Analyst and Production Planner on roadmap milestones.</li>
+                <li>Ask MESkit in chat.</li>
+                <li>Quality Monitor and Production Planner on roadmap milestones.</li>
                 <li>Realtime dashboards and event logs tied to tool outputs.</li>
               </ul>
             </div>
@@ -185,7 +185,7 @@ Agent: SMX-00042 moved to Station 3.`}</pre>
           </div>
           <div style={{ marginTop: '1rem' }}>
             <CtaRow
-              primary={{ href: '/agents', label: 'Meet the agents' }}
+              primary={{ href: '/agents', label: 'See smart features' }}
               secondary={{ href: '/roadmap', label: 'View roadmap' }}
             />
           </div>
@@ -195,7 +195,7 @@ Agent: SMX-00042 moved to Station 3.`}</pre>
           <div className="card">
             <ul className="clean-list">
               <li>
-                <Link href="/agents">Agent runtime and tool-call examples</Link>
+                <Link href="/agents">Smart features and tool-call examples</Link>
               </li>
               <li>
                 <Link href="/architecture">Four-layer architecture and MQTT transition</Link>

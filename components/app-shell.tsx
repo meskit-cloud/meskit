@@ -169,7 +169,7 @@ function formatEvent(row: AuditRow): string {
   const suffix = name ? ` "${name}"` : "";
 
   if (row.actor === "agent") {
-    return `${row.agent_name ?? "Agent"} — ${verb}${suffix}`;
+    return `MESkit — ${verb}${suffix}`;
   }
   return `You — ${verb}${suffix}`;
 }

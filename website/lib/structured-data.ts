@@ -112,7 +112,7 @@ export function softwareSourceCodeJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
-    name: 'MESkit — The AI-Native MES',
+    name: 'MESkit — Open-Source MES',
     description: siteConfig.description,
     codeRepository: siteConfig.githubUrl,
     programmingLanguage: ['TypeScript', 'SQL'],

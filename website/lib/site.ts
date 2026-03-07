@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 
 export const siteConfig = {
   name: 'MESkit',
-  title: 'MESkit | The AI-Native MES',
+  title: 'MESkit | Open-Source MES',
   description:
-    'The AI-Native MES. Open-source Manufacturing Execution System toolkit — ISA-95 aligned, agent-powered, simulation-first, MQTT-ready.',
+    'Open-source MES with built-in analytics, quality alerts, and natural language queries. ISA-95 aligned, simulation-first, MQTT-ready.',
   url: 'https://meskit.cloud',
   appUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   githubUrl: 'https://github.com/meskit-cloud/meskit',
@@ -21,7 +21,7 @@ export type NavLink = {
 export const navLinks: NavLink[] = [
   { href: '/product', label: 'Product' },
   { href: '/docs', label: 'Docs' },
-  { href: '/agents', label: 'Agents' },
+  { href: '/agents', label: 'Smart Features' },
   { href: '/isa-95', label: 'ISA-95' },
   { href: '/architecture', label: 'Architecture' },
   { href: '/roadmap', label: 'Roadmap' },
@@ -45,7 +45,7 @@ export const footerGroups: FooterGroup[] = [
     title: 'Product',
     links: [
       { href: '/product', label: 'Overview' },
-      { href: '/agents', label: 'Agents' },
+      { href: '/agents', label: 'Smart Features' },
       { href: '/architecture', label: 'Architecture' },
       { href: '/roadmap', label: 'Roadmap' },
       { href: `${siteConfig.appUrl}/signup`, label: 'Sign up', external: true },
@@ -117,7 +117,7 @@ export function buildPageMetadata(input: {
           url: `${siteConfig.url}/og-image.svg`,
           width: 1200,
           height: 630,
-          alt: 'MESkit — The AI-Native MES',
+          alt: 'MESkit open-source MES toolkit',
         },
       ],
     },
@@ -131,12 +131,12 @@ export function buildPageMetadata(input: {
 }
 
 export const coreFacts = [
-  'Category: AI-native open-source MES toolkit (MIT license).',
-  'Identity: The AI-Native MES — an MES, but an Agent-Augmented one. Agents handle coordination; operators stay in command.',
+  'Category: Open-source MES toolkit with built-in analytics (MIT license).',
+  'Identity: Open-source MES with dashboards, quality alerts, and natural language queries. Operators stay in command.',
   'Standards: ISA-95 aligned data model with 15 mapped Postgres tables.',
-  'Tool layer: 26 Zod-validated server actions shared by UI and agents.',
-  'Agents: Operator Assistant, Quality Analyst, Production Planner (3 agents).',
-  'North Star: Predict machine failure and coordinate the response via three AI layers (Sentinel, Strategist, Executor) — operators stay in command.',
+  'Tool layer: 26 Zod-validated server actions shared by UI and intelligence layer.',
+  'Smart features: Ask MESkit (natural language queries), Quality Monitor, Production Planner.',
+  'North Star: Predict machine failure and coordinate the response via three automation layers (Monitor, Plan, Act) — operators stay in command.',
   'Roadmap: 6 milestones (M1 complete, M2 in progress, through M6 MQTT integration).',
   'Stack: Next.js, Supabase, Gemini API (tool-use), TypeScript.',
 ];
@@ -144,7 +144,7 @@ export const coreFacts = [
 export const taxonomy = [
   'ISA-95',
   'MES architecture',
-  'AI agents',
+  'Smart features',
   'Simulation',
   'MQTT',
   'Supabase',

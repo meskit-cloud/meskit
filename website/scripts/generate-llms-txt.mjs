@@ -40,7 +40,7 @@ const navLinks = navMatch
 
 const pageDescriptions = {
   '/product': 'Build, Configure, Run, Monitor modes',
-  '/agents': 'Three specialized agents sharing one typed tool layer',
+  '/agents': 'Three smart features sharing one typed tool layer',
   '/architecture': 'Four-layer design with tool layer rationale',
   '/isa-95': 'Standards alignment and database schema mapping',
   '/roadmap': 'M1-M6 milestone timeline',
@@ -53,18 +53,18 @@ const productLinks = navLinks
 
 const factsBlock = facts.map((f) => `- ${f}`).join('\n');
 
-const content = `# MESkit — The AI-Native MES
+const content = `# MESkit — Open-Source MES
 > ${description}
 
 ## What is MESkit
 - [What is MESkit? (FAQ)](${url}/faq): Core definitions and product status
-- [What is an AI-native MES?](${url}/blog/what-is-an-ai-native-mes): Category-defining explainer
+- [Why your MES needs a universal tool layer](${url}/blog/what-is-an-ai-native-mes): Architecture explainer
 
 ## Product
 ${productLinks}
 
 ## Technical
-- [How agents call MES tools](${url}/blog/how-meskit-agents-call-mes-tools): Tool registration and call chain deep-dive
+- [How MESkit smart features call MES tools](${url}/blog/how-meskit-agents-call-mes-tools): Tool registration and call chain deep-dive
 - [From simulation to MQTT](${url}/blog/from-simulation-to-mqtt-same-tools-different-transport): Transport transition without logic rewrites
 - [ISA-95 for developers](${url}/blog/isa-95-for-developers): Practical mapping from standard to Postgres schema
 

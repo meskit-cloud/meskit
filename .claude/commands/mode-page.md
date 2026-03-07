@@ -119,7 +119,7 @@ app/(dashboard)/run/components/
 - Throughput chart — units completed over time (Recharts line chart)
 - Yield summary — pass/fail ratio per workstation (Recharts bar chart)
 - Unit lookup — search by serial number, full route history
-- Quality insights panel — natural-language summaries from Quality Analyst
+- Quality insights panel — natural-language summaries from Quality Monitor
 - All charts auto-refresh via Realtime subscriptions
 
 Components to scaffold:
@@ -143,8 +143,8 @@ The app shell layout from the PRD:
 |        |                                         |                 |
 |  Mode  |         Main Content Area               |   Chat Panel    |
 |  ----- |                                         |   -----------   |
-|  Build |  (changes based on selected mode)       |   Operator      |
-|  Config|                                         |   Assistant     |
+|  Build |  (changes based on selected mode)       |   Ask MESkit    |
+|  Config|                                         |                 |
 |  Run   |                                         |                 |
 |  Monitor|                                        |   [message...]  |
 |        |                                         |   [> type here] |
@@ -171,7 +171,7 @@ Use these CSS custom properties (from `app/globals.css`):
 | `--success` | `#15803D` | Pass results, healthy status |
 | `--warning` | `#B45309` | Attention states |
 | `--error` | `#B91C1C` | Fail results, faults |
-| `--agent` | `#7C3AED` | Agent-originated accents |
+| `--agent` | `#7C3AED` | Smart feature accents |
 
 ### Conventions
 
