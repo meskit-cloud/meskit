@@ -319,6 +319,58 @@ Expose the full tool layer as an MCP (Model Context Protocol) server. External A
 
 ---
 
+## M7 — WebMCP: Browser Agent Integration
+
+Make MESkit pages directly accessible to browser-based AI agents via the [WebMCP standard](https://developer.chrome.com/blog/webmcp-epp). Completes the agent accessibility story from server-side (MCP Server, M6) to client-side. See [`docs/webmcp-integration.md`](docs/webmcp-integration.md) for full design.
+
+### Prerequisites
+
+- [ ] Sign up for WebMCP Early Preview Program
+- [ ] Review full API documentation when access is granted
+- [ ] Prototype declarative API on one Configure Mode form
+
+### Declarative API — Form Annotations
+
+Annotate existing forms so browser agents can discover and interact with them natively:
+
+- [ ] Configure Mode: Part Number CRUD forms
+- [ ] Configure Mode: BOM assembly forms
+- [ ] Configure Mode: Serial algorithm config forms
+- [ ] Configure Mode: Route designer and step editor forms
+- [ ] Build Mode: Line, workstation, machine forms
+- [ ] Run Mode: Production order and unit filter forms
+- [ ] Monitor Mode: Dashboard filter forms
+
+### Imperative API — Tool Registry Adapter
+
+Expose the tool registry as structured JavaScript actions for complex workflows:
+
+- [ ] WebMCP adapter module (`lib/webmcp/`) wrapping the tool registry
+- [ ] Auto-generate action catalog from tool metadata (names, descriptions, Zod schemas)
+- [ ] Reuse Zod-to-JSON-Schema conversion from `registry.ts`
+- [ ] Build Mode tools: create/update/delete lines, workstations, machines
+- [ ] Configure Mode tools: part numbers, BOMs, routes, serial algorithms
+- [ ] Run Mode tools: generate units, move units, log quality events, scrap units
+- [ ] Monitor Mode tools: analytics queries, unit lookup, report generation
+
+### Security and UX
+
+- [ ] Confirmation dialogs for destructive operations (delete, scrap) — agents must not bypass
+- [ ] Auth boundary — WebMCP actions respect user session and RLS policies
+- [ ] Scope control — restrict available actions per page context
+- [ ] Rate limiting for agent-initiated actions
+
+### Testing
+
+- [ ] Test with Chrome's built-in AI agent
+- [ ] Test with third-party browser agents
+- [ ] Validate Supabase Realtime propagation from WebMCP-triggered actions
+- [ ] Performance benchmarks — no latency impact on normal UI usage
+
+**Done when**: Any browser-based AI agent can discover and execute MESkit actions on any page — creating shop floors, configuring products, running production, and querying dashboards — through the WebMCP standard, with the same auth and safety guarantees as the native UI.
+
+---
+
 ## Architecture Note — One Repo, All Manufacturing Types
 
 MESkit will **not** fork into separate repos for discrete, process, and batch manufacturing. The three types share ~80% of the codebase (auth, shop floor, configure, quality, agents, realtime) and differ mainly in how units are tracked. Forking would triple the maintenance surface before product-market fit.
@@ -334,7 +386,7 @@ A separate repo would only make sense if process manufacturing required a fundam
 
 ## Future — Beyond MVP
 
-Not scoped, not scheduled. Ideas for after M6 is solid.
+Not scoped, not scheduled. Ideas for after M7 is solid.
 
 ### OEE Dashboard
 
