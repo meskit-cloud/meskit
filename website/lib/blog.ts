@@ -353,6 +353,94 @@ export const blogPosts: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: 'm3-configure-mode-release-notes',
+    title: 'M3 Release Notes: Configure Mode — Define Products, BOMs, Routes, and Serial Algorithms',
+    excerpt:
+      'MESkit M3 ships Configure Mode: full product definition through UI or natural language, with 15 new tools, a three-panel editor, and live cross-tab updates.',
+    category: 'Release notes',
+    author: 'MESkit Team',
+    publishedAt: '2026-03-06',
+    updatedAt: '2026-03-06',
+    keywords: [
+      'MESkit release notes',
+      'Configure Mode MES',
+      'product definition MES',
+      'bill of materials software',
+      'manufacturing route designer',
+      'serial number algorithm',
+      'AI MES product setup',
+    ],
+    summary:
+      'Milestone 3 adds Configure Mode to MESkit — the product and process definition layer. Users can create part numbers, assemble bills of materials, configure serial number algorithms, and design multi-step manufacturing routes. All operations work through both the UI and the Operator Assistant via natural language. 15 new tools power the feature, and Supabase Realtime keeps every browser tab in sync.',
+    keyFacts: [
+      '15 new tools implemented: part numbers, items, BOM entries, routes, route steps, and serial algorithms.',
+      'Three-panel Configure Mode UI: part number list, product detail (BOM + serial config), and route designer.',
+      'Operator Assistant now handles all Configure Mode operations via chat.',
+      'Agent context injection includes selected part number and route.',
+      'Supabase Realtime subscriptions keep Configure Mode live across browser tabs.',
+      'Route steps validate against workstations created in Build Mode.',
+    ],
+    miniFaq: [
+      {
+        question: 'Can I define a product entirely through chat?',
+        answer:
+          'Yes. The Operator Assistant can create part numbers, add BOM entries, configure serial algorithms, and design routes with steps — all through natural language commands.',
+      },
+      {
+        question: 'What happens if I mix UI and chat?',
+        answer:
+          'Both interfaces call the same tool layer. You can create a part number in the UI and add its route via chat, or vice versa. Changes from either source appear instantly in both.',
+      },
+      {
+        question: 'Do route steps require existing workstations?',
+        answer:
+          'Yes. The route step editor presents a dropdown of workstations from Build Mode. The database enforces this with a foreign key constraint.',
+      },
+    ],
+    sections: [
+      {
+        heading: 'What shipped in M3',
+        paragraphs: [
+          'Configure Mode is the second functional mode in MESkit, following Build Mode (M2). Where Build Mode handles the physical shop floor — lines, workstations, and machines — Configure Mode handles the product and process layer: what you manufacture, what it is made of, how units are serialized, and which path they follow through the shop floor.',
+          'The milestone delivers a complete product definition workflow. Users create part numbers (product definitions), attach bills of materials with items and quantities, configure serial number algorithms with prefix and padding, and design manufacturing routes with ordered steps assigned to workstations. Each step can optionally be a pass/fail quality gate.',
+          'Every operation is available through both the three-panel UI and the Operator Assistant chat interface. The same 15 typed tools serve both paths, maintaining the AI-native architecture established in M1.',
+        ],
+      },
+      {
+        heading: 'The tool layer: 15 new operations',
+        paragraphs: [
+          'M3 adds 15 tools to the MESkit tool layer, replacing the stubs created during the M1 scaffold. The tools cover five entity types: part numbers (list, create, update, delete), items (list, create), BOM entries (get, set as upsert, delete), routes (list, create, update, delete), and serial algorithms (configure as upsert, get).',
+          'Each tool follows the established pattern: a Zod schema for input validation, an async execute function against Supabase, and registration in the central tool registry. The Operator Assistant has access to all 15 tools, and agent context now includes the selected part number and route so the assistant can scope its actions.',
+          'Route creation handles the multi-table insert (route + steps) with cleanup on failure — if step insertion fails, the orphaned route is deleted. Serial algorithm configuration uses an upsert pattern since it has a 1:1 relationship with part numbers. BOM entry setting checks for existing entries on the same part number and item combination, updating quantity and position rather than creating duplicates.',
+        ],
+      },
+      {
+        heading: 'Configure Mode UI',
+        paragraphs: [
+          'The UI follows the same three-panel layout established in Build Mode. The left panel lists part numbers with inline rename and delete. The center panel shows the selected product\'s detail: a BOM section where users add items from a dropdown (or create new items inline) with quantities, and a serial algorithm section with prefix, digit count, and a live preview of the generated format.',
+          'The right panel is the route designer. Users create named routes, then expand them to add, reorder, or remove steps. Each step is assigned to a workstation via a dropdown populated from Build Mode, and has a pass/fail gate toggle shown as a shield icon. Steps can be reordered with up/down controls, and step counts are shown next to each route name.',
+          'All UI operations go through server actions that wrap the tool layer — the UI never calls Supabase directly. This preserves the four-layer architecture and ensures audit logging is consistent across human and agent actions.',
+        ],
+      },
+      {
+        heading: 'Realtime and cross-mode awareness',
+        paragraphs: [
+          'Configure Mode tables — part numbers, items, BOM entries, routes, route steps, and serial algorithms — are now published to Supabase Realtime. The UI subscribes to change events on all six tables, with debounced reloading to avoid rapid re-fetches during batch operations like route step reordering.',
+          'Cross-mode selection cleanup ensures a clean context when switching between Build and Configure modes. Entering Build Mode clears any selected part number and route. Entering Configure Mode clears any selected line and workstation. This prevents stale context from leaking into agent prompts.',
+          'The milestone badge in the top bar now shows M3, reflecting the current development state.',
+        ],
+      },
+      {
+        heading: 'What comes next: M4 Run Mode',
+        paragraphs: [
+          'With the physical shop floor (M2) and product definitions (M3) in place, M4 will bring Run Mode — production execution. Users will generate units from part numbers, move them through routes, encounter pass/fail quality gates, and track everything in real time.',
+          'M4 also introduces the Quality Analyst agent, an event-driven monitor that watches production in real time and alerts operators when yield drops or defect patterns emerge. The simulation engine will let users auto-run production at configurable speeds.',
+          'The foundation is set: the tools, schema, and agent architecture from M1 through M3 carry forward unchanged. M4 adds execution state on top of the definitions created in Configure Mode.',
+        ],
+      },
+    ],
+  },
 ];
 
 export function getPostBySlug(slug: string) {

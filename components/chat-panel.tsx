@@ -25,8 +25,17 @@ export function ChatPanel() {
     addToolCallToLastMessage,
     setStreaming,
   } = useChatStore();
-  const { activeMode, selectedLineId, selectedLineName, selectedWorkstationId, selectedWorkstationName } =
-    useUiStore();
+  const {
+    activeMode,
+    selectedLineId,
+    selectedLineName,
+    selectedWorkstationId,
+    selectedWorkstationName,
+    selectedPartNumberId,
+    selectedPartNumberName,
+    selectedRouteId,
+    selectedRouteName,
+  } = useUiStore();
   const chatPanelOpen = useUiStore((s) => s.chatPanelOpen);
 
   useEffect(() => {
@@ -82,6 +91,10 @@ export function ChatPanel() {
             selectedLineName,
             selectedWorkstationId,
             selectedWorkstationName,
+            selectedPartNumberId,
+            selectedPartNumberName,
+            selectedRouteId,
+            selectedRouteName,
             activeProductionRun: null,
           },
         }),

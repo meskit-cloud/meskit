@@ -20,6 +20,7 @@ export type NavLink = {
 
 export const navLinks: NavLink[] = [
   { href: '/product', label: 'Product' },
+  { href: '/docs', label: 'Docs' },
   { href: '/agents', label: 'Agents' },
   { href: '/isa-95', label: 'ISA-95' },
   { href: '/architecture', label: 'Architecture' },

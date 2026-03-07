@@ -72,9 +72,11 @@ export function BuildPanels() {
   const [workstations, setWorkstations] = useState<Workstation[]>([]);
   const [machines, setMachines] = useState<Machine[]>([]);
 
-  // Set active mode
+  // Set active mode and clear Configure mode selections
   useEffect(() => {
-    useUiStore.getState().setActiveMode("build");
+    const store = useUiStore.getState();
+    store.setActiveMode("build");
+    store.selectPartNumber(null);
   }, []);
 
   // Fetch lines

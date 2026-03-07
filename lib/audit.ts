@@ -53,6 +53,9 @@ export function inferEntityType(toolName: string): string | undefined {
     "unit",
     "route",
     "part_number",
+    "item",
+    "bom_entry",
+    "serial_algorithm",
     "defect_code",
     "quality_event",
   ];

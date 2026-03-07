@@ -13,6 +13,7 @@ import {
   PanelRightOpen,
   Sun,
   Moon,
+  HelpCircle,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useUiStore } from "@/lib/stores/ui-store";
@@ -88,11 +89,19 @@ export function TopBar({ userEmail }: { userEmail: string }) {
           <span className="text-accent">kit</span>
         </span>
         <span className="text-xs text-text-secondary font-mono bg-bg-app px-2 py-0.5 rounded">
-          M2
+          M3
         </span>
       </div>
 
       <div className="flex items-center gap-2">
+        <a
+          href="/help"
+          className="p-2 rounded-lg text-text-secondary hover:bg-bg-app transition-colors"
+          title="Documentation"
+        >
+          <HelpCircle size={18} />
+        </a>
+
         {mounted && (
           <button
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}

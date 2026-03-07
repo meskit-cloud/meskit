@@ -16,6 +16,10 @@ interface ChatRequestBody {
     selectedLineName: string | null;
     selectedWorkstationId: string | null;
     selectedWorkstationName: string | null;
+    selectedPartNumberId: string | null;
+    selectedPartNumberName: string | null;
+    selectedRouteId: string | null;
+    selectedRouteName: string | null;
     activeProductionRun: {
       partNumberName: string;
       unitCount: number;
@@ -38,6 +42,10 @@ export async function POST(request: NextRequest) {
           selectedLineName: body.context.selectedLineName,
           selectedWorkstationId: body.context.selectedWorkstationId,
           selectedWorkstationName: body.context.selectedWorkstationName,
+          selectedPartNumberId: body.context.selectedPartNumberId,
+          selectedPartNumberName: body.context.selectedPartNumberName,
+          selectedRouteId: body.context.selectedRouteId,
+          selectedRouteName: body.context.selectedRouteName,
           activeProductionRun: body.context.activeProductionRun,
         };
         systemPrompt = buildOperatorAssistantSystemPrompt(ctx);

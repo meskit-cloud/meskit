@@ -9,6 +9,10 @@ interface UiState {
   selectedLineName: string | null;
   selectedWorkstationId: string | null;
   selectedWorkstationName: string | null;
+  selectedPartNumberId: string | null;
+  selectedPartNumberName: string | null;
+  selectedRouteId: string | null;
+  selectedRouteName: string | null;
 }
 
 // --- Actions ---
@@ -19,6 +23,8 @@ interface UiActions {
   setChatPanelOpen: (open: boolean) => void;
   selectLine: (id: string | null, name?: string | null) => void;
   selectWorkstation: (id: string | null, name?: string | null) => void;
+  selectPartNumber: (id: string | null, name?: string | null) => void;
+  selectRoute: (id: string | null, name?: string | null) => void;
   clearSelections: () => void;
 }
 
@@ -33,6 +39,10 @@ export const useUiStore = create<UiStore>((set) => ({
   selectedLineName: null,
   selectedWorkstationId: null,
   selectedWorkstationName: null,
+  selectedPartNumberId: null,
+  selectedPartNumberName: null,
+  selectedRouteId: null,
+  selectedRouteName: null,
 
   setActiveMode: (mode) => set({ activeMode: mode }),
   toggleChatPanel: () =>
@@ -47,12 +57,25 @@ export const useUiStore = create<UiStore>((set) => ({
     }),
   selectWorkstation: (id, name) =>
     set({ selectedWorkstationId: id, selectedWorkstationName: name ?? null }),
+  selectPartNumber: (id, name) =>
+    set({
+      selectedPartNumberId: id,
+      selectedPartNumberName: name ?? null,
+      selectedRouteId: null,
+      selectedRouteName: null,
+    }),
+  selectRoute: (id, name) =>
+    set({ selectedRouteId: id, selectedRouteName: name ?? null }),
   clearSelections: () =>
     set({
       selectedLineId: null,
       selectedLineName: null,
       selectedWorkstationId: null,
       selectedWorkstationName: null,
+      selectedPartNumberId: null,
+      selectedPartNumberName: null,
+      selectedRouteId: null,
+      selectedRouteName: null,
     }),
 }));
 

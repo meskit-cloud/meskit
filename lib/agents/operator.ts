@@ -25,11 +25,19 @@ export const operatorAssistantTools: string[] = [
   // Product & process
   "list_part_numbers",
   "create_part_number",
+  "update_part_number",
+  "delete_part_number",
+  "list_items",
+  "create_item",
   "get_bom",
   "set_bom_entry",
+  "delete_bom_entry",
   "list_routes",
   "create_route",
+  "update_route",
+  "delete_route",
   "configure_serial_algorithm",
+  "get_serial_algorithm",
   // Production
   "generate_units",
   "move_unit",
@@ -54,6 +62,10 @@ export interface OperatorAssistantContext {
   selectedLineName: string | null;
   selectedWorkstationId: string | null;
   selectedWorkstationName: string | null;
+  selectedPartNumberId: string | null;
+  selectedPartNumberName: string | null;
+  selectedRouteId: string | null;
+  selectedRouteName: string | null;
   activeProductionRun: { partNumberName: string; unitCount: number } | null;
 }
 
@@ -76,6 +88,12 @@ export function buildOperatorAssistantSystemPrompt(
   }
   if (context.selectedWorkstationName) {
     contextSection += `\nSelected workstation: **${context.selectedWorkstationName}** (${context.selectedWorkstationId})`;
+  }
+  if (context.selectedPartNumberName) {
+    contextSection += `\nSelected part number: **${context.selectedPartNumberName}** (${context.selectedPartNumberId})`;
+  }
+  if (context.selectedRouteName) {
+    contextSection += `\nSelected route: **${context.selectedRouteName}** (${context.selectedRouteId})`;
   }
   if (context.activeProductionRun) {
     contextSection += `\nActive production run: **${context.activeProductionRun.partNumberName}** — ${context.activeProductionRun.unitCount} units`;
