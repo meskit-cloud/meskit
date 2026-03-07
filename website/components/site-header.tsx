@@ -39,7 +39,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="header-cta">
-          <a href={`${siteConfig.appUrl}/signup`} target="_blank" rel="noreferrer" className="btn btn-primary">
+          <a href="/signup" className="btn btn-primary">
             Try MESkit
           </a>
           <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer" className="btn btn-ghost">
@@ -72,7 +72,7 @@ export function SiteHeader() {
                 </Link>
               );
             })}
-            <a href={`${siteConfig.appUrl}/signup`} target="_blank" rel="noreferrer" className="btn btn-primary" onClick={() => setOpen(false)}>
+            <a href="/signup" className="btn btn-primary" onClick={() => setOpen(false)}>
               Try MESkit
             </a>
             <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer" className="btn btn-ghost" onClick={() => setOpen(false)}>
