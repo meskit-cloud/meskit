@@ -16,6 +16,10 @@ interface ChatRequestBody {
     selectedLineName: string | null;
     selectedWorkstationId: string | null;
     selectedWorkstationName: string | null;
+    selectedPartNumberId: string | null;
+    selectedPartNumberName: string | null;
+    selectedRouteId: string | null;
+    selectedRouteName: string | null;
     activeProductionRun: {
       partNumberName: string;
       unitCount: number;
@@ -38,6 +42,10 @@ export async function POST(request: NextRequest) {
           selectedLineName: body.context.selectedLineName,
           selectedWorkstationId: body.context.selectedWorkstationId,
           selectedWorkstationName: body.context.selectedWorkstationName,
+          selectedPartNumberId: body.context.selectedPartNumberId,
+          selectedPartNumberName: body.context.selectedPartNumberName,
+          selectedRouteId: body.context.selectedRouteId,
+          selectedRouteName: body.context.selectedRouteName,
           activeProductionRun: body.context.activeProductionRun,
         };
         systemPrompt = buildOperatorAssistantSystemPrompt(ctx);
@@ -49,16 +57,17 @@ export async function POST(request: NextRequest) {
           activeMode: body.context.activeMode,
           currentWipSummary: null,
           shiftEndTime: null,
+          carbonTrackingEnabled: false,
         });
         toolNames = plannerTools;
         break;
       }
       case "quality_analyst": {
-        // Quality analyst is event-driven — not available via chat yet
+        // Quality Monitor is event-driven — not available via chat yet
         return new Response(
           JSON.stringify({
             error:
-              "Quality Analyst is event-driven and not available via chat in M1",
+              "Quality Monitor is event-driven and not available via chat yet",
           }),
           { status: 400, headers: { "Content-Type": "application/json" } },
         );
@@ -74,6 +83,7 @@ export async function POST(request: NextRequest) {
       systemPrompt,
       toolNames,
       messages: body.messages,
+      agentName: body.agent,
     });
 
     return new Response(stream, {

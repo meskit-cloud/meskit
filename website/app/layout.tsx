@@ -41,7 +41,7 @@ export const metadata: Metadata = {
         url: '/og-image.svg',
         width: 1200,
         height: 630,
-        alt: 'MESkit open-source AI-native MES toolkit',
+        alt: 'MESkit open-source MES toolkit',
       },
     ],
   },
@@ -75,7 +75,7 @@ const softwareJsonLd = {
     priceCurrency: 'USD',
   },
   description:
-    'Open-source, AI-native Manufacturing Execution System toolkit. ISA-95 aligned and simulation-first.',
+    'Open-source Manufacturing Execution System toolkit with built-in analytics, quality alerts, and natural language queries. ISA-95 aligned and simulation-first.',
   softwareVersion: 'MVP roadmap phase',
   creator: {
     '@type': 'Organization',

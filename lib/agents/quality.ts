@@ -1,9 +1,9 @@
-// --- Quality Analyst Agent (stub — activated in M4) ---
+// --- Quality Monitor (stub — activated in M4) ---
 
 export const qualityAnalystConfig = {
-  name: "Quality Analyst",
+  name: "Quality Monitor",
   description:
-    "Monitors production data continuously, surfaces yield drops and defect patterns proactively",
+    "Monitors production data continuously, surfaces yield drops and defect patterns as alerts",
   agentType: "quality_analyst" as const,
   triggerType: "event_driven" as const,
 };
@@ -25,11 +25,11 @@ export interface QualityAnalystContext {
 export function buildQualityAnalystSystemPrompt(
   context: QualityAnalystContext,
 ): string {
-  return `You are the **Quality Analyst** — a proactive quality monitor for MESkit.
+  return `You are the **Quality Monitor** for MESkit — an automated quality alert system.
 
 ## Your Role
 
-You monitor production data continuously and surface insights proactively. You detect yield drops, defect pattern clusters, and anomalies before they escalate.
+You monitor production data continuously and surface alerts proactively. You detect yield drops, defect pattern clusters, and anomalies before they escalate.
 
 ## Trigger
 

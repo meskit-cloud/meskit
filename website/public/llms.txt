@@ -1,29 +1,29 @@
-# MESkit — The AI-Native MES
-> An MES, but an Autonomous one. Open-source, ISA-95 aligned, simulation-first, agent-powered, MQTT-ready.
+# MESkit — Open-Source MES
+> Open-source MES with built-in analytics, quality alerts, and natural language queries. ISA-95 aligned, simulation-first, MQTT-ready.
 
 ## What is MESkit
 - [What is MESkit? (FAQ)](https://meskit.cloud/faq): Core definitions and product status
-- [What is an AI-native MES?](https://meskit.cloud/blog/what-is-an-ai-native-mes): Category-defining explainer
+- [Why your MES needs a universal tool layer](https://meskit.cloud/blog/what-is-an-ai-native-mes): Architecture explainer
 
 ## Product
-- [Product overview](https://meskit.cloud/product): Build, Configure, Run, Monitor modes
-- [AI agents](https://meskit.cloud/agents): Three specialized agents sharing one typed tool layer
+- [Product](https://meskit.cloud/product): Build, Configure, Run, Monitor modes
+- [Docs](https://meskit.cloud/docs): 
+- [Smart Features](https://meskit.cloud/agents): Three smart features sharing one typed tool layer
+- [ISA-95](https://meskit.cloud/isa-95): Standards alignment and database schema mapping
 - [Architecture](https://meskit.cloud/architecture): Four-layer design with tool layer rationale
-- [ISA-95 mapping](https://meskit.cloud/isa-95): Standards alignment and database schema mapping
-
-## Technical
-- [How agents call MES tools](https://meskit.cloud/blog/how-meskit-agents-call-mes-tools): Tool registration and call chain deep-dive
-- [From simulation to MQTT](https://meskit.cloud/blog/from-simulation-to-mqtt-same-tools-different-transport): Transport transition without logic rewrites
-- [ISA-95 for developers](https://meskit.cloud/blog/isa-95-for-developers): Practical mapping from standard to Postgres schema
 - [Roadmap](https://meskit.cloud/roadmap): M1-M6 milestone timeline
 
+## Technical
+- [How MESkit smart features call MES tools](https://meskit.cloud/blog/how-meskit-agents-call-mes-tools): Tool registration and call chain deep-dive
+- [From simulation to MQTT](https://meskit.cloud/blog/from-simulation-to-mqtt-same-tools-different-transport): Transport transition without logic rewrites
+- [ISA-95 for developers](https://meskit.cloud/blog/isa-95-for-developers): Practical mapping from standard to Postgres schema
+
 ## Key facts
-- Identity: The AI-Native MES — an MES, but an Autonomous one
-- License: MIT (open source)
-- Stack: Next.js, Supabase, Claude API (tool-use)
-- Standards: ISA-95 aligned data model
-- Agents: Operator Assistant, Quality Analyst, Production Planner
-- North Star: Predict machine failure and reschedule autonomously via three AI layers (Sentinel, Strategist, Executor)
-- Tool layer: 20+ typed Zod-validated server actions shared by UI and agents
-- Database: 12 ISA-95-mapped Postgres tables via Supabase
-- Status: Pre-M1 implementation with finalized architecture and public roadmap
+- Category: Open-source MES toolkit with built-in analytics (MIT license).
+- Identity: Open-source MES with dashboards, quality alerts, and natural language queries. Operators stay in command.
+- Standards: ISA-95 aligned data model with 15 mapped Postgres tables.
+- Tool layer: 26 Zod-validated server actions shared by UI and intelligence layer.
+- Smart features: Ask MESkit (natural language queries), Quality Monitor, Production Planner.
+- North Star: Predict machine failure and coordinate the response via three automation layers (Monitor, Plan, Act) — operators stay in command.
+- Roadmap: 6 milestones (M1 complete, M2 in progress, through M6 MQTT integration).
+- Stack: Next.js, Supabase, Gemini API (tool-use), TypeScript.

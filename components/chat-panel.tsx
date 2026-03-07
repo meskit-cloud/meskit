@@ -5,15 +5,16 @@ import { Send, Bot, User, Wrench, ChevronDown } from "lucide-react";
 import { useChatStore, type ChatMessage } from "@/lib/stores/chat-store";
 import { useUiStore } from "@/lib/stores/ui-store";
 
-const agentOptions = [
-  { key: "operator_assistant" as const, label: "Operator Assistant" },
-  { key: "planner" as const, label: "Production Planner" },
+const topicOptions = [
+  { key: "operator_assistant" as const, label: "Production" },
+  { key: "planner" as const, label: "Planning" },
 ] as const;
 
 export function ChatPanel() {
   const [input, setInput] = useState("");
-  const [agentMenuOpen, setAgentMenuOpen] = useState(false);
+  const [topicMenuOpen, setTopicMenuOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const {
     activeAgent,
     setActiveAgent,
@@ -24,13 +25,28 @@ export function ChatPanel() {
     addToolCallToLastMessage,
     setStreaming,
   } = useChatStore();
-  const { activeMode, selectedLineId, selectedLineName, selectedWorkstationId, selectedWorkstationName } =
-    useUiStore();
+  const {
+    activeMode,
+    selectedLineId,
+    selectedLineName,
+    selectedWorkstationId,
+    selectedWorkstationName,
+    selectedPartNumberId,
+    selectedPartNumberName,
+    selectedRouteId,
+    selectedRouteName,
+  } = useUiStore();
   const chatPanelOpen = useUiStore((s) => s.chatPanelOpen);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (!isStreaming) {
+      inputRef.current?.focus();
+    }
+  }, [isStreaming]);
 
   if (!chatPanelOpen) return null;
 
@@ -75,6 +91,10 @@ export function ChatPanel() {
             selectedLineName,
             selectedWorkstationId,
             selectedWorkstationName,
+            selectedPartNumberId,
+            selectedPartNumberName,
+            selectedRouteId,
+            selectedRouteName,
             activeProductionRun: null,
           },
         }),
@@ -134,36 +154,39 @@ export function ChatPanel() {
         }
       }
     } catch {
-      appendToLastMessage("Failed to connect to agent");
+      appendToLastMessage("Failed to connect to MESkit");
     } finally {
       setStreaming(false);
     }
   }
 
-  const currentAgentLabel =
-    agentOptions.find((a) => a.key === activeAgent)?.label ?? activeAgent;
+  const currentTopicLabel =
+    topicOptions.find((a) => a.key === activeAgent)?.label ?? "Production";
 
   return (
     <aside className="w-80 bg-bg-surface border-l border-border flex flex-col shrink-0">
-      {/* Agent selector */}
+      {/* Header + topic selector */}
       <div className="px-3 py-2 border-b border-border relative">
-        <button
-          onClick={() => setAgentMenuOpen(!agentMenuOpen)}
-          className="flex items-center gap-2 text-sm font-medium text-agent w-full"
-        >
+        <div className="flex items-center gap-2 text-sm font-medium text-agent mb-1">
           <Bot size={16} />
-          <span>{currentAgentLabel}</span>
-          <ChevronDown size={14} className="ml-auto" />
+          <span>Ask MESkit</span>
+        </div>
+        <button
+          onClick={() => setTopicMenuOpen(!topicMenuOpen)}
+          className="flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary transition-colors w-full"
+        >
+          <span>Ask about: {currentTopicLabel}</span>
+          <ChevronDown size={12} className="ml-auto" />
         </button>
 
-        {agentMenuOpen && (
+        {topicMenuOpen && (
           <div className="absolute top-full left-0 right-0 bg-bg-surface border border-border rounded-b-lg shadow-lg z-10">
-            {agentOptions.map((option) => (
+            {topicOptions.map((option) => (
               <button
                 key={option.key}
                 onClick={() => {
                   setActiveAgent(option.key);
-                  setAgentMenuOpen(false);
+                  setTopicMenuOpen(false);
                 }}
                 className={`w-full text-left px-3 py-2 text-sm hover:bg-bg-app transition-colors ${
                   activeAgent === option.key
@@ -183,7 +206,7 @@ export function ChatPanel() {
         {messages.length === 0 && (
           <div className="text-center text-text-secondary text-xs mt-8">
             <Bot size={24} className="mx-auto mb-2 text-agent" />
-            <p>Ask me to manage your shop floor.</p>
+            <p>Ask anything about your shop floor.</p>
             <p className="mt-1 text-text-secondary/60">
               &quot;Create a line called Assembly&quot;
             </p>
@@ -205,10 +228,11 @@ export function ChatPanel() {
         className="px-3 py-2 border-t border-border flex gap-2"
       >
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask the assistant..."
+          placeholder="Ask anything about your shop floor..."
           disabled={isStreaming}
           className="flex-1 px-3 py-2 rounded-lg border border-border bg-bg-app text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-agent/30 disabled:opacity-50"
         />

@@ -162,7 +162,7 @@ interface MeasurementPayload {
 ```
 Tool layer calls:
 - Insert into `mqtt_messages` for historical tracking
-- Anomaly Monitor trigger: evaluate if value is out of range
+- Machine Health Monitor trigger: evaluate if value is out of range
 
 **`fault`** — A machine error
 ```typescript
@@ -177,7 +177,7 @@ interface FaultPayload {
 Tool layer calls:
 - `update_machine_status({ id: machine_id, status: "down" })` — mark machine as down
 - `create_quality_event(...)` — log the fault
-- Anomaly Monitor trigger: evaluate fault pattern
+- Machine Health Monitor trigger: evaluate fault pattern
 
 ### `mqtt_messages` Table Schema
 
@@ -200,14 +200,14 @@ MQTT Broker
     -> Validates message against schema
     -> Writes to mqtt_messages table
     -> Calls tool layer (move_unit, create_quality_event)
-    -> Anomaly Monitor agent evaluates sensor data
+    -> Machine Health Monitor evaluates sensor data
 ```
 
-### Anomaly Monitor Trigger
+### Machine Health Monitor Trigger
 
-After writing to `mqtt_messages`, the Edge Function should trigger the Anomaly Monitor agent for evaluation. This happens via the Realtime subscription on `mqtt_messages` — the agent listens for INSERT events.
+After writing to `mqtt_messages`, the Edge Function should trigger the Machine Health Monitor for evaluation. This happens via the Realtime subscription on `mqtt_messages` — the monitor listens for INSERT events.
 
-For `fault` events, the trigger is immediate. For `measurement` events, the agent evaluates trends over a window of recent readings.
+For `fault` events, the trigger is immediate. For `measurement` events, the monitor evaluates trends over a window of recent readings.
 
 ### Conventions
 

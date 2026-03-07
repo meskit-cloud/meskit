@@ -16,23 +16,23 @@ import { breadcrumbJsonLd } from '@/lib/structured-data';
 export const metadata = buildPageMetadata({
   title: 'Blog',
   description:
-    'MESkit blog for ISA-95, AI-native MES architecture, tool-layer implementation, simulation workflows, and MQTT transition guidance.',
+    'MESkit blog for ISA-95, open-source MES architecture, tool-layer implementation, simulation workflows, and MQTT transition guidance.',
   path: '/blog',
   keywords: [
-    'AI-native MES blog',
+    'open source MES blog',
     'ISA-95 for developers',
     'MES architecture articles',
-    'manufacturing AI agent blog',
+    'MES analytics blog',
   ],
 });
 
 const breadcrumbs = [{ name: 'Blog', path: '/blog' }];
 
 const blogFacts = [
-  'Categories: ISA-95, MES architecture, AI agents, simulation, MQTT, Supabase.',
+  'Categories: ISA-95, MES architecture, Smart features, simulation, MQTT, Supabase.',
   'Each post includes author, publish date, and update date.',
   'Posts link to canonical product and docs pages.',
-  'Launch set includes four cornerstone technical explainers.',
+  'Launch set includes five cornerstone technical explainers.',
 ];
 
 const blogFaq = [
@@ -66,7 +66,7 @@ export default function BlogIndexPage() {
         <Breadcrumbs items={breadcrumbs} />
         <PageIntro
           title="Blog"
-          description="Technical content hub for AI-native MES architecture, ISA-95 implementation, and simulation-to-MQTT operational design."
+          description="Technical content hub for open-source MES architecture, ISA-95 implementation, and simulation-to-MQTT operational design."
           updated={siteConfig.lastUpdated}
         />
 

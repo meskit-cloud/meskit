@@ -12,16 +12,17 @@ import { buildPageMetadata, coreFacts, siteConfig } from '@/lib/site';
 import { howToJsonLd } from '@/lib/structured-data';
 
 export const metadata = buildPageMetadata({
-  title: 'The AI-Native MES',
+  title: 'Open-Source MES with Built-in Analytics',
   description:
-    'The AI-Native MES. Open-source, ISA-95 aligned MES toolkit where UI actions and AI agents run through the same typed tool layer.',
+    'Open-source MES with built-in analytics, quality alerts, and natural language queries. ISA-95 aligned, simulation-first, MQTT-ready.',
   path: '/',
   keywords: [
-    'AI-native MES',
     'open source MES',
+    'MES for small manufacturers',
+    'MES with natural language',
+    'MES quality analytics',
+    'predictive maintenance MES',
     'ISA-95 MES',
-    'manufacturing AI agents',
-    'autonomous MES',
     'simulation-first MES',
   ],
 });
@@ -30,17 +31,17 @@ const homeFaq = [
   {
     question: 'What is MESkit?',
     answer:
-      'MESkit is the AI-Native MES — an open-source Manufacturing Execution System toolkit aligned to the ISA-95 standard. It routes both human UI actions and AI agent commands through a single typed tool layer — 20+ Zod-validated server actions backed by 12 ISA-95-mapped Postgres tables. Built on Next.js, Supabase, and Claude API tool-use, MESkit ships with three specialized agents (Operator Assistant, Quality Analyst, Production Planner) and a North Star vision of autonomous predictive rescheduling.',
+      'MESkit is an open-source Manufacturing Execution System toolkit aligned to the ISA-95 standard. It routes both human UI actions and natural language commands through a single typed tool layer \u2014 20+ Zod-validated server actions backed by 15 ISA-95-mapped Postgres tables. Built on Next.js and Supabase, MESkit includes built-in quality alerts, production planning, and a natural language interface so operators can ask questions instead of clicking through menus.',
   },
   {
-    question: 'How do agents work in MESkit?',
+    question: 'How does the natural language interface work?',
     answer:
-      'MESkit agents use Claude tool-use to call the same typed operations as UI buttons. When a user gives a natural-language command, the agent runtime selects from registered tools, validates input against Zod schemas, and executes against Supabase. Every button has a voice equivalent, and every voice command follows the same guardrails as a button click.',
+      "MESkit's natural language interface uses the same typed operations as UI buttons. When a user gives a plain English command, the system selects from registered tools, validates input against Zod schemas, and executes against Supabase. Every button has a voice equivalent, and every voice command follows the same guardrails as a button click.",
   },
   {
     question: 'Is MESkit production-ready today?',
     answer:
-      'MESkit has completed M1 (project scaffold and tool layer) and is actively building M2 (Build Mode and Operator Assistant). Shop floor tools and the chat-driven agent are functional. The public six-milestone roadmap (M1 through M6) tracks progress toward full production readiness, with the simulation-first model letting teams validate line flow before connecting real hardware via MQTT in M6.',
+      'MESkit has completed M1 through M3 (scaffold, Build Mode, and Configure Mode). Shop floor tools and the natural language interface are functional. The public milestone roadmap tracks progress toward full production readiness, with the simulation-first model letting teams validate line flow before connecting real hardware via MQTT in M6.',
   },
 ];
 
@@ -68,28 +69,28 @@ export default function HomePage() {
       <div className="container">
         <header className="page-intro">
           <p className="eyebrow">Open-source MES toolkit</p>
-          <h1>The AI-Native MES</h1>
+          <h1>Finally, an MES that&apos;s as easy to use as asking a question.</h1>
           <p className="lead" style={{ fontSize: '1.18rem', color: 'var(--text-primary)', fontWeight: 500 }}>
-            An MES, but an Autonomous one.
+            Track production, prevent problems, and get answers in plain English.
           </p>
           <p className="lead" style={{ marginTop: '0.8rem' }}>
             ISA-95 aligned, simulation-first, and MQTT-ready. One typed tool layer for UI actions and
-            AI agent commands. Three specialized agents that operate as peers to human operators.
+            natural language queries. Built-in analytics that help your team act on insights instead of chasing data.
           </p>
           <p className="updated">Last updated: {siteConfig.lastUpdated}</p>
           <div style={{ marginTop: '1.1rem' }}>
             <CtaRow
-              primary={{ href: siteConfig.githubUrl, label: 'View on GitHub', external: true }}
-              secondary={{ href: '/docs', label: 'Read docs' }}
+              primary={{ href: `${siteConfig.appUrl}/signup`, label: 'Get Started Free', external: true }}
+              secondary={{ href: siteConfig.githubUrl, label: 'View on GitHub', external: true }}
             />
           </div>
         </header>
 
         <Section
           title="What is MESkit?"
-          subtitle="The AI-Native MES — an MES, but an Autonomous one."
+          subtitle="Open-source MES with built-in analytics and natural language queries."
         >
-          <SummaryBlock summary="MESkit is an open-source MES toolkit where AI agents and human operators execute the same typed manufacturing operations. Unlike traditional MES platforms where AI is bolted on as an afterthought, MESkit routes both UI actions and agent commands through one Zod-validated tool layer backed by an ISA-95-aligned Postgres schema. The result: every button has a voice equivalent, and every voice command follows the same guardrails as a button click." />
+          <SummaryBlock summary="MESkit is an open-source MES toolkit with built-in analytics, quality alerts, and a natural language interface. It routes both UI actions and plain English commands through one Zod-validated tool layer backed by an ISA-95-aligned Postgres schema. The result: every button has a voice equivalent, and every voice command follows the same guardrails as a button click." />
           <div className="table-wrap" style={{ marginTop: '1rem' }}>
             <table>
               <thead>
@@ -108,8 +109,8 @@ export default function HomePage() {
                   <td>12 Postgres tables via Supabase</td>
                 </tr>
                 <tr>
-                  <td>AI agents in scope</td>
-                  <td>3 (Operator, Quality, Planner)</td>
+                  <td>Smart features</td>
+                  <td>3 (Quality alerts, Planning, Natural language)</td>
                 </tr>
                 <tr>
                   <td>License</td>
@@ -128,20 +129,20 @@ export default function HomePage() {
           title="North Star"
           subtitle="The product vision MESkit is building toward."
         >
-          <SummaryBlock summary="Predict a machine failure and reschedule the entire shop floor autonomously — before the failure happens, without human intervention." />
+          <SummaryBlock summary="See problems before they stop your line. MESkit monitors machine health, surfaces quality trends, and helps you plan production \u2014 so your team acts on insights instead of chasing data." />
           <div className="grid-3" style={{ marginTop: '1rem' }}>
             <article className="card">
-              <h3>Sentinel</h3>
+              <h3>Monitor</h3>
               <p>
-                The Anomaly Monitor detects degradation signals from sensor telemetry and outputs failure
-                probability scores.
+                The Machine Health Monitor detects degradation signals from sensor telemetry and surfaces
+                alerts before failures happen.
               </p>
               <p style={{ marginTop: '0.5rem', fontSize: '0.84rem', color: 'var(--text-tertiary)' }}>
                 Milestone M6
               </p>
             </article>
             <article className="card">
-              <h3>Strategist</h3>
+              <h3>Plan</h3>
               <p>
                 The Production Planner evaluates constraints — backlog, deadlines, alternative capacity — and
                 computes rescheduling options.
@@ -151,9 +152,9 @@ export default function HomePage() {
               </p>
             </article>
             <article className="card">
-              <h3>Executor</h3>
+              <h3>Act</h3>
               <p>
-                The Agent Runtime acts on decisions through the tool layer — updates schedules, notifies
+                The intelligence layer acts on decisions through the tool layer — updates schedules, notifies
                 operators, adjusts production flow.
               </p>
               <p style={{ marginTop: '0.5rem', fontSize: '0.84rem', color: 'var(--text-tertiary)' }}>
@@ -162,8 +163,8 @@ export default function HomePage() {
             </article>
           </div>
           <p style={{ marginTop: '0.8rem' }}>
-            In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist,
-            which triggers the Executor — closing the autonomous loop. See the{' '}
+            In the MVP, these layers operate independently. Post-MVP, the Monitor triggers the Plan,
+            which triggers the Act — closing the coordination loop. See the{' '}
             <Link href="/roadmap">roadmap</Link> for milestone details.
           </p>
         </Section>
@@ -189,7 +190,7 @@ export default function HomePage() {
               'Move units',
               'Collect data',
               'Visualize',
-              '...or tell the agent',
+              '...or ask MESkit',
             ].map((step) => (
               <div key={step} className="flow-step" role="listitem">
                 {step}
@@ -205,9 +206,9 @@ export default function HomePage() {
               </p>
             </div>
             <div className="card agent-border">
-              <h3>Agent interface</h3>
+              <h3>Natural language</h3>
               <p>
-                The chat panel maps intent into explicit tool calls. Every agent response is grounded in
+                The chat panel maps intent into explicit tool calls. Every response is grounded in
                 real MES operations.
               </p>
             </div>
@@ -215,12 +216,12 @@ export default function HomePage() {
         </Section>
 
         <Section
-          title="Agent example"
+          title="Natural language example"
           subtitle="Illustrative chat flow: user intent becomes deterministic tool calls."
         >
           <div className="code-block agent-border">
             <div className="code-head">
-              <span>Operator Assistant</span>
+              <span>Ask MESkit</span>
               <span>Example interaction</span>
             </div>
             <div className="code-body">
@@ -228,21 +229,21 @@ export default function HomePage() {
 → search_units(serial_number='SMX-00044')
 → create_quality_event(unit_id=..., event_type='scrap', result='fail')
 → scrap_unit(unit_id=...)
-Agent: SMX-00044 scrapped. Defect logged as critical.`}</pre>
+MESkit: SMX-00044 scrapped. Defect logged as critical.`}</pre>
             </div>
           </div>
         </Section>
 
         <Section
           title="One tool layer for UI and agents"
-          subtitle="AI-native architecture means no split logic path."
+          subtitle="Unified architecture means no split logic path."
         >
           <div className="diagram">
-            <code>{`UI Buttons ───┐
-              ├─> Tool Layer (typed + validated) ──> Supabase Postgres
-AI Agents ───┘
+            <code>{`UI Buttons ────────┐
+                   ├─> Tool Layer (typed + validated) ──> Supabase Postgres
+Natural Language ──┘
 
-Agent Runtime (Claude tool-use) reads and writes through the same tool contracts.`}</code>
+Intelligence Layer reads and writes through the same tool contracts.`}</code>
           </div>
           <p style={{ marginTop: '0.8rem' }}>
             See the full architecture breakdown on the <Link href="/architecture">architecture page</Link>.
@@ -298,7 +299,7 @@ Agent Runtime (Claude tool-use) reads and writes through the same tool contracts
   ↓
 Tool Layer (Server Actions + Zod)
   ↓
-Agent Runtime (Claude tool-use)
+Intelligence Layer
   ↓
 Supabase (Postgres, Auth, Realtime)
   ↓
@@ -316,7 +317,7 @@ MQTT Broker (M6)`}</code>
                   <Link href="/product">Product overview and operating modes</Link>
                 </li>
                 <li>
-                  <Link href="/agents">Agent profiles and tool-call chains</Link>
+                  <Link href="/agents">Smart features and how they work</Link>
                 </li>
                 <li>
                   <Link href="/isa-95">ISA-95 mapping table</Link>
@@ -327,7 +328,7 @@ MQTT Broker (M6)`}</code>
               </ul>
               <div style={{ marginTop: '1rem' }}>
                 <CtaRow
-                  primary={{ href: '/agents', label: 'Meet the agents' }}
+                  primary={{ href: '/agents', label: 'See smart features' }}
                   secondary={{ href: '/architecture', label: 'See the tool layer' }}
                 />
               </div>

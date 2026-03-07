@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, IBM_Plex_Mono } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -14,8 +15,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MESkit — AI-Native MES",
-  description: "Open-source, AI-native Manufacturing Execution System toolkit",
+  title: "MESkit — Open-Source MES",
+  description: "Open-source Manufacturing Execution System with built-in analytics, quality alerts, and natural language queries",
 };
 
 export default function RootLayout({
@@ -24,8 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${ibmPlexMono.variable}`}>
-      <body className="antialiased">{children}</body>
+    <html lang="en" className={`${manrope.variable} ${ibmPlexMono.variable}`} suppressHydrationWarning>
+      <body className="antialiased">
+        <ThemeProvider attribute="class" defaultTheme="light">
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

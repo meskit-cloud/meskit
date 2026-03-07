@@ -38,15 +38,21 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Public routes that don't require auth
-  const isPublicRoute = pathname === "/login" || pathname === "/signup";
+  const isPublicRoute =
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password" ||
+    pathname.startsWith("/auth/");
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
+    url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 
-  if (user && isPublicRoute) {
+  if (user && isPublicRoute && pathname !== "/reset-password") {
     const url = request.nextUrl.clone();
     url.pathname = "/build";
     return NextResponse.redirect(url);

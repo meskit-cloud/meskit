@@ -16,7 +16,7 @@ import { breadcrumbJsonLd } from '@/lib/structured-data';
 export const metadata = buildPageMetadata({
   title: 'About',
   description:
-    'MESkit mission and open-source positioning: standards-aligned manufacturing software with AI-native architecture.',
+    'MESkit mission and open-source positioning: standards-aligned manufacturing software with built-in analytics and natural language queries.',
   path: '/about',
   keywords: ['about MESkit', 'open source manufacturing software', 'MESkit mission'],
 });
@@ -26,7 +26,7 @@ const breadcrumbs = [{ name: 'About', path: '/about' }];
 const facts = [
   'MESkit is positioned as an open-source reference implementation for modern MES architecture.',
   'Mission focus: practical ISA-95 alignment and programmable operations.',
-  'AI-native claims are grounded in shared tool-layer design, not marketing abstraction.',
+  'Natural language interface is grounded in shared tool-layer design, not marketing abstraction.',
   'Community contribution and transparency are core project principles.',
 ];
 
@@ -55,7 +55,7 @@ export default function AboutPage() {
         />
 
         <Section title="Summary" subtitle="Mission and positioning.">
-          <SummaryBlock summary="MESkit is a standards-aligned, AI-native MES toolkit built in the open. The project focuses on concrete mechanisms: typed operations, ISA-95 language, simulation-first rollout, and a clear path to MQTT-fed execution." />
+          <SummaryBlock summary="MESkit is a standards-aligned, open-source MES toolkit built in the open. The project focuses on concrete mechanisms: typed operations, ISA-95 language, simulation-first rollout, and a clear path to MQTT-fed execution." />
         </Section>
 
         <Section title="Mission" subtitle="What the project is trying to solve.">
@@ -68,10 +68,10 @@ export default function AboutPage() {
               </p>
             </article>
             <article className="card">
-              <h3>Connect AI to real operations</h3>
+              <h3>Natural language meets real operations</h3>
               <p>
-                AI agents are useful only when tied to explicit operational interfaces. MESkit enforces this
-                through shared tools.
+                Smart features are useful only when tied to explicit operational interfaces. MESkit enforces
+                this through shared tools.
               </p>
             </article>
             <article className="card">
@@ -115,7 +115,7 @@ export default function AboutPage() {
           <div style={{ marginTop: '1rem' }}>
             <CtaRow
               primary={{ href: '/product', label: 'See product overview' }}
-              secondary={{ href: '/agents', label: 'Meet the agents' }}
+              secondary={{ href: '/agents', label: 'See smart features' }}
             />
           </div>
         </Section>

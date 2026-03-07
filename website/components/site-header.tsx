@@ -39,7 +39,10 @@ export function SiteHeader() {
         </nav>
 
         <div className="header-cta">
-          <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer" className="btn btn-primary">
+          <a href="/signup" className="btn btn-primary">
+            Try MESkit
+          </a>
+          <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer" className="btn btn-ghost">
             View on GitHub
           </a>
           <button
@@ -69,7 +72,10 @@ export function SiteHeader() {
                 </Link>
               );
             })}
-            <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer" className="btn btn-primary">
+            <a href="/signup" className="btn btn-primary" onClick={() => setOpen(false)}>
+              Try MESkit
+            </a>
+            <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer" className="btn btn-ghost" onClick={() => setOpen(false)}>
               View on GitHub
             </a>
           </nav>

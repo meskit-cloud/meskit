@@ -1,6 +1,6 @@
 # Quality Rule Definition
 
-Define a quality monitoring rule for MESkit's Quality Analyst agent.
+Define a quality monitoring rule for MESkit's Quality Monitor.
 
 ## Input
 
@@ -77,7 +77,7 @@ export const {ruleName}RealtimeFilter = {
 };
 ```
 
-### Quality Analyst Trigger Conditions (PRD Section 5.3)
+### Quality Monitor Trigger Conditions (PRD Section 5.3)
 
 These are the built-in trigger conditions. Generate rules matching these when the input corresponds:
 

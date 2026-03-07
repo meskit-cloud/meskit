@@ -192,6 +192,103 @@ registerTool({
   execute: createWorkstation,
 });
 
+// --- update_workstation ---
+
+export const updateWorkstationSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().optional(),
+  position: z.number().int().min(1).optional(),
+  operator_name: z.string().nullable().optional(),
+});
+
+export type UpdateWorkstationInput = z.infer<typeof updateWorkstationSchema>;
+
+export async function updateWorkstation(input: UpdateWorkstationInput) {
+  const { id, ...updates } = updateWorkstationSchema.parse(input);
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("workstations")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw new Error(`update_workstation failed: ${error.message}`);
+  return data;
+}
+
+registerTool({
+  name: "update_workstation",
+  description: "Update a workstation (name, position, or operator)",
+  schema: updateWorkstationSchema,
+  execute: updateWorkstation,
+});
+
+// --- delete_workstation ---
+
+export const deleteWorkstationSchema = z.object({
+  id: z.string().uuid(),
+});
+
+export type DeleteWorkstationInput = z.infer<typeof deleteWorkstationSchema>;
+
+export async function deleteWorkstation(input: DeleteWorkstationInput) {
+  const validated = deleteWorkstationSchema.parse(input);
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("workstations")
+    .delete()
+    .eq("id", validated.id);
+
+  if (error) throw new Error(`delete_workstation failed: ${error.message}`);
+  return { success: true };
+}
+
+registerTool({
+  name: "delete_workstation",
+  description: "Delete a workstation from a manufacturing line",
+  schema: deleteWorkstationSchema,
+  execute: deleteWorkstation,
+});
+
+// --- create_machine ---
+
+export const createMachineSchema = z.object({
+  workstation_id: z.string().uuid(),
+  name: z.string(),
+  type: z.string(),
+});
+
+export type CreateMachineInput = z.infer<typeof createMachineSchema>;
+
+export async function createMachine(input: CreateMachineInput) {
+  const validated = createMachineSchema.parse(input);
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const { data, error } = await supabase
+    .from("machines")
+    .insert({ ...validated, user_id: user.id })
+    .select()
+    .single();
+
+  if (error) throw new Error(`create_machine failed: ${error.message}`);
+  return data;
+}
+
+registerTool({
+  name: "create_machine",
+  description: "Register a new machine and attach it to a workstation",
+  schema: createMachineSchema,
+  execute: createMachine,
+});
+
 // --- list_machines ---
 
 export const listMachinesSchema = z.object({
@@ -228,6 +325,66 @@ registerTool({
   description: "List machines with optional filters by workstation or status",
   schema: listMachinesSchema,
   execute: listMachines,
+});
+
+// --- update_machine ---
+
+export const updateMachineSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().optional(),
+  type: z.string().optional(),
+});
+
+export type UpdateMachineInput = z.infer<typeof updateMachineSchema>;
+
+export async function updateMachine(input: UpdateMachineInput) {
+  const { id, ...updates } = updateMachineSchema.parse(input);
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("machines")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw new Error(`update_machine failed: ${error.message}`);
+  return data;
+}
+
+registerTool({
+  name: "update_machine",
+  description: "Update a machine (name or type)",
+  schema: updateMachineSchema,
+  execute: updateMachine,
+});
+
+// --- delete_machine ---
+
+export const deleteMachineSchema = z.object({
+  id: z.string().uuid(),
+});
+
+export type DeleteMachineInput = z.infer<typeof deleteMachineSchema>;
+
+export async function deleteMachine(input: DeleteMachineInput) {
+  const validated = deleteMachineSchema.parse(input);
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("machines")
+    .delete()
+    .eq("id", validated.id);
+
+  if (error) throw new Error(`delete_machine failed: ${error.message}`);
+  return { success: true };
+}
+
+registerTool({
+  name: "delete_machine",
+  description: "Delete a machine from a workstation",
+  schema: deleteMachineSchema,
+  execute: deleteMachine,
 });
 
 // --- update_machine_status ---

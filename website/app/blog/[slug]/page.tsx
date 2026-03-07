@@ -118,7 +118,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="card">
             <ul className="clean-list">
               <li>
-                <Link href="/agents">Agents page</Link>
+                <Link href="/agents">Smart features</Link>
               </li>
               <li>
                 <Link href="/architecture">Architecture page</Link>

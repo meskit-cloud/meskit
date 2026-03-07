@@ -1,6 +1,11 @@
 import type { Config } from "tailwindcss";
 
+function rgb(varName: string) {
+  return `rgb(var(--${varName}) / <alpha-value>)`;
+}
+
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -10,22 +15,22 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          app: "#F3F7FC",
-          surface: "#FFFFFF",
+          app: rgb("bg-app"),
+          surface: rgb("bg-surface"),
         },
-        border: "#D6E0EA",
+        border: rgb("border"),
         accent: {
-          DEFAULT: "#0F6FF2",
-          hover: "#0A58C7",
+          DEFAULT: rgb("accent"),
+          hover: rgb("accent-hover"),
         },
-        agent: "#7C3AED",
+        agent: rgb("agent"),
         text: {
-          primary: "#0F172A",
-          secondary: "#334155",
+          primary: rgb("text-primary"),
+          secondary: rgb("text-secondary"),
         },
-        success: "#15803D",
-        warning: "#B45309",
-        error: "#B91C1C",
+        success: rgb("success"),
+        warning: rgb("warning"),
+        error: rgb("error"),
       },
       fontFamily: {
         ui: ["var(--font-ui)", "sans-serif"],

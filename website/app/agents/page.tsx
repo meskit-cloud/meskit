@@ -14,43 +14,43 @@ import { buildPageMetadata, siteConfig } from '@/lib/site';
 import { breadcrumbJsonLd, definedTermJsonLd } from '@/lib/structured-data';
 
 export const metadata = buildPageMetadata({
-  title: 'AI agents',
+  title: 'Smart Features',
   description:
-    'MESkit AI agents: Operator Assistant, Quality Analyst, and Production Planner. Learn how tool-use connects agents and UI through one typed tool layer.',
+    'MESkit smart features: Ask MESkit, Quality Monitor, and Production Planner. Learn how the natural language interface and UI share one typed tool layer.',
   path: '/agents',
   keywords: [
-    'AI agents manufacturing',
-    'AI-native MES',
-    'MES with AI',
+    'MES smart features',
+    'MES with natural language',
+    'MES quality alerts',
     'MES tool layer',
-    'Claude tool-use manufacturing',
+    'natural language manufacturing',
   ],
 });
 
-const breadcrumbs = [{ name: 'Agents', path: '/agents' }];
+const breadcrumbs = [{ name: 'Smart Features', path: '/agents' }];
 
 const facts = [
-  '3 specialized agents share 20+ typed tool operations with the UI.',
-  'Operator Assistant is chat-triggered with access to all shop-floor tools.',
-  'Quality Analyst triggers on yield below 90%, defect clusters, or elevated scrap.',
+  '3 specialized features share 20+ typed tool operations with the UI.',
+  'Ask MESkit is chat-triggered with access to all shop-floor tools.',
+  'Quality Monitor triggers on yield below 90%, defect clusters, or elevated scrap.',
   'Production Planner analyzes capacity across routes and shift windows.',
-  'Three AI layers (Sentinel, Strategist, Executor) build toward autonomous predictive rescheduling.',
-  'All agent actions are Zod-validated — no hidden APIs or uncontrolled authority.',
+  'Three automation layers (Monitor, Plan, Act) build toward automated predictive rescheduling.',
+  'All smart feature actions are Zod-validated — no hidden APIs or uncontrolled authority.',
 ];
 
 const miniFaq = [
   {
-    question: 'What makes MESkit agents different from chatbot add-ons?',
+    question: 'What makes MESkit smart features different from chatbot add-ons?',
     answer:
-      'Agents call operational MES tools directly with schema validation and explicit side effects.',
+      'They call operational MES tools directly with schema validation and explicit side effects.',
   },
   {
-    question: 'Can an agent act outside the tool layer?',
-    answer: 'No. Agent operations are constrained to registered tool contracts.',
+    question: 'Can a smart feature act outside the tool layer?',
+    answer: 'No. All operations are constrained to registered tool contracts.',
   },
   {
-    question: 'Which agent is event-driven in MVP scope?',
-    answer: 'Quality Analyst, triggered by yield and defect thresholds.',
+    question: 'Which feature is event-driven in MVP scope?',
+    answer: 'Quality Monitor, triggered by yield and defect thresholds.',
   },
 ];
 
@@ -59,66 +59,66 @@ export default function AgentsPage() {
     <div className="page">
       <JsonLd data={breadcrumbJsonLd(breadcrumbs)} />
       <JsonLd data={definedTermJsonLd([
-        { name: 'AI-native MES', description: 'A Manufacturing Execution System where AI agents and human operators execute the same typed manufacturing operations through a shared tool layer.' },
-        { name: 'Tool layer', description: 'A set of Zod-validated server actions that serve as the single execution interface for both UI interactions and AI agent commands in MESkit.' },
-        { name: 'Agent runtime', description: 'The Claude tool-use runtime that maps natural-language intent to explicit, schema-validated MES tool calls.' },
+        { name: 'Open-source MES with natural language', description: 'A Manufacturing Execution System where smart features and human operators execute the same typed manufacturing operations through a shared tool layer.' },
+        { name: 'Tool layer', description: 'A set of Zod-validated server actions that serve as the single execution interface for both UI interactions and smart feature commands in MESkit.' },
+        { name: 'Intelligence layer', description: 'The runtime that maps natural-language intent to explicit, schema-validated MES tool calls.' },
       ])} />
       <div className="container">
         <Breadcrumbs items={breadcrumbs} />
         <PageIntro
-          title="AI agents"
-          description="MESkit ships with specialized AI operators that act through the same typed tool layer as the UI. This is architecture-level AI-native behavior, not a bolted-on chat wrapper."
+          title="Smart features"
+          description="MESkit ships with smart features that act through the same typed tool layer as the UI. Natural language and automation are built into the architecture, not bolted on as a chat wrapper."
           updated={siteConfig.lastUpdated}
         />
 
-        <Section title="What AI-native MES means" subtitle="Tool layer first, chat interface second.">
-          <SummaryBlock summary="In MESkit, AI capability is defined by tool contracts. The Operator Assistant, Quality Analyst, and Production Planner use the same operations used by UI buttons. This keeps behavior consistent, testable, and auditable." />
+        <Section title="How MESkit works" subtitle="Tool layer first, chat interface second.">
+          <SummaryBlock summary="In MESkit, smart features are defined by tool contracts. Ask MESkit, Quality Monitor, and Production Planner use the same operations used by UI buttons. This keeps behavior consistent, testable, and auditable." />
         </Section>
 
-        <Section title="Three AI layers" subtitle="The architecture behind autonomous manufacturing.">
-          <SummaryBlock summary="MESkit agents are designed around three complementary roles that, together, deliver the North Star: predict a machine failure and reschedule the entire shop floor autonomously." />
+        <Section title="Three automation layers" subtitle="The architecture behind automated manufacturing.">
+          <SummaryBlock summary="MESkit smart features are designed around three complementary roles that, together, deliver the North Star: predict a machine failure and coordinate the shop floor response — automation handles detection, planning, and execution while operators stay in command." />
           <div className="table-wrap" style={{ marginTop: '1rem' }}>
             <table>
               <thead>
                 <tr>
                   <th>Layer</th>
                   <th>Role</th>
-                  <th>Agent</th>
+                  <th>Feature</th>
                   <th>Milestone</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Sentinel</strong></td>
+                  <td><strong>Monitor</strong></td>
                   <td>Monitors sensor telemetry, detects degradation, outputs failure probability scores</td>
-                  <td>Anomaly Monitor</td>
+                  <td>Machine Health Monitor</td>
                   <td>M6</td>
                 </tr>
                 <tr>
-                  <td><strong>Strategist</strong></td>
+                  <td><strong>Plan</strong></td>
                   <td>Evaluates constraints (backlog, deadlines, capacity), computes alternative schedules</td>
                   <td>Production Planner</td>
                   <td>M5</td>
                 </tr>
                 <tr>
-                  <td><strong>Executor</strong></td>
+                  <td><strong>Act</strong></td>
                   <td>Acts on decisions through the tool layer — updates schedules, notifies operators</td>
-                  <td>Agent Runtime</td>
+                  <td>Intelligence Layer</td>
                   <td>M1+</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p style={{ marginTop: '0.8rem' }}>
-            In the MVP, these layers operate independently. Post-MVP, the Sentinel triggers the Strategist,
-            which triggers the Executor — closing the autonomous loop.
+            In the MVP, these layers operate independently. Post-MVP, Monitor triggers Plan,
+            which triggers Act — closing the coordination loop.
           </p>
         </Section>
 
-        <Section title="Agent profiles" subtitle="Roles, triggers, and tool access by design.">
+        <Section title="Feature profiles" subtitle="Roles, triggers, and tool access by design.">
           <div className="grid-3">
             <article className="card agent-border">
-              <h3>Operator Assistant</h3>
+              <h3>Ask MESkit</h3>
               <p>
                 Trigger: chat, always available. Role: conversational co-pilot for WIP, movement, and
                 quality logging.
@@ -132,7 +132,7 @@ export default function AgentsPage() {
               </ul>
             </article>
             <article className="card agent-border">
-              <h3>Quality Analyst</h3>
+              <h3>Quality Monitor</h3>
               <p>
                 Trigger: realtime threshold events. Role: proactive defect and yield monitoring with concise
                 alerts.
@@ -163,8 +163,8 @@ export default function AgentsPage() {
 
         <Section title="Shared tool layer architecture" subtitle="Same typed functions for button clicks and tool-use.">
           <div className="diagram">
-            <code>{`Operator Assistant ─┐
-Quality Analyst ────┼─> Agent Runtime (Claude tool-use)
+            <code>{`Ask MESkit ─────────┐
+Quality Monitor ────┼─> Intelligence Layer
 Production Planner ─┘                │
                                      ▼
                              Tool Layer (Zod-validated)
@@ -188,7 +188,7 @@ Production Planner ─┘                │
               <div className="code-body">
                 <pre>{`User: What's stuck at assembly?
 → get_wip_status(workstation_id='assembly')
-Agent: 3 units waiting at Assembly.`}</pre>
+MESkit: 3 units waiting at Assembly.`}</pre>
               </div>
             </div>
             <div className="code-block agent-border">
@@ -200,7 +200,7 @@ Agent: 3 units waiting at Assembly.`}</pre>
                 <pre>{`Trigger: Yield < 90% at Station 3
 → get_yield_report(time_range='last_50_units')
 → get_unit_history(unit_ids=...)
-Analyst: 6/7 failures are SOL-003.`}</pre>
+Alert: 6/7 failures are SOL-003.`}</pre>
               </div>
             </div>
             <div className="code-block agent-border">
@@ -219,7 +219,7 @@ Planner: Recommend parallel lines to hit target.`}</pre>
               <h3>Guardrails</h3>
               <ul className="clean-list">
                 <li>All actions are bounded by registered tools and schema validation.</li>
-                <li>Agents do not self-authorize critical actions outside user intent.</li>
+                <li>Smart features do not self-authorize critical actions outside user intent.</li>
                 <li>Operator oversight remains mandatory for production decisions.</li>
               </ul>
             </div>
@@ -227,7 +227,7 @@ Planner: Recommend parallel lines to hit target.`}</pre>
         </Section>
 
         <Section
-          title="AI-native vs traditional MES"
+          title="MESkit vs traditional MES"
           subtitle="How the tool layer changes the integration model."
         >
           <div className="table-wrap">
@@ -237,7 +237,7 @@ Planner: Recommend parallel lines to hit target.`}</pre>
                   <th>Dimension</th>
                   <th>Traditional MES</th>
                   <th>AI-enhanced MES</th>
-                  <th>AI-native MES (MESkit)</th>
+                  <th>MESkit</th>
                 </tr>
               </thead>
               <tbody>
@@ -251,7 +251,7 @@ Planner: Recommend parallel lines to hit target.`}</pre>
                   <td>Execution path</td>
                   <td>UI only</td>
                   <td>UI + separate AI API</td>
-                  <td>One path for UI and agents</td>
+                  <td>One path for UI and smart features</td>
                 </tr>
                 <tr>
                   <td>Validation</td>
@@ -263,7 +263,7 @@ Planner: Recommend parallel lines to hit target.`}</pre>
                   <td>Audit trail</td>
                   <td>UI actions logged</td>
                   <td>Partial AI logging</td>
-                  <td>Full trace for both UI and agents</td>
+                  <td>Full trace for both UI and smart features</td>
                 </tr>
                 <tr>
                   <td>Natural language</td>
