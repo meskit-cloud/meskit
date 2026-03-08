@@ -53,7 +53,7 @@ const productLinks = navLinks
 
 const factsBlock = facts.map((f) => `- ${f}`).join('\n');
 
-const content = `# MESkit — Open-Source MES
+const content = `# MESkit — Source-Available MES
 > ${description}
 
 ## What is MESkit

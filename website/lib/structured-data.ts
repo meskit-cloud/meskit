@@ -112,11 +112,11 @@ export function softwareSourceCodeJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
-    name: 'MESkit — Open-Source MES',
+    name: 'MESkit — Source-Available MES',
     description: siteConfig.description,
     codeRepository: siteConfig.githubUrl,
     programmingLanguage: ['TypeScript', 'SQL'],
     runtimePlatform: 'Node.js',
-    license: 'https://opensource.org/licenses/MIT',
+    license: 'https://mariadb.com/bsl11/',
   };
 }

@@ -22,7 +22,7 @@ export const metadata = buildPageMetadata({
     'MES roadmap',
     'MES feature roadmap',
     'MQTT MES timeline',
-    'open source MES milestones',
+    'source-available MES milestones',
   ],
 });
 

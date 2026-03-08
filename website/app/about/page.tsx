@@ -16,15 +16,15 @@ import { breadcrumbJsonLd } from '@/lib/structured-data';
 export const metadata = buildPageMetadata({
   title: 'About',
   description:
-    'MESkit mission and open-source positioning: standards-aligned manufacturing software with built-in analytics and natural language queries.',
+    'MESkit mission and positioning: standards-aligned manufacturing software with built-in analytics and natural language queries. Source-available under BSL 1.1.',
   path: '/about',
-  keywords: ['about MESkit', 'open source manufacturing software', 'MESkit mission'],
+  keywords: ['about MESkit', 'source-available manufacturing software', 'MESkit mission'],
 });
 
 const breadcrumbs = [{ name: 'About', path: '/about' }];
 
 const facts = [
-  'MESkit is positioned as an open-source reference implementation for modern MES architecture.',
+  'MESkit is positioned as a source-available reference implementation for modern MES architecture.',
   'Mission focus: practical ISA-95 alignment and programmable operations.',
   'Natural language interface is grounded in shared tool-layer design, not marketing abstraction.',
   'Community contribution and transparency are core project principles.',
@@ -33,7 +33,7 @@ const facts = [
 const miniFaq = [
   {
     question: 'Is MESkit commercial software?',
-    answer: 'MESkit is open-source and designed as a transparent, buildable toolkit.',
+    answer: 'MESkit is source-available under BSL 1.1 — free to self-host for internal use. Designed as a transparent, buildable toolkit.',
   },
   {
     question: 'Why focus on developers and engineers?',
@@ -55,7 +55,7 @@ export default function AboutPage() {
         />
 
         <Section title="Summary" subtitle="Mission and positioning.">
-          <SummaryBlock summary="MESkit is a standards-aligned, open-source MES toolkit built in the open. The project focuses on concrete mechanisms: typed operations, ISA-95 language, simulation-first rollout, and a clear path to MQTT-fed execution." />
+          <SummaryBlock summary="MESkit is a standards-aligned, source-available MES toolkit built in the open. The project focuses on concrete mechanisms: typed operations, ISA-95 language, simulation-first rollout, and a clear path to MQTT-fed execution." />
         </Section>
 
         <Section title="Mission" subtitle="What the project is trying to solve.">
@@ -91,7 +91,7 @@ export default function AboutPage() {
           </div>
         </Section>
 
-        <Section title="Open-source stance" subtitle="Why the repository is central.">
+        <Section title="Source-available stance" subtitle="Why the repository is central.">
           <div className="card">
             <p>
               Core specs, roadmap checkpoints, and implementation progress are designed to stay public.

@@ -32,7 +32,7 @@ export function SiteFooter() {
       <div className="container footer-bottom">
         <div>
           <WordmarkInline />
-          <p>Open-source MES with built-in analytics and natural language queries.</p>
+          <p>Source-available MES with built-in analytics and natural language queries. Free to self-host.</p>
         </div>
 
         <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer" className="social-link">

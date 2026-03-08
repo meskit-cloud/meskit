@@ -1,5 +1,5 @@
-# MESkit — Open-Source MES
-> Open-source MES with built-in analytics, quality alerts, and natural language queries. ISA-95 aligned, simulation-first, MQTT-ready.
+# MESkit — Source-Available MES
+> Source-available MES with built-in analytics, quality alerts, and natural language queries. Free to self-host. ISA-95 aligned, simulation-first, MQTT-ready.
 
 ## What is MESkit
 - [What is MESkit? (FAQ)](https://meskit.cloud/faq): Core definitions and product status
@@ -19,8 +19,8 @@
 - [ISA-95 for developers](https://meskit.cloud/blog/isa-95-for-developers): Practical mapping from standard to Postgres schema
 
 ## Key facts
-- Category: Open-source MES toolkit with built-in analytics (MIT license).
-- Identity: Open-source MES with dashboards, quality alerts, and natural language queries. Operators stay in command.
+- Category: Source-available MES toolkit with built-in analytics (BSL 1.1 — free to self-host).
+- Identity: Source-available MES with dashboards, quality alerts, and natural language queries. Operators stay in command.
 - Standards: ISA-95 aligned data model with 15 mapped Postgres tables.
 - Tool layer: 26 Zod-validated server actions shared by UI and intelligence layer.
 - Smart features: Ask MESkit (natural language queries), Quality Monitor, Production Planner.

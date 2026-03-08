@@ -20,7 +20,7 @@ export const metadata = buildPageMetadata({
   path: '/faq',
   keywords: [
     'MESkit FAQ',
-    'open source MES features',
+    'source-available MES features',
     'MES natural language',
     'ISA-95 support',
     'MES MQTT integration',
@@ -35,7 +35,7 @@ const faqEntries = [
   {
     question: 'What is MESkit?',
     answer:
-      'MESkit is an open-source Manufacturing Execution System toolkit aligned to the ISA-95 standard. It provides 20+ typed tool operations backed by 15 ISA-95-mapped Postgres tables. Built on Next.js and Supabase, it includes quality alerts, production planning, and a natural language interface — all sharing the same tool layer as the UI.',
+      'MESkit is a source-available Manufacturing Execution System toolkit aligned to the ISA-95 standard, licensed under BSL 1.1 (free to self-host for internal use). It provides 20+ typed tool operations backed by 15 ISA-95-mapped Postgres tables. Built on Next.js and Supabase, it includes quality alerts, production planning, and a natural language interface — all sharing the same tool layer as the UI.',
   },
   {
     question: 'How does MESkit\'s natural language interface work?',

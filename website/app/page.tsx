@@ -12,9 +12,9 @@ import { buildPageMetadata, coreFacts, siteConfig } from '@/lib/site';
 import { howToJsonLd } from '@/lib/structured-data';
 
 export const metadata = buildPageMetadata({
-  title: 'Open-Source MES for Small Manufacturers',
+  title: 'Source-Available MES for Small Manufacturers',
   description:
-    'Open-source MES with production tracking, quality alerts, and natural language queries. Built for small contract manufacturers upgrading from spreadsheets.',
+    'Source-available MES with production tracking, quality alerts, and natural language queries. Free to self-host. Built for small contract manufacturers upgrading from spreadsheets.',
   path: '/',
   keywords: [
     'open source MES',
@@ -31,7 +31,7 @@ const homeFaq = [
   {
     question: 'What is MESkit?',
     answer:
-      'MESkit is an open-source Manufacturing Execution System toolkit aligned to the ISA-95 standard. It routes both human UI actions and natural language commands through a single typed tool layer \u2014 20+ Zod-validated server actions backed by 15 ISA-95-mapped Postgres tables. Built on Next.js and Supabase, MESkit includes built-in quality alerts, production planning, and a natural language interface so operators can ask questions instead of clicking through menus.',
+      'MESkit is a source-available Manufacturing Execution System toolkit aligned to the ISA-95 standard. It routes both human UI actions and natural language commands through a single typed tool layer \u2014 20+ Zod-validated server actions backed by 15 ISA-95-mapped Postgres tables. Built on Next.js and Supabase, MESkit includes built-in quality alerts, production planning, and a natural language interface so operators can ask questions instead of clicking through menus.',
   },
   {
     question: 'How does the natural language interface work?',
@@ -68,13 +68,13 @@ export default function HomePage() {
       <JsonLd data={howToJsonLd({ name: 'How to set up MESkit', description: 'Step-by-step guide to defining products, building routes, moving units, collecting quality data, and monitoring execution in MESkit.', steps: howToSteps })} />
       <div className="container">
         <header className="page-intro">
-          <p className="eyebrow">Open-source MES toolkit</p>
+          <p className="eyebrow">Source-available MES toolkit</p>
           <h1>Know your floor. Hit your deadlines. Answer any audit.</h1>
           <p className="lead" style={{ fontSize: '1.18rem', color: 'var(--text-primary)', fontWeight: 500 }}>
             Stop chasing data across spreadsheets. Ask MESkit what&apos;s happening on your floor and get a real answer.
           </p>
           <p className="lead" style={{ marginTop: '0.8rem' }}>
-            Open-source MES with production tracking, quality alerts, and built-in analytics. Free to self-host.
+            Source-available MES with production tracking, quality alerts, and built-in analytics. Free to self-host.
           </p>
           <p className="updated">Last updated: {siteConfig.lastUpdated}</p>
           <div style={{ marginTop: '1.1rem' }}>
@@ -87,9 +87,9 @@ export default function HomePage() {
 
         <Section
           title="What is MESkit?"
-          subtitle="Open-source MES with built-in analytics and natural language queries."
+          subtitle="Source-available MES with built-in analytics and natural language queries."
         >
-          <SummaryBlock summary="MESkit is an open-source MES toolkit with built-in analytics, quality alerts, and a natural language interface. It routes both UI actions and plain English commands through one Zod-validated tool layer backed by an ISA-95-aligned Postgres schema. The result: every button has a voice equivalent, and every voice command follows the same guardrails as a button click." />
+          <SummaryBlock summary="MESkit is a source-available MES toolkit with built-in analytics, quality alerts, and a natural language interface. It routes both UI actions and plain English commands through one Zod-validated tool layer backed by an ISA-95-aligned Postgres schema. The result: every button has a voice equivalent, and every voice command follows the same guardrails as a button click." />
           <div className="table-wrap" style={{ marginTop: '1rem' }}>
             <table>
               <thead>
@@ -113,7 +113,7 @@ export default function HomePage() {
                 </tr>
                 <tr>
                   <td>License</td>
-                  <td>MIT (fully open source)</td>
+                  <td>BSL 1.1 (free to self-host)</td>
                 </tr>
                 <tr>
                   <td>Roadmap milestones</td>

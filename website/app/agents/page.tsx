@@ -59,7 +59,7 @@ export default function AgentsPage() {
     <div className="page">
       <JsonLd data={breadcrumbJsonLd(breadcrumbs)} />
       <JsonLd data={definedTermJsonLd([
-        { name: 'Open-source MES with natural language', description: 'A Manufacturing Execution System where smart features and human operators execute the same typed manufacturing operations through a shared tool layer.' },
+        { name: 'Source-available MES with natural language', description: 'A Manufacturing Execution System where smart features and human operators execute the same typed manufacturing operations through a shared tool layer.' },
         { name: 'Tool layer', description: 'A set of Zod-validated server actions that serve as the single execution interface for both UI interactions and smart feature commands in MESkit.' },
         { name: 'Intelligence layer', description: 'The runtime that maps natural-language intent to explicit, schema-validated MES tool calls.' },
       ])} />

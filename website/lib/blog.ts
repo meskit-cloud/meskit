@@ -34,7 +34,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: '2026-03-03',
     updatedAt: '2026-03-03',
     keywords: [
-      'open source MES',
+      'source-available MES',
       'MES with natural language',
       'MES tool layer',
       'manufacturing execution system',
@@ -265,19 +265,19 @@ export const blogPosts: BlogPost[] = [
     updatedAt: '2026-03-05',
     keywords: [
       'what is MES software',
-      'manufacturing execution system open source',
+      'manufacturing execution system source-available',
       'AI factory software',
       'universal tool layer MES',
       'MES air traffic control',
       'human AI manufacturing',
       'MESkit architecture',
-      'ISA-95 open source',
+      'ISA-95 source-available',
     ],
     summary:
-      'A manufacturing execution system (MES) is the air-traffic-control software that tracks every product, machine, and operator across the factory floor. MESkit is an open-source MES toolkit built on ISA-95 that wraps every operation in a typed, validated tool — so humans clicking buttons and natural language commands execute the exact same business logic through one secure front door.',
+      'A manufacturing execution system (MES) is the air-traffic-control software that tracks every product, machine, and operator across the factory floor. MESkit is a source-available MES toolkit built on ISA-95 that wraps every operation in a typed, validated tool — so humans clicking buttons and natural language commands execute the exact same business logic through one secure front door.',
     keyFacts: [
       'An MES tracks every product from raw material to finished good across the factory floor.',
-      'MESkit is open-source, ISA-95 aligned, and self-hostable.',
+      'MESkit is source-available (BSL 1.1), ISA-95 aligned, and free to self-host.',
       'The universal tool layer ensures humans and natural language commands call the same validated code.',
       'Every tool follows a four-step process: register, find, validate with Zod, then execute.',
       'ISA-95 support covers discrete, batch, and continuous manufacturing in one unified data model.',
@@ -292,7 +292,7 @@ export const blogPosts: BlogPost[] = [
       {
         question: 'What makes MESkit different from traditional MES software?',
         answer:
-          'MESkit is open-source and built on the ISA-95 standard. Its universal tool layer means natural language commands and human operators share the same validated operations — there is no separate API or backdoor.',
+          'MESkit is source-available and built on the ISA-95 standard. Its universal tool layer means natural language commands and human operators share the same validated operations — there is no separate API or backdoor.',
       },
       {
         question: 'Who is MESkit designed for?',
@@ -316,7 +316,7 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           'A manufacturing execution system (MES) is the software that orchestrates everything happening on a factory floor — tracking every item, monitoring every machine, coordinating every operator, and keeping production lines moving without collisions or downtime. Think of it as air traffic control for production: it guides every product and lot from takeoff to landing, making sure nothing collides and everything arrives on time.',
           'The scale of the problem an MES solves is staggering. A single factory contains countless machines, tons of raw materials, and hundreds of operators in a constant whirlwind of activity. Without an MES, tracking individual items, maintaining quality, and preventing line stoppages becomes nearly impossible. The MES is the central nervous system that holds it all together.',
-          'Traditional MES products are expensive, proprietary, and rigid. MESkit offers a modern, open-source alternative — one that speaks the same language as enterprise systems thanks to its ISA-95 foundation, while being flexible enough for small shops to self-host and developers to extend.',
+          'Traditional MES products are expensive, proprietary, and rigid. MESkit offers a modern, source-available alternative — one that speaks the same language as enterprise systems thanks to its ISA-95 foundation, while being flexible enough for small shops to self-host and developers to extend.',
         ],
       },
       {

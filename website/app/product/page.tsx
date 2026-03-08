@@ -19,8 +19,8 @@ export const metadata = buildPageMetadata({
     'MESkit product overview: Build, Configure, Run, Monitor workflows with an always-available chat interface using the same tool layer.',
   path: '/product',
   keywords: [
-    'open source MES product',
-    'manufacturing execution system open source',
+    'source-available MES product',
+    'manufacturing execution system source-available',
     'MES operating modes',
     'chat-driven MES operations',
   ],

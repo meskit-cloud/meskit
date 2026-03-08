@@ -16,10 +16,10 @@ import { breadcrumbJsonLd } from '@/lib/structured-data';
 export const metadata = buildPageMetadata({
   title: 'Blog',
   description:
-    'MESkit blog for ISA-95, open-source MES architecture, tool-layer implementation, simulation workflows, and MQTT transition guidance.',
+    'MESkit blog for ISA-95, MES architecture, tool-layer implementation, simulation workflows, and MQTT transition guidance.',
   path: '/blog',
   keywords: [
-    'open source MES blog',
+    'source-available MES blog',
     'ISA-95 for developers',
     'MES architecture articles',
     'MES analytics blog',
@@ -66,7 +66,7 @@ export default function BlogIndexPage() {
         <Breadcrumbs items={breadcrumbs} />
         <PageIntro
           title="Blog"
-          description="Technical content hub for open-source MES architecture, ISA-95 implementation, and simulation-to-MQTT operational design."
+          description="Technical content hub for MES architecture, ISA-95 implementation, and simulation-to-MQTT operational design."
           updated={siteConfig.lastUpdated}
         />
 

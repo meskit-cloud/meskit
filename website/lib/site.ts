@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 
 export const siteConfig = {
   name: 'MESkit',
-  title: 'MESkit | Open-Source MES',
+  title: 'MESkit | Source-Available MES',
   description:
-    'Open-source MES with built-in analytics, quality alerts, and natural language queries. ISA-95 aligned, simulation-first, MQTT-ready.',
+    'Source-available MES with built-in analytics, quality alerts, and natural language queries. Free to self-host. ISA-95 aligned, simulation-first, MQTT-ready.',
   url: 'https://meskit.cloud',
   appUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   githubUrl: 'https://github.com/meskit-cloud/meskit',
@@ -74,7 +74,7 @@ export const footerGroups: FooterGroup[] = [
     title: 'Legal',
     links: [
       { href: '/about', label: 'Mission' },
-      { href: siteConfig.githubUrl, label: 'License (MIT)', external: true },
+      { href: siteConfig.githubUrl, label: 'License (BSL 1.1)', external: true },
       { href: '/faq', label: 'Product status' },
     ],
   },
@@ -117,7 +117,7 @@ export function buildPageMetadata(input: {
           url: `${siteConfig.url}/og-image.svg`,
           width: 1200,
           height: 630,
-          alt: 'MESkit open-source MES toolkit',
+          alt: 'MESkit source-available MES toolkit',
         },
       ],
     },
@@ -131,8 +131,8 @@ export function buildPageMetadata(input: {
 }
 
 export const coreFacts = [
-  'Category: Open-source MES toolkit with built-in analytics (MIT license).',
-  'Identity: Open-source MES with production tracking, quality alerts, and natural language queries. Operators stay in command.',
+  'Category: Source-available MES toolkit with built-in analytics (BSL 1.1 — free to self-host).',
+  'Identity: Source-available MES with production tracking, quality alerts, and natural language queries. Operators stay in command.',
   'Standards: ISA-95 aligned data model with 15 mapped Postgres tables.',
   'Tool layer: 26 Zod-validated server actions shared by UI and intelligence layer.',
   'Smart features: Ask MESkit (natural language queries), Quality Monitor, Production Planner.',
