@@ -1,6 +1,6 @@
 # MESkit Roadmap
 
-> Status: M3 complete — M1 scaffold, M2 Build Mode, and M3 Configure Mode all done. M4 — Run Mode + Production Simulator + Quality Monitor next.
+> Status: M4 complete — M1 scaffold, M2 Build Mode, M3 Configure Mode, and M4 Run Mode + Production Simulator + Quality Monitor all done. M5 — Monitor Mode + Production Planner next.
 
 ## Related Docs
 
@@ -36,7 +36,7 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
   - [x] Quality model: `quality_events`, `defect_codes`
   - [x] Config: `serial_algorithms`
   - [x] Chat: `agent_conversations`
-  - [x] Future: `mqtt_messages` (table created, unused until M6)
+  - [x] Future: `mqtt_messages` (table created, unused until M7)
 - [x] Set up Row Level Security (RLS) policies
 
 ### Auth
@@ -143,16 +143,16 @@ Production execution: unit generation, WIP movement, quality gates. Built-in sim
 
 ### Tools
 
-- [ ] Implement production tools: `generate_units`, `move_unit`, `scrap_unit`, `get_wip_status`, `search_units`
-- [ ] Implement quality tools: `create_quality_event`, `list_defect_codes`, `create_defect_code`
-- [ ] Implement monitor analytics helpers: `get_throughput`, `get_yield_report`, `get_unit_history` — required by Quality Monitor in M4 and reused by Monitor Mode in M5
-- [ ] Register all production and quality tools in intelligence layer
-- [ ] Create `production_orders` table (ISA-95 F1) — migration with order_number, part_number_id, quantity_ordered, quantity_completed, status enum (new/scheduled/running/complete/closed)
-- [ ] Implement production order tools: `create_production_order`, `update_order_status`, `list_production_orders` (ISA-95 F1)
-- [ ] Add `ideal_cycle_time_seconds` column to `route_steps` (ISA-95 F3) — migration
-- [ ] Create `quality_test_definitions` table (ISA-95 F4) — test_name, part_number_id, route_step_id, property, unit_of_measure, lower_limit, upper_limit, measurement_method
-- [ ] Implement quality test tools: `create_test_definition`, `list_test_definitions`, `record_test_result` (ISA-95 F4)
-- [ ] Add route versioning — `version` column on `routes`, new version on structural changes (ISA-95 F10)
+- [x] Implement production tools: `generate_units`, `move_unit`, `scrap_unit`, `get_wip_status`, `search_units`
+- [x] Implement quality tools: `create_quality_event`, `list_defect_codes`, `create_defect_code`
+- [x] Implement monitor analytics helpers: `get_throughput`, `get_yield_report`, `get_unit_history` — required by Quality Monitor in M4 and reused by Monitor Mode in M5
+- [x] Register all production and quality tools in intelligence layer
+- [x] Create `production_orders` table (ISA-95 F1) — migration with order_number, part_number_id, quantity_ordered, quantity_completed, status enum (new/scheduled/running/complete/closed)
+- [x] Implement production order tools: `create_production_order`, `update_order_status`, `list_production_orders` (ISA-95 F1)
+- [x] Add `ideal_cycle_time_seconds` column to `route_steps` (ISA-95 F3) — migration
+- [x] Create `quality_test_definitions` table (ISA-95 F4) — test_name, part_number_id, route_step_id, property, unit_of_measure, lower_limit, upper_limit, measurement_method
+- [x] Implement quality test tools: `create_test_definition`, `list_test_definitions`, `record_test_result` (ISA-95 F4)
+- [x] Add route versioning — `version` column on `routes`, new version on structural changes (ISA-95 F10)
 
 ### Production Simulator (replaces auto-run engine)
 
@@ -160,95 +160,95 @@ The Production Simulator role-plays as a factory — generating units, moving WI
 
 **Isolation rule**: The Simulator is a pure consumer of the MES — it lives in `lib/simulator/` and `app/api/simulation/`, uses only public tool APIs, and introduces no simulation-specific columns or conditionals in MES core code. Deleting all Simulator files must leave the MES fully functional. See [`docs/simulator.md` §8](docs/simulator.md) for full isolation rules.
 
-- [ ] Production Simulator config, system prompt, and tool subset (`lib/agents/simulator.ts`)
-- [ ] Simulation API routes (`/api/simulation/start`, `/pause`, `/reset`)
-- [ ] Simulation tick execution — server-side `/api/simulation/tick` invoked by a client-held clock in MVP, with configurable tick interval
-- [ ] Capacity-aware WIP movement — respects workstation capacity, won't pile units
-- [ ] Contextual quality decisions — base yield ~95%, degrades over time, clusters defects realistically
-- [ ] Machine lifecycle — toggles machine statuses (running → fault → repair → idle)
-- [ ] Zustand `simulationStore` for simulation state (running, paused, speed)
-- [ ] Simulation controls in top bar — Start (`▶`), Pause (`⏸`), Speed selector (1x/2x/5x/10x), Reset (`↺`)
-- [ ] Simulator creates production orders before generating units (ISA-95 F1) — order-driven simulation
-- [ ] Simulator uses PackML 7-state model for machine lifecycle (ISA-95/ISA-88 F2): STOPPED → IDLE → EXECUTE → HELD/SUSPENDED → COMPLETE/ABORTED
-- [ ] Simulator paces unit movement using `ideal_cycle_time_seconds` from route steps (ISA-95 F3)
-- [ ] Simulator generates realistic quality test results against test definitions (ISA-95 F4)
+- [x] Production Simulator config, system prompt, and tool subset (`lib/agents/simulator.ts`)
+- [x] Simulation API routes (`/api/simulation/start`, `/pause`, `/reset`)
+- [x] Simulation tick execution — server-side `/api/simulation/tick` invoked by a client-held clock in MVP, with configurable tick interval
+- [x] Capacity-aware WIP movement — respects workstation capacity, won't pile units
+- [x] Contextual quality decisions — base yield ~95%, degrades over time, clusters defects realistically
+- [x] Machine lifecycle — toggles machine statuses (running → fault → repair → idle)
+- [x] Zustand `simulationStore` for simulation state (running, paused, speed)
+- [x] Simulation controls in top bar — Start (`▶`), Pause (`⏸`), Speed selector (1x/2x/5x/10x), Reset (`↺`)
+- [x] Simulator creates production orders before generating units (ISA-95 F1) — order-driven simulation
+- [x] Simulator uses PackML 7-state model for machine lifecycle (ISA-95/ISA-88 F2): STOPPED → IDLE → EXECUTE → HELD/SUSPENDED → COMPLETE/ABORTED
+- [x] Simulator paces unit movement using `ideal_cycle_time_seconds` from route steps (ISA-95 F3)
+- [x] Simulator generates realistic quality test results against test definitions (ISA-95 F4)
 
 ### Manual Production (non-simulation)
 
-- [ ] Unit generation — create N units for a part number; serials auto-assigned via algorithm
-- [ ] Manual WIP movement — user clicks "Move" or tells assistant "move SMX-00042"
-- [ ] Quality gate logic — at pass/fail steps, record outcomes via tool layer
-- [ ] Scrap handling — failed units marked as scrapped, removed from route progression
-- [ ] `unit_history` recording — every move and quality event written via tool layer
-- [ ] Live ticker — Supabase Realtime subscription renders scrolling event log
-- [ ] Order-driven unit generation — units linked to a production order, order tracks completion (ISA-95 F1)
+- [x] Unit generation — create N units for a part number; serials auto-assigned via algorithm
+- [x] Manual WIP movement — user clicks "Move" or tells assistant "move SMX-00042"
+- [x] Quality gate logic — at pass/fail steps, record outcomes via tool layer
+- [x] Scrap handling — failed units marked as scrapped, removed from route progression
+- [x] `unit_history` recording — every move and quality event written via tool layer
+- [x] Live ticker — Supabase Realtime subscription renders scrolling event log
+- [x] Order-driven unit generation — units linked to a production order, order tracks completion (ISA-95 F1)
 
 ### Quality Alerts / Quality Monitor
 
-- [ ] Implement event-driven trigger system (Supabase Realtime → monitor invocation)
-- [ ] Yield threshold monitoring — alert when workstation yield drops below 90%
-- [ ] Defect clustering detection — alert when same defect code appears 3+ times in 30 min
-- [ ] Natural-language quality alerts displayed in the live ticker and chat panel
-- [ ] Configurable alert thresholds
-- [ ] Reacts to Simulator-generated patterns (defect clusters, yield drops) in real-time
-- [ ] Quality Monitor references test definitions when evaluating pass/fail (ISA-95 F4) — alerts include tolerance context
+- [x] Implement event-driven trigger system (Supabase Realtime → monitor invocation)
+- [x] Yield threshold monitoring — alert when workstation yield drops below 90%
+- [x] Defect clustering detection — alert when same defect code appears 3+ times in 30 min
+- [x] Natural-language quality alerts displayed in the live ticker and chat panel
+- [ ] Configurable alert thresholds *(deferred — hardcoded defaults work, UI not built)*
+- [x] Reacts to Simulator-generated patterns (defect clusters, yield drops) in real-time
+- [x] Quality Monitor references test definitions when evaluating pass/fail (ISA-95 F4) — alerts include tolerance context
 
 ### Machine State Model (ISA-88 PackML aligned)
 
-- [ ] Replace 3-state machine enum (`idle`/`running`/`down`) with 7-state PackML subset (ISA-88 F2)
-- [ ] Implement state transition validation — only allowed transitions per PackML state diagram (ISA-88 F2)
-- [ ] Update `update_machine_status` tool to enforce valid transitions (ISA-88 F2)
-- [ ] Update Build Mode UI to display PackML states with color coding (ISA-88 F2)
+- [x] Replace 3-state machine enum (`idle`/`running`/`down`) with 7-state PackML subset (ISA-88 F2)
+- [x] Implement state transition validation — only allowed transitions per PackML state diagram (ISA-88 F2)
+- [x] Update `update_machine_status` tool to enforce valid transitions (ISA-88 F2)
+- [x] Update Build Mode UI to display PackML states with color coding (ISA-88 F2)
 
 ### REST API (integration layer 1 of 3)
 
 Auto-generate REST endpoints from the tool registry — every registered tool becomes an endpoint with OpenAPI documentation. Enables `curl`-based testing and machine-to-machine integration.
 
-- [ ] Auto-generate REST endpoints from tool registry (one endpoint per tool)
-- [ ] OpenAPI/Swagger spec auto-generated from Zod schemas
-- [ ] API key authentication with scoped permissions
-- [ ] Pagination, filtering, and sorting for list endpoints
-- [ ] Webhooks for real-time event notifications (unit moved, quality event, machine status change)
+- [x] Auto-generate REST endpoints from tool registry (one endpoint per tool)
+- [x] OpenAPI/Swagger spec auto-generated from Zod schemas
+- [x] API key authentication with scoped permissions
+- [x] Pagination, filtering, and sorting for list endpoints
+- [ ] Webhooks for real-time event notifications (unit moved, quality event, machine status change) *(deferred — infrastructure exists, subscription UI not built)*
 
 ### Intelligence Layer
 
-- [ ] Ask MESkit handles all Run Mode operations ("generate 100 units of Smartphone X", "scrap SMX-00044")
-- [ ] Production Simulator drives automated production when simulation is running
-- [ ] Quality Monitor runs alongside production (manual or simulated), surfacing alerts proactively
+- [x] Ask MESkit handles all Run Mode operations ("generate 100 units of Smartphone X", "scrap SMX-00044")
+- [x] Production Simulator drives automated production when simulation is running
+- [x] Quality Monitor runs alongside production (manual or simulated), surfacing alerts proactively
 
 ### Onboarding — First-Run Experience
 
 Guided onboarding for new users. See [`docs/onboarding-plan.md`](docs/onboarding-plan.md) for full design.
 
-- [ ] Detect empty shop floor on first login (zero lines)
-- [ ] Auto-open chat panel with MESkit welcome message
-- [ ] Offer one-click demo shop floor (creates sample line, workstations, machines via tool layer)
-- [ ] Guided step-by-step option (MESkit walks through Build → Configure → Run)
+- [x] Detect empty shop floor on first login (zero lines)
+- [x] Auto-open chat panel with MESkit welcome message
+- [x] Offer one-click demo shop floor (creates sample line, workstations, machines via tool layer)
+- [x] Guided step-by-step option (MESkit walks through Build → Configure → Run)
 - [ ] Cross-mode progress checklist (optional)
 
 ### Demo Environment — 7-Day Data Retention
 
-- [ ] pg_cron job to delete user data after 7 days (migration: `004_demo_data_cleanup_cron.sql`)
-- [ ] Signup page notice: "Demo environment — data deleted after 7 days"
-- [ ] Top bar banner with days-remaining countdown (amber → red)
-- [ ] MESkit welcome message mentions the 7-day limit
+- [x] pg_cron job to delete user data after 7 days (migration: `004_demo_data_cleanup_cron.sql`)
+- [x] Signup page notice: "Demo environment — data deleted after 7 days"
+- [x] Top bar banner with days-remaining countdown (amber → red)
+- [x] MESkit welcome message mentions the 7-day limit
 
 ### User Documentation
 
 End-user documentation pages published to the marketing website (`website/`). Generated with the `/doc-writer` skill.
 
-- [ ] Getting Started — sign up, onboarding flow, first demo shop floor
-- [ ] Build Mode — create lines, workstations, and machines
-- [ ] Configure Mode — define part numbers, BOMs, serial algorithms, and routes
-- [ ] Run Mode — generate units, move WIP, log quality events, scrap units
-- [ ] Production Simulator — start/pause/reset, speed controls, what the simulator does
-- [ ] Ask MESkit — natural language interface, example prompts per mode
-- [ ] Quality Monitor — how alerts are triggered, what they mean, configuring thresholds
-- [ ] REST API — authentication, endpoint structure, OpenAPI spec
+- [x] Getting Started — sign up, onboarding flow, first demo shop floor
+- [x] Build Mode — create lines, workstations, and machines
+- [x] Configure Mode — define part numbers, BOMs, serial algorithms, and routes
+- [x] Run Mode — generate units, move WIP, log quality events, scrap units
+- [x] Production Simulator — start/pause/reset, speed controls, what the simulator does
+- [x] Ask MESkit — natural language interface, example prompts per mode
+- [x] Quality Monitor — how alerts are triggered, what they mean, configuring thresholds
+- [x] REST API — authentication, endpoint structure, OpenAPI spec
 
-**M4 core done when**: A user can start a simulation, watch units flow through workstations driven by the Production Simulator, see realistic quality events and machine faults, receive proactive quality alerts from the Quality Monitor, and follow everything in the live ticker. Manual production via UI and chat also works independently of the simulation.
+**M4 core done** ✓ (2026-03-08): All core features implemented and tested. Full test pass: 290/290 unit tests, all 13 test guide sections verified (manual UI + Playwright). See [`docs/M4_test_guide.md`](docs/M4_test_guide.md) and [`docs/M4_punch_list.md`](docs/M4_punch_list.md).
 
-**Parallel completion items**: REST API foundation, onboarding, demo retention, and user documentation can land during M4 or immediately after without blocking the simulator-enabled MVP.
+**Remaining parallel items** (do not block M4 sign-off): Configurable alert thresholds, webhook subscription UI, and cross-mode progress checklist.
 
 ---
 
@@ -299,7 +299,98 @@ Public natural language endpoint with API key auth — external systems send pla
 
 ---
 
-## M6 — MQTT Interface + Machine Health Monitor
+## M6 — Multi-Tenancy + Organizations + Multi-Plant
+
+Customer registration, team management, role-based access, and multi-plant support. This milestone transforms MESkit from a single-user tool into a multi-tenant platform ready for Cloud launch. Must land before integration layers (MQTT, WebMCP) so everything built on top is org-aware from the start.
+
+### Why here and not earlier
+
+The core product loop must be complete first (Build → Configure → Run → Monitor). Adding multi-tenancy to an incomplete product doubles the surface area of every unfinished feature. After M5, the product is valuable enough to onboard real customers — that is when multi-tenancy becomes the blocker.
+
+### Schema — Organizations and Teams
+
+- [ ] Create `organizations` table — id, name, slug, tier (starter/pro/enterprise), metadata JSONB, created_at
+- [ ] Create `org_members` table — org_id, user_id, role enum (owner/admin/operator/viewer), invited_by, joined_at
+- [ ] Create `plants` table — org_id, name, location, timezone, metadata JSONB — a plant is a physical facility that groups lines
+- [ ] Add `org_id` column (NOT NULL, FK to organizations) to all data tables: lines, workstations, machines, part_numbers, items, routes, units, defect_codes, production_orders, quality_test_definitions, agent_conversations, audit_log, api_keys, webhook_subscriptions
+- [ ] Add `plant_id` column (NOT NULL, FK to plants) to `lines` — every line belongs to a plant
+- [ ] Backfill migration: create a default organization and default plant per existing user, populate org_id and plant_id on all rows
+- [ ] Update unique constraints from `(user_id, name)` to `(org_id, name)` on lines, part_numbers, defect_codes, production_orders
+- [ ] Update `units` serial uniqueness from `UNIQUE(serial_number)` to `UNIQUE(org_id, serial_number)` — two orgs can independently use `SMX-00001`
+- [ ] Add `org_id` to `audit_log` — audit trail is org-scoped, user_id preserved as "who did it"
+- [ ] Update `SECURITY DEFINER` RPC functions (serial counter, order completion) to validate org_id ownership
+
+### RLS Policies — Org-Level Isolation
+
+- [ ] Replace all `auth.uid() = user_id` policies with org membership check: `org_id IN (SELECT org_id FROM org_members WHERE user_id = auth.uid())`
+- [ ] Add role-based restrictions: operators can read/create but not delete; viewers are read-only
+- [ ] Plants are org-scoped — users see all plants in their org (per-plant permissions are post-MVP)
+- [ ] Part numbers, routes, and defect codes are org-scoped (shared across plants within the same org)
+
+### Tool Layer — Org Context
+
+- [ ] Create `getOrgContext()` helper — resolves current user's active org_id and role from session
+- [ ] Refactor all `create_*` tools to inject `org_id` from context instead of `user.id`
+- [ ] Refactor all `list_*` and `get_*` tools to filter by org_id (via RLS or explicit WHERE)
+- [ ] Refactor all `update_*` and `delete_*` tools — RLS enforces org isolation, role check enforces permissions
+- [ ] Update API key model: tie API keys to `org_id`, not `user_id`
+- [ ] Update webhook subscriptions to `org_id`
+
+### User Registration and Team Management
+
+- [ ] Signup flow creates a new organization + default plant automatically (one-click)
+- [ ] Org settings page — rename org, manage billing tier
+- [ ] Plant management UI — create/rename/archive plants within the org
+- [ ] Invite flow — admin invites users by email, assigns role (admin/operator/viewer)
+- [ ] Accept invitation flow — new user signs up via invite link, joins existing org
+- [ ] Team management page — list members, change roles, remove users
+- [ ] Role-based UI — operators see Run/Monitor only; viewers see read-only dashboards; admins see everything including settings
+- [ ] User profile — name, email, active org switcher (future: users can belong to multiple orgs)
+
+### Role Definitions
+
+| Role | Build | Configure | Run | Monitor | Settings | Invite |
+|------|-------|-----------|-----|---------|----------|--------|
+| **Owner** | Full | Full | Full | Full | Full | Yes |
+| **Admin** | Full | Full | Full | Full | Org settings | Yes |
+| **Operator** | Read | Read | Full | Read | None | No |
+| **Viewer** | Read | Read | Read | Read | None | No |
+
+### Data Model — Multi-Plant Design
+
+Part numbers, routes, BOMs, serial algorithms, and defect codes are **org-scoped** (shared across plants). A company manufactures the same product in multiple plants.
+
+Lines, workstations, and machines are **plant-scoped**. Each line belongs to exactly one plant.
+
+Production orders and units are **org-scoped** with an implicit plant association via the route's workstations. A production order runs at whatever plant its route's workstations belong to.
+
+```
+organization
+  ├── plants
+  │   └── lines → workstations → machines
+  ├── part_numbers (org-wide)
+  │   ├── routes → route_steps (reference workstations in a specific plant)
+  │   ├── BOMs, serial algorithms, test definitions
+  │   └── defect_codes
+  └── production_orders → units → unit_history, quality_events
+```
+
+### Demo Cleanup Update
+
+- [ ] Update demo data cleanup to delete by organization (not user_id) — removing a user from an org must not delete production data
+- [ ] Org-level 7-day retention: the org expires, not individual users
+
+### Intelligence Layer
+
+- [ ] Ask MESkit receives org context — answers scoped to the user's org and role
+- [ ] Quality Monitor and Production Planner operate within org scope
+- [ ] Simulator runs within org context
+
+**Done when**: A customer can sign up, an organization and default plant are created automatically. The customer can invite team members with different roles (admin, operator, viewer). Each role sees the appropriate UI and can perform only allowed operations. Multiple plants can be created within one org, each with its own lines and workstations. All data is isolated per org via RLS. Existing single-user data is migrated into org containers without data loss.
+
+---
+
+## M7 — MQTT Interface + Machine Health Monitor
 
 Device layer: broker, message schema, gateway edge function, predictive maintenance.
 
@@ -346,9 +437,9 @@ Expose the full tool layer as an MCP (Model Context Protocol) server. External s
 
 ---
 
-## M7 — WebMCP: Browser Automation Integration
+## M8 — WebMCP: Browser Automation Integration
 
-Make MESkit pages directly accessible to browser-based automation via the [WebMCP standard](https://developer.chrome.com/blog/webmcp-epp). Completes the integration story from server-side (MCP Server, M6) to client-side. See [`docs/webmcp-integration.md`](docs/webmcp-integration.md) for full design.
+Make MESkit pages directly accessible to browser-based automation via the [WebMCP standard](https://developer.chrome.com/blog/webmcp-epp). Completes the integration story from server-side (MCP Server, M7) to client-side. See [`docs/webmcp-integration.md`](docs/webmcp-integration.md) for full design.
 
 ### Prerequisites
 
@@ -404,7 +495,7 @@ MESkit will **not** fork into separate repos for discrete, process, and batch ma
 
 **Strategy:**
 
-- Ship discrete manufacturing first (serial-tracked units) through M6.
+- Ship discrete manufacturing first (serial-tracked units) through M7.
 - Add batch and process as **tracking modes**, not forks — a `tracking_type` field on `part_numbers` controls behavior while the route/step engine, intelligence layer, and tool layer stay shared.
 - The ISA-95 schema already supports this: the abstraction boundary is the unit/lot/batch tracking layer (~10-15% of code). Everything above (intelligence layer, chat, quality rules, analytics) and below (Supabase, auth, realtime) remains common.
 
@@ -414,7 +505,7 @@ A separate repo would only make sense if process manufacturing required a fundam
 
 ## Future — Beyond MVP
 
-Not scoped, not scheduled. Ideas for after M7 is solid.
+Not scoped, not scheduled. Ideas for after M8 is solid.
 
 ### OEE Dashboard
 
