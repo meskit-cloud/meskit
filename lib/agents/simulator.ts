@@ -43,6 +43,8 @@ export const simulatorTools: string[] = [
   // Shop floor awareness (read-only)
   "list_lines",
   "list_workstations",
+  // Routes (read-only — for cycle time awareness)
+  "list_routes",
   // Production orders (ISA-95 F1)
   "create_production_order",
   "update_order_status",
@@ -60,6 +62,7 @@ export interface SimulatorContext {
   currentWip: { workstationId: string; workstationName: string; unitCount: number }[];
   openProductionOrders: { id: string; partNumberName: string; remaining: number }[];
   machineStates: { machineId: string; machineName: string; status: string }[];
+  routeStepCycleTimes?: { routeName: string; stepNumber: number; stepName: string; idealCycleTimeSeconds: number }[];
 }
 
 // --- Simulation Scenarios ---
@@ -142,6 +145,12 @@ export function buildSimulatorSystemPrompt(context: SimulatorContext): string {
         .join("\n")
     : "  No machines registered.";
 
+  const cycleTimeLines = context.routeStepCycleTimes && context.routeStepCycleTimes.length > 0
+    ? context.routeStepCycleTimes
+        .map((ct) => `- ${ct.routeName} → Step ${ct.stepNumber} (${ct.stepName}): ${ct.idealCycleTimeSeconds}s`)
+        .join("\n")
+    : null;
+
   return `You are the **Simulator** — an AI that role-plays as a real manufacturing factory.
 
 ## Your Role
@@ -176,7 +185,7 @@ ${orderLines}
 
 ### Machine States (PackML)
 ${machineLines}
-
+${cycleTimeLines ? `\n### Route Step Cycle Times\n${cycleTimeLines}\n` : ""}
 ## Decision Logic (execute in order each tick)
 
 1. **Check open orders.** If no open production orders exist, create one via create_production_order before generating any units.
@@ -204,7 +213,7 @@ When introducing a fault: EXECUTE → HELD (fault detected) → ABORTED (unrecov
 - Never produce 100% yield. Even steady_state targets 95%.
 - Defects should cluster realistically — the same defect code appearing repeatedly at the same step is realistic.
 - Faults should be preceded by early signals in the cascade_failure scenario.
-- Cycle times should vary ± 10–15% around the route step's expected_duration_s.`;
+- Cycle times should vary ± 10–15% around the route step's ideal_cycle_time_seconds. If a step has ideal_cycle_time_seconds set, use it to pace unit movement — don't move a unit past a step faster than its cycle time.`;
 }
 
 function getScenarioBehaviorTargets(scenario: SimulationScenario): string {

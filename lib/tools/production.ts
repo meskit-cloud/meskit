@@ -270,6 +270,23 @@ export async function scrapUnit(input: ScrapUnitInput) {
     });
   }
 
+  // Check if all units for the order are terminal (completed or scrapped)
+  if (unit.production_order_id) {
+    const { count } = await supabase
+      .from("units")
+      .select("id", { count: "exact", head: true })
+      .eq("production_order_id", unit.production_order_id)
+      .eq("status", "in_progress");
+
+    if (count === 0) {
+      await supabase
+        .from("production_orders")
+        .update({ status: "complete" })
+        .eq("id", unit.production_order_id)
+        .in("status", ["running", "scheduled"]);
+    }
+  }
+
   return data;
 }
 

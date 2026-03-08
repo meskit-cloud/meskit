@@ -70,6 +70,7 @@ interface RouteStep {
   step_number: number;
   name: string;
   pass_fail_gate: boolean;
+  ideal_cycle_time_seconds: number | null;
   workstations: { name: string } | null;
 }
 
@@ -77,6 +78,7 @@ interface MfgRoute {
   id: string;
   part_number_id: string;
   name: string;
+  version: number;
   created_at: string;
   route_steps: RouteStep[];
 }
@@ -985,7 +987,12 @@ function RoutesPanel({
             >
               <RouteIcon size={14} className="text-text-secondary shrink-0" />
               <div className="flex-1 min-w-0">
-                <div className="text-sm text-text-primary truncate">{route.name}</div>
+                <div className="text-sm text-text-primary truncate">
+                  {route.name}
+                  {route.version > 1 && (
+                    <span className="ml-1.5 text-[10px] font-mono text-text-secondary/50">v{route.version}</span>
+                  )}
+                </div>
                 <div className="text-xs text-text-secondary/60 mt-0.5">
                   {route.route_steps.length} step{route.route_steps.length !== 1 ? "s" : ""}
                 </div>
@@ -1050,6 +1057,7 @@ function RouteStepEditor({
   const [newStepName, setNewStepName] = useState("");
   const [newStepWsId, setNewStepWsId] = useState("");
   const [newStepGate, setNewStepGate] = useState(true);
+  const [newStepCycleTime, setNewStepCycleTime] = useState("");
   const [deletingStepIndex, setDeletingStepIndex] = useState<number | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -1057,20 +1065,27 @@ function RouteStepEditor({
     (a, b) => a.step_number - b.step_number,
   );
 
+  function mapStep(s: RouteStep, i: number) {
+    return {
+      workstation_id: s.workstation_id,
+      step_number: i + 1,
+      name: s.name,
+      pass_fail_gate: s.pass_fail_gate,
+      ...(s.ideal_cycle_time_seconds != null ? { ideal_cycle_time_seconds: s.ideal_cycle_time_seconds } : {}),
+    };
+  }
+
   function handleAddStep() {
     if (!newStepName.trim() || !newStepWsId) return;
+    const cycleTime = newStepCycleTime ? Number(newStepCycleTime) : undefined;
     const newSteps = [
-      ...sortedSteps.map((s) => ({
-        workstation_id: s.workstation_id,
-        step_number: s.step_number,
-        name: s.name,
-        pass_fail_gate: s.pass_fail_gate,
-      })),
+      ...sortedSteps.map((s, i) => mapStep(s, i)),
       {
         workstation_id: newStepWsId,
         step_number: sortedSteps.length + 1,
         name: newStepName.trim(),
         pass_fail_gate: newStepGate,
+        ...(cycleTime && cycleTime > 0 ? { ideal_cycle_time_seconds: cycleTime } : {}),
       },
     ];
     startTransition(async () => {
@@ -1078,6 +1093,7 @@ function RouteStepEditor({
       setNewStepName("");
       setNewStepWsId("");
       setNewStepGate(true);
+      setNewStepCycleTime("");
       setShowAdd(false);
       onReload();
     });
@@ -1086,12 +1102,7 @@ function RouteStepEditor({
   function handleRemoveStep(stepIndex: number) {
     const newSteps = sortedSteps
       .filter((_, i) => i !== stepIndex)
-      .map((s, i) => ({
-        workstation_id: s.workstation_id,
-        step_number: i + 1,
-        name: s.name,
-        pass_fail_gate: s.pass_fail_gate,
-      }));
+      .map((s, i) => mapStep(s, i));
     startTransition(async () => {
       await editRoute(route.id, undefined, newSteps);
       onReload();
@@ -1103,12 +1114,7 @@ function RouteStepEditor({
     if (targetIndex < 0 || targetIndex >= sortedSteps.length) return;
     const reordered = [...sortedSteps];
     [reordered[stepIndex], reordered[targetIndex]] = [reordered[targetIndex], reordered[stepIndex]];
-    const newSteps = reordered.map((s, i) => ({
-      workstation_id: s.workstation_id,
-      step_number: i + 1,
-      name: s.name,
-      pass_fail_gate: s.pass_fail_gate,
-    }));
+    const newSteps = reordered.map((s, i) => mapStep(s, i));
     startTransition(async () => {
       await editRoute(route.id, undefined, newSteps);
       onReload();
@@ -1117,9 +1123,7 @@ function RouteStepEditor({
 
   function handleToggleGate(stepIndex: number) {
     const newSteps = sortedSteps.map((s, i) => ({
-      workstation_id: s.workstation_id,
-      step_number: i + 1,
-      name: s.name,
+      ...mapStep(s, i),
       pass_fail_gate: i === stepIndex ? !s.pass_fail_gate : s.pass_fail_gate,
     }));
     startTransition(async () => {
@@ -1159,6 +1163,9 @@ function RouteStepEditor({
             <div className="text-xs text-text-primary truncate">{step.name}</div>
             <div className="text-[10px] text-text-secondary/60 truncate">
               {step.workstations?.name ?? "Unknown workstation"}
+              {step.ideal_cycle_time_seconds != null && (
+                <span className="ml-1">· {step.ideal_cycle_time_seconds}s</span>
+              )}
             </div>
           </div>
           <button
@@ -1225,6 +1232,16 @@ function RouteStepEditor({
               </option>
             ))}
           </select>
+          <input
+            type="number"
+            min="1"
+            step="1"
+            value={newStepCycleTime}
+            onChange={(e) => setNewStepCycleTime(e.target.value)}
+            placeholder="Cycle time (seconds, optional)"
+            className="w-full px-2 py-1 text-xs rounded border border-border bg-bg-app text-text-primary placeholder:text-text-secondary/50 focus:outline-none"
+            disabled={pending}
+          />
           <label className="flex items-center gap-1.5 text-xs text-text-secondary cursor-pointer">
             <input
               type="checkbox"

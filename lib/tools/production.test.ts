@@ -32,10 +32,11 @@ const ROUTE_ID = "22222222-2222-2222-2222-222222222222";
 const PRODUCTION_ORDER_ID = "33333333-3333-3333-3333-333333333333";
 const UNIT_ID = "44444444-4444-4444-4444-444444444444";
 
-function makeClient(fromChains: ReturnType<typeof dbChain>[]) {
+function makeClient(fromChains: ReturnType<typeof dbChain>[], rpcResult?: { data: unknown; error: unknown }) {
   const client = {
     auth: { getUser: vi.fn().mockResolvedValue({ data: { user: USER } }) },
     from: vi.fn(),
+    rpc: vi.fn().mockResolvedValue(rpcResult ?? { data: null, error: null }),
   };
   for (const chain of fromChains) {
     client.from.mockReturnValueOnce(chain);
@@ -110,11 +111,13 @@ describe("generateUnits — serial number generation", () => {
     const count = 3;
     const units = makeUnits(0, count);
 
-    makeClient([
-      dbChain({ data: ALGO }),                          // SELECT serial_algorithm
-      dbChain({ data: { current_counter: count } }),    // UPDATE counter
-      dbChain({ data: units }),                         // INSERT units
-    ]);
+    makeClient(
+      [
+        dbChain({ data: ALGO }),                          // SELECT serial_algorithm
+        dbChain({ data: units }),                         // INSERT units
+      ],
+      { data: count, error: null },                       // rpc increment_serial_counter returns new counter
+    );
 
     const result = await generateUnits({
       part_number_id: PART_NUMBER_ID,
@@ -129,11 +132,13 @@ describe("generateUnits — serial number generation", () => {
     const count = 5;
     const units = makeUnits(997, count);
 
-    makeClient([
-      dbChain({ data: { ...ALGO, current_counter: 997 } }),
-      dbChain({ data: { current_counter: 1002 } }),
-      dbChain({ data: units }),
-    ]);
+    makeClient(
+      [
+        dbChain({ data: { ...ALGO, current_counter: 997 } }),
+        dbChain({ data: units }),
+      ],
+      { data: 1002, error: null },                        // rpc returns new counter (997 + 5)
+    );
 
     const result = await generateUnits({
       part_number_id: PART_NUMBER_ID,
@@ -155,10 +160,12 @@ describe("generateUnits — serial number generation", () => {
   });
 
   it("throws when counter update fails", async () => {
-    makeClient([
-      dbChain({ data: ALGO }),                                          // SELECT serial_algorithm
-      dbChain({ data: null, error: { message: "counter locked" } }),    // UPDATE counter (fails)
-    ]);
+    makeClient(
+      [
+        dbChain({ data: ALGO }),                                        // SELECT serial_algorithm
+      ],
+      { data: null, error: { message: "counter locked" } },            // rpc fails
+    );
 
     await expect(
       generateUnits({ part_number_id: PART_NUMBER_ID, route_id: ROUTE_ID, count: 1 }),
@@ -377,5 +384,56 @@ describe("scrapUnit", () => {
 
     const result = await scrapUnit({ unit_id: UNIT_ID });
     expect(result).toMatchObject({ status: "scrapped" });
+  });
+
+  it("auto-completes order when last in_progress unit is scrapped", async () => {
+    const unit = {
+      id: UNIT_ID,
+      status: "in_progress",
+      current_step: 1,
+      route_id: ROUTE_ID,
+      production_order_id: PRODUCTION_ORDER_ID,
+    };
+    const scrapped = { ...unit, status: "scrapped" };
+
+    const client = makeClient([
+      dbChain({ data: unit }),                      // SELECT unit
+      dbChain({ data: { id: "step-1", workstation_id: "ws-1" } }), // SELECT route_step
+      dbChain({ data: null }),                      // INSERT unit_history
+      dbChain({ data: scrapped }),                  // UPDATE units (scrap)
+      dbChain({ data: null }),                      // INSERT quality_events
+      dbChain({ count: 0, data: null }),            // SELECT units count (0 in_progress)
+      dbChain({ data: null }),                      // UPDATE production_orders (complete)
+    ]);
+
+    const result = await scrapUnit({ unit_id: UNIT_ID });
+    expect(result).toMatchObject({ status: "scrapped" });
+    // Should have queried for remaining in_progress units and updated order
+    expect(client.from).toHaveBeenCalledTimes(7);
+  });
+
+  it("does not auto-complete order when other units are still in_progress", async () => {
+    const unit = {
+      id: UNIT_ID,
+      status: "in_progress",
+      current_step: 1,
+      route_id: ROUTE_ID,
+      production_order_id: PRODUCTION_ORDER_ID,
+    };
+    const scrapped = { ...unit, status: "scrapped" };
+
+    const client = makeClient([
+      dbChain({ data: unit }),                      // SELECT unit
+      dbChain({ data: { id: "step-1", workstation_id: "ws-1" } }), // SELECT route_step
+      dbChain({ data: null }),                      // INSERT unit_history
+      dbChain({ data: scrapped }),                  // UPDATE units (scrap)
+      dbChain({ data: null }),                      // INSERT quality_events
+      dbChain({ count: 3, data: null }),            // SELECT units count (3 still in_progress)
+    ]);
+
+    const result = await scrapUnit({ unit_id: UNIT_ID });
+    expect(result).toMatchObject({ status: "scrapped" });
+    // Should NOT update production_orders (6 calls, not 7)
+    expect(client.from).toHaveBeenCalledTimes(6);
   });
 });

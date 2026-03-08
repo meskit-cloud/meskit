@@ -328,6 +328,7 @@ export const createRouteSchema = z.object({
       step_number: z.number().int().min(1),
       name: z.string(),
       pass_fail_gate: z.boolean().optional(),
+      ideal_cycle_time_seconds: z.number().positive().optional(),
     }),
   ),
 });
@@ -363,6 +364,7 @@ export async function createRoute(input: CreateRouteInput) {
       step_number: step.step_number,
       name: step.name,
       pass_fail_gate: step.pass_fail_gate ?? true,
+      ideal_cycle_time_seconds: step.ideal_cycle_time_seconds ?? null,
     }));
 
     const { error: stepsError } = await supabase
@@ -391,7 +393,7 @@ export async function createRoute(input: CreateRouteInput) {
 registerTool({
   name: "create_route",
   description:
-    "Create a route for a part number with ordered steps assigned to workstations",
+    "Create a route for a part number with ordered steps assigned to workstations. Each step can include an optional ideal_cycle_time_seconds.",
   schema: createRouteSchema,
   execute: createRoute,
 });
@@ -408,6 +410,7 @@ export const updateRouteSchema = z.object({
         step_number: z.number().int().min(1),
         name: z.string(),
         pass_fail_gate: z.boolean().optional(),
+        ideal_cycle_time_seconds: z.number().positive().optional(),
       }),
     )
     .optional(),
@@ -418,17 +421,11 @@ export async function updateRoute(input: UpdateRouteInput) {
   const validated = updateRouteSchema.parse(input);
   const supabase = await createClient();
 
-  // Update route name if provided
-  if (validated.name) {
-    const { error } = await supabase
-      .from("routes")
-      .update({ name: validated.name })
-      .eq("id", validated.id);
+  // Build route-level updates
+  const routeUpdates: Record<string, unknown> = {};
+  if (validated.name) routeUpdates.name = validated.name;
 
-    if (error) throw new Error(`update_route failed: ${error.message}`);
-  }
-
-  // Replace steps if provided
+  // Replace steps if provided — also bumps route version
   if (validated.steps) {
     // Delete existing steps
     const { error: deleteError } = await supabase
@@ -447,6 +444,7 @@ export async function updateRoute(input: UpdateRouteInput) {
         step_number: step.step_number,
         name: step.name,
         pass_fail_gate: step.pass_fail_gate ?? true,
+        ideal_cycle_time_seconds: step.ideal_cycle_time_seconds ?? null,
       }));
 
       const { error: insertError } = await supabase
@@ -456,6 +454,26 @@ export async function updateRoute(input: UpdateRouteInput) {
       if (insertError)
         throw new Error(`update_route insert steps failed: ${insertError.message}`);
     }
+
+    // Increment route version (steps changed)
+    // Fetch current version first, then set version + 1
+    const { data: current } = await supabase
+      .from("routes")
+      .select("version")
+      .eq("id", validated.id)
+      .single();
+
+    routeUpdates.version = (current?.version ?? 1) + 1;
+  }
+
+  // Apply route-level updates (name and/or version bump)
+  if (Object.keys(routeUpdates).length > 0) {
+    const { error } = await supabase
+      .from("routes")
+      .update(routeUpdates)
+      .eq("id", validated.id);
+
+    if (error) throw new Error(`update_route failed: ${error.message}`);
   }
 
   // Return updated route with steps
@@ -472,7 +490,7 @@ export async function updateRoute(input: UpdateRouteInput) {
 
 registerTool({
   name: "update_route",
-  description: "Update a route's name and/or replace its steps",
+  description: "Update a route's name and/or replace its steps. Replacing steps auto-increments the route version.",
   schema: updateRouteSchema,
   execute: updateRoute,
 });

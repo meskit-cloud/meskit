@@ -1,7 +1,6 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient as createBaseClient } from "@supabase/supabase-js";
 import crypto from "node:crypto";
 import { createServiceClient } from "@/lib/supabase/service";
 import { apiClientStorage } from "@/lib/supabase/server";
@@ -14,33 +13,6 @@ import "@/lib/tools/product";
 import "@/lib/tools/production";
 import "@/lib/tools/quality";
 import "@/lib/tools/analytics";
-
-// --- JWT creation (no external deps) ---
-// Requires SUPABASE_JWT_SECRET (Supabase dashboard → Settings → API → JWT Secret)
-
-function createUserJWT(userId: string): string {
-  const secret = process.env.SUPABASE_JWT_SECRET;
-  if (!secret) throw new Error("SUPABASE_JWT_SECRET is not configured");
-
-  const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
-  const payload = Buffer.from(
-    JSON.stringify({
-      aud: "authenticated",
-      exp: Math.floor(Date.now() / 1000) + 60,
-      iat: Math.floor(Date.now() / 1000),
-      iss: "supabase",
-      sub: userId,
-      role: "authenticated",
-    }),
-  ).toString("base64url");
-
-  const signature = crypto
-    .createHmac("sha256", secret)
-    .update(`${header}.${payload}`)
-    .digest("base64url");
-
-  return `${header}.${payload}.${signature}`;
-}
 
 // --- API key validation ---
 
@@ -114,29 +86,26 @@ export async function POST(
     input = {};
   }
 
-  // Create user-scoped Supabase client via JWT
-  let jwt: string;
-  try {
-    jwt = createUserJWT(auth.userId);
-  } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : "JWT creation failed" },
-      { status: 500 },
-    );
-  }
+  // Service role client bypasses RLS. We stub auth.getUser() so tools
+  // resolve the correct user_id without needing a user-scoped JWT.
+  const serviceClient = createServiceClient();
+  const userStub = {
+    id: auth.userId,
+    aud: "authenticated",
+    role: "authenticated",
+    email: "",
+    created_at: "",
+    app_metadata: {},
+    user_metadata: {},
+  };
+  serviceClient.auth.getUser = async () => ({
+    data: { user: userStub as never },
+    error: null,
+  });
 
-  const userClient = createBaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      global: { headers: { Authorization: `Bearer ${jwt}` } },
-      auth: { persistSession: false, autoRefreshToken: false },
-    },
-  );
-
-  // Execute tool within the user-scoped client context
+  // Execute tool within the service-role client context
   try {
-    const result = await apiClientStorage.run(userClient, () =>
+    const result = await apiClientStorage.run(serviceClient, () =>
       executeTool(toolName, input, { actor: "user" }),
     );
 

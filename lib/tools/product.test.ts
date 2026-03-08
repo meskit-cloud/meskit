@@ -320,13 +320,14 @@ describe("createRoute", () => {
 describe("updateRoute", () => {
   const STEP = { workstation_id: WS_ID, step_number: 1, name: "Assembly" };
 
-  it("replaces steps when steps are provided: delete then insert", async () => {
+  it("replaces steps when steps are provided: delete then insert, bumps version", async () => {
     const updatedRoute = { id: ROUTE_ID, name: "Updated", route_steps: [] };
     const client = makeClient([
-      dbChain({ data: null }),          // UPDATE routes (name)
-      dbChain({ data: null }),          // DELETE route_steps
-      dbChain({ data: null }),          // INSERT route_steps
-      dbChain({ data: updatedRoute }),  // SELECT routes with steps
+      dbChain({ data: null }),            // DELETE route_steps
+      dbChain({ data: null }),            // INSERT route_steps
+      dbChain({ data: { version: 1 } }), // SELECT routes (version fetch)
+      dbChain({ data: null }),            // UPDATE routes (name + version bump)
+      dbChain({ data: updatedRoute }),    // SELECT routes with steps
     ]);
 
     const result = await updateRoute({
@@ -336,7 +337,7 @@ describe("updateRoute", () => {
     });
 
     expect(result).toEqual(updatedRoute);
-    expect(client.from).toHaveBeenCalledTimes(4);
+    expect(client.from).toHaveBeenCalledTimes(5);
   });
 
   it("skips step replacement when steps are not provided", async () => {
@@ -350,16 +351,18 @@ describe("updateRoute", () => {
     expect(client.from).toHaveBeenCalledTimes(2);
   });
 
-  it("skips name update when name is not provided", async () => {
+  it("skips name update when name is not provided, still bumps version", async () => {
     const updatedRoute = { id: ROUTE_ID, route_steps: [] };
     const client = makeClient([
-      dbChain({ data: null }),          // DELETE route_steps
-      dbChain({ data: null }),          // INSERT route_steps
-      dbChain({ data: updatedRoute }),  // SELECT routes
+      dbChain({ data: null }),            // DELETE route_steps
+      dbChain({ data: null }),            // INSERT route_steps
+      dbChain({ data: { version: 2 } }), // SELECT routes (version fetch)
+      dbChain({ data: null }),            // UPDATE routes (version bump only)
+      dbChain({ data: updatedRoute }),    // SELECT routes with steps
     ]);
 
     await updateRoute({ id: ROUTE_ID, steps: [STEP] });
-    expect(client.from).toHaveBeenCalledTimes(3);
+    expect(client.from).toHaveBeenCalledTimes(5);
   });
 });
 

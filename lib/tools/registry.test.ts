@@ -8,6 +8,13 @@ vi.mock("@/lib/audit", () => ({
 vi.mock("@/lib/webhooks", () => ({
   fireWebhooksForTool: vi.fn().mockResolvedValue(undefined),
 }));
+vi.mock("@/lib/supabase/server", () => ({
+  createClient: vi.fn().mockResolvedValue({
+    auth: {
+      getUser: vi.fn().mockResolvedValue({ data: { user: { id: "test-user" } } }),
+    },
+  }),
+}));
 
 import {
   registerTool,
@@ -105,12 +112,14 @@ describe("executeTool", () => {
 
   it("fires webhooks with the tool name and result (fire-and-forget)", async () => {
     await executeTool("__test_exec__", { count: 5 });
-    expect(fireWebhooksForTool).toHaveBeenCalledWith(
-      "__test_exec__",
-      // userId comes from result.user_id or validated.user_id; neither exists on this tool
-      undefined,
-      { id: "result-id", count: 5 },
-    );
+    // Flush the fire-and-forget promise chain (createClient → getUser → fireWebhooksForTool)
+    await vi.waitFor(() => {
+      expect(fireWebhooksForTool).toHaveBeenCalledWith(
+        "__test_exec__",
+        "test-user",
+        { id: "result-id", count: 5 },
+      );
+    });
   });
 
   it("passes actor and agent_name to audit log", async () => {

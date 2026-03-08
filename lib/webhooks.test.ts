@@ -27,6 +27,7 @@ function makeServiceClient(subs: typeof SUBSCRIPTION[] | null) {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "test-service-key");
   vi.mocked(global.fetch).mockResolvedValue({ ok: true } as Response);
 });
 

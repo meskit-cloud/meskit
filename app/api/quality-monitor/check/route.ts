@@ -104,6 +104,7 @@ export async function POST(request: NextRequest) {
 
     const result = await generateText({
       model: getModel(),
+      temperature: 0,
       system: buildQualityAnalystSystemPrompt(context),
       prompt: `A quality event was just recorded at workstation ${triggerData.workstation_id}.${
         yieldDropDetected ? " YIELD DROP detected (below 90%)." : ""

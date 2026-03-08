@@ -47,6 +47,7 @@ export async function runAgent(
       try {
         const result = streamText({
           model: getModel(),
+          temperature: 0,
           system: request.systemPrompt,
           messages,
           tools: Object.keys(tools).length > 0 ? tools : undefined,

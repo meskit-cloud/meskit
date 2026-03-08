@@ -88,7 +88,7 @@ export async function fetchRoutes(partNumberId: string) {
 export async function addRoute(
   partNumberId: string,
   name: string,
-  steps: { workstation_id: string; step_number: number; name: string; pass_fail_gate?: boolean }[],
+  steps: { workstation_id: string; step_number: number; name: string; pass_fail_gate?: boolean; ideal_cycle_time_seconds?: number }[],
 ) {
   const result = await createRoute({ part_number_id: partNumberId, name, steps });
   writeAuditLog({ action: "create_route", entity_type: "route", entity_id: (result as { id: string }).id, metadata: { part_number_id: partNumberId, name, step_count: steps.length } });
@@ -98,7 +98,7 @@ export async function addRoute(
 export async function editRoute(
   id: string,
   name?: string,
-  steps?: { workstation_id: string; step_number: number; name: string; pass_fail_gate?: boolean }[],
+  steps?: { workstation_id: string; step_number: number; name: string; pass_fail_gate?: boolean; ideal_cycle_time_seconds?: number }[],
 ) {
   const result = await updateRoute({ id, name, steps });
   writeAuditLog({ action: "update_route", entity_type: "route", entity_id: id, metadata: { name, step_count: steps?.length } });

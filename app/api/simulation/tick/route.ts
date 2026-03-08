@@ -13,6 +13,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getWipStatus } from "@/lib/tools/production";
 import { listProductionOrders } from "@/lib/tools/production";
 import { listMachines } from "@/lib/tools/shop-floor";
+import { listRoutes } from "@/lib/tools/product";
 
 // Ensure tool modules register themselves
 import "@/lib/tools/shop-floor";
@@ -36,10 +37,11 @@ export async function POST(request: NextRequest) {
 
     // --- Build simulator context from live DB state ---
 
-    const [wipResult, ordersResult, machinesResult] = await Promise.allSettled([
+    const [wipResult, ordersResult, machinesResult, routesResult] = await Promise.allSettled([
       getWipStatus({}),
       listProductionOrders({}),
       listMachines({}),
+      listRoutes({}),
     ]);
 
     const wip = wipResult.status === "fulfilled"
@@ -53,6 +55,21 @@ export async function POST(request: NextRequest) {
     const machines = machinesResult.status === "fulfilled"
       ? (machinesResult.value as { id: string; name: string; status: string }[])
       : [];
+
+    const routes = routesResult.status === "fulfilled"
+      ? (routesResult.value as { name: string; route_steps: { step_number: number; name: string; ideal_cycle_time_seconds: number | null }[] }[])
+      : [];
+
+    const routeStepCycleTimes = routes.flatMap((r) =>
+      r.route_steps
+        .filter((s) => s.ideal_cycle_time_seconds != null)
+        .map((s) => ({
+          routeName: r.name,
+          stepNumber: s.step_number,
+          stepName: s.name,
+          idealCycleTimeSeconds: s.ideal_cycle_time_seconds!,
+        })),
+    );
 
     const context: SimulatorContext = {
       activeScenario: scenario,
@@ -77,6 +94,7 @@ export async function POST(request: NextRequest) {
         machineName: m.name,
         status: m.status,
       })),
+      routeStepCycleTimes: routeStepCycleTimes.length > 0 ? routeStepCycleTimes : undefined,
     };
 
     // --- Run simulator agent ---
@@ -88,6 +106,7 @@ export async function POST(request: NextRequest) {
 
     const result = await generateText({
       model: getModel(),
+      temperature: 0,
       system: systemPrompt,
       prompt: `Execute tick #${tickNumber}. Review the current factory state and take the appropriate production actions.`,
       tools: Object.keys(tools).length > 0 ? tools : undefined,

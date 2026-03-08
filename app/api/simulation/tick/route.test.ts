@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   getWipStatus: vi.fn(),
   listProductionOrders: vi.fn(),
   listMachines: vi.fn(),
+  listRoutes: vi.fn(),
 }));
 
 vi.mock("ai", () => ({
@@ -44,8 +45,18 @@ vi.mock("@/lib/tools/shop-floor", () => ({
   listMachines: mocks.listMachines,
 }));
 
-vi.mock("@/lib/tools/product", () => ({}));
+vi.mock("@/lib/tools/product", () => ({
+  listRoutes: mocks.listRoutes,
+}));
 vi.mock("@/lib/tools/quality", () => ({}));
+
+vi.mock("@/lib/supabase/server", () => ({
+  createClient: vi.fn().mockResolvedValue({
+    auth: {
+      getUser: vi.fn().mockResolvedValue({ data: { user: { id: "test-user" } } }),
+    },
+  }),
+}));
 
 import { POST } from "./route";
 
@@ -98,6 +109,15 @@ describe("POST /api/simulation/tick", () => {
     mocks.listMachines.mockResolvedValue([
       { id: "machine-1", name: "Press", status: "EXECUTE" },
     ]);
+    mocks.listRoutes.mockResolvedValue([
+      {
+        name: "Standard Assembly",
+        route_steps: [
+          { step_number: 1, name: "Assembly", ideal_cycle_time_seconds: 30 },
+          { step_number: 2, name: "Test", ideal_cycle_time_seconds: null },
+        ],
+      },
+    ]);
 
     const response = await POST(
       makeRequest({ scenario: "steady_state", tickNumber: 3 }),
@@ -137,6 +157,14 @@ describe("POST /api/simulation/tick", () => {
           status: "EXECUTE",
         },
       ],
+      routeStepCycleTimes: [
+        {
+          routeName: "Standard Assembly",
+          stepNumber: 1,
+          stepName: "Assembly",
+          idealCycleTimeSeconds: 30,
+        },
+      ],
     });
 
     expect(mocks.generateText).toHaveBeenCalledWith(
@@ -154,6 +182,7 @@ describe("POST /api/simulation/tick", () => {
     mocks.getWipStatus.mockRejectedValue(new Error("db unavailable"));
     mocks.listProductionOrders.mockResolvedValue([]);
     mocks.listMachines.mockResolvedValue([]);
+    mocks.listRoutes.mockResolvedValue([]);
 
     const response = await POST(
       makeRequest({ scenario: "ramp_up", tickNumber: 7 }),
@@ -175,6 +204,7 @@ describe("POST /api/simulation/tick", () => {
     mocks.getWipStatus.mockResolvedValue([]);
     mocks.listProductionOrders.mockResolvedValue([]);
     mocks.listMachines.mockResolvedValue([]);
+    mocks.listRoutes.mockResolvedValue([]);
     mocks.generateText.mockRejectedValue(new Error("model unavailable"));
 
     const response = await POST(

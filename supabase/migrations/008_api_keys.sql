@@ -1,6 +1,8 @@
 -- Migration 008: API Keys and Webhook Subscriptions
 -- Enables programmatic access to MESkit via REST API and event webhooks.
 
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 -- --- API Keys ---
 -- key_hash: SHA-256 of the raw key (raw key shown once at creation, never stored)
 -- scopes: array of allowed tool names, or ['*'] for full access
@@ -34,7 +36,7 @@ CREATE TABLE IF NOT EXISTS webhook_subscriptions (
   name       TEXT NOT NULL,
   url        TEXT NOT NULL,
   events     TEXT[] NOT NULL DEFAULT ARRAY['*'],
-  secret     TEXT NOT NULL DEFAULT encode(gen_random_bytes(32), 'hex'),
+  secret     TEXT NOT NULL DEFAULT encode(extensions.gen_random_bytes(32), 'hex'),
   is_active  BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

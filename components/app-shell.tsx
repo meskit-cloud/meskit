@@ -14,6 +14,7 @@ import {
   Sun,
   Moon,
   HelpCircle,
+  KeyRound,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useUiStore } from "@/lib/stores/ui-store";
@@ -149,6 +150,13 @@ export function TopBar({ userEmail, userCreatedAt }: { userEmail: string; userCr
 
         <div className="flex items-center gap-2 text-sm text-text-secondary">
           <span className="text-xs">{userEmail}</span>
+          <button
+            onClick={() => router.push("/settings")}
+            className="p-2 rounded-lg hover:bg-bg-app transition-colors"
+            title="API Keys"
+          >
+            <KeyRound size={16} />
+          </button>
           <button
             onClick={handleLogout}
             className="p-2 rounded-lg hover:bg-bg-app transition-colors"

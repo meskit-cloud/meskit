@@ -3,15 +3,10 @@ import { NextRequest } from "next/server";
 import { z, ZodError } from "zod";
 
 const mocks = vi.hoisted(() => ({
-  createBaseClient: vi.fn(),
   createServiceClient: vi.fn(),
-  apiClientRun: vi.fn((client: unknown, fn: () => unknown) => fn()),
+  apiClientRun: vi.fn((_client: unknown, fn: () => unknown) => fn()),
   getTool: vi.fn(),
   executeTool: vi.fn(),
-}));
-
-vi.mock("@supabase/supabase-js", () => ({
-  createClient: mocks.createBaseClient,
 }));
 
 vi.mock("@/lib/supabase/service", () => ({
@@ -68,28 +63,28 @@ function makeRequest(
 }
 
 function mockAuthorizedApiKey(scopes: string[]) {
-  mocks.createServiceClient.mockReturnValue(
-    mockSupabaseClient({
-      fromChains: [
-        dbChain({
-          data: {
-            user_id: "user-1",
-            scopes,
-          },
-        }),
-        dbChain({ data: null }),
-      ],
-    }) as never,
-  );
+  const client = mockSupabaseClient({
+    fromChains: [
+      dbChain({
+        data: {
+          user_id: "user-1",
+          scopes,
+        },
+      }),
+      dbChain({ data: null }),
+    ],
+  });
+  // Add a stubable auth.getUser
+  (client as Record<string, unknown>).auth = {
+    getUser: vi.fn(),
+  };
+  mocks.createServiceClient.mockReturnValue(client as never);
+  return client;
 }
 
 beforeEach(() => {
   vi.clearAllMocks();
-  process.env.SUPABASE_JWT_SECRET = "test-jwt-secret";
-  process.env.NEXT_PUBLIC_SUPABASE_URL = "https://example.supabase.co";
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "test-anon-key";
-  mocks.createBaseClient.mockReturnValue({ kind: "user-client" });
-  mocks.apiClientRun.mockImplementation((client, fn) => fn());
+  mocks.apiClientRun.mockImplementation((_client, fn) => fn());
 });
 
 describe("POST /api/tools/[toolName]", () => {
@@ -167,8 +162,8 @@ describe("POST /api/tools/[toolName]", () => {
     });
   });
 
-  it("executes the tool inside the user-scoped Supabase client and paginates arrays", async () => {
-    mockAuthorizedApiKey(["*"]);
+  it("executes the tool via service-role client with stubbed auth and paginates arrays", async () => {
+    const client = mockAuthorizedApiKey(["*"]);
     mocks.getTool.mockReturnValue({
       name: "search_units",
       schema: z.object({}),
@@ -195,21 +190,16 @@ describe("POST /api/tools/[toolName]", () => {
       total: 3,
     });
 
-    expect(mocks.createBaseClient).toHaveBeenCalledWith(
-      "https://example.supabase.co",
-      "test-anon-key",
-      expect.objectContaining({
-        global: {
-          headers: {
-            Authorization: expect.stringMatching(/^Bearer /),
-          },
-        },
-      }),
-    );
+    // Service client is passed to apiClientStorage (not a JWT-scoped client)
     expect(mocks.apiClientRun).toHaveBeenCalledWith(
-      { kind: "user-client" },
+      client,
       expect.any(Function),
     );
+    // auth.getUser is stubbed to return the API key's user_id
+    const stubbedGetUser = (client as { auth: { getUser: () => Promise<unknown> } }).auth.getUser;
+    const { data } = await stubbedGetUser() as { data: { user: { id: string } } };
+    expect(data.user.id).toBe("user-1");
+
     expect(mocks.executeTool).toHaveBeenCalledWith("search_units", {}, {
       actor: "user",
     });
