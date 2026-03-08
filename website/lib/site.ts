@@ -6,7 +6,7 @@ export const siteConfig = {
   description:
     'Source-available MES with built-in analytics, quality alerts, and natural language queries. Free to self-host. ISA-95 aligned, simulation-first, MQTT-ready.',
   url: 'https://meskit.cloud',
-  appUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://app.meskit.cloud',
   githubUrl: 'https://github.com/meskit-cloud/meskit',
   docsUrl: 'https://meskit.cloud/docs',
   lastUpdated: 'March 7, 2026',
