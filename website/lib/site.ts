@@ -9,7 +9,7 @@ export const siteConfig = {
   appUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   githubUrl: 'https://github.com/meskit-cloud/meskit',
   docsUrl: 'https://meskit.cloud/docs',
-  lastUpdated: 'March 5, 2026',
+  lastUpdated: 'March 7, 2026',
   author: 'MESkit Team',
 };
 
@@ -132,13 +132,13 @@ export function buildPageMetadata(input: {
 
 export const coreFacts = [
   'Category: Open-source MES toolkit with built-in analytics (MIT license).',
-  'Identity: Open-source MES with dashboards, quality alerts, and natural language queries. Operators stay in command.',
+  'Identity: Open-source MES with production tracking, quality alerts, and natural language queries. Operators stay in command.',
   'Standards: ISA-95 aligned data model with 15 mapped Postgres tables.',
   'Tool layer: 26 Zod-validated server actions shared by UI and intelligence layer.',
   'Smart features: Ask MESkit (natural language queries), Quality Monitor, Production Planner.',
   'North Star: Predict machine failure and coordinate the response via three automation layers (Monitor, Plan, Act) — operators stay in command.',
-  'Roadmap: 6 milestones (M1 complete, M2 in progress, through M6 MQTT integration).',
-  'Stack: Next.js, Supabase, Gemini API (tool-use), TypeScript.',
+  'Roadmap: 6 milestones. M1–M3 complete (scaffold, Build Mode, Configure Mode). M4 (Run Mode + Simulator) in progress.',
+  'Stack: Next.js, Supabase, Claude API (tool-use), TypeScript.',
 ];
 
 export const taxonomy = [

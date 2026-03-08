@@ -1,8 +1,19 @@
 # MESkit Website PRD
 
-- Status: Draft v2
-- Last updated: 2026-03-03
+- Status: Draft v4
+- Last updated: 2026-03-07
 - Source context: `/MESKIT_PRD.md` (product PRD)
+
+## Related Docs
+
+- [Documentation Map](../docs/DOCUMENTATION_MAP.md) — overview of the core MESkit doc system
+- [README](../README.md) — public-facing product summary
+- [Product Principles](../PRODUCT_PRINCIPLES.md) — durable product and messaging constraints
+- [PRD](../MESKIT_PRD.md) — source product strategy this website should represent
+- [Roadmap](../ROADMAP.md) — milestone status and future scope the website should communicate accurately
+- [Licensing and Growth Strategy](../LICENSING_AND_GROWTH_STRATEGY.md) — packaging, PLG, and licensing direction
+- [Target Audience](../docs/GTM_Target_Audience.md) — ICP this website should convert
+- [Manufacturing Software Stack](../docs/MANUFACTURING_SOFTWARE_STACK.md) — integration priorities relevant to onboarding and content strategy
 
 ## 1. Purpose
 
@@ -60,10 +71,44 @@ MVP product scope focuses on discrete manufacturing UX (Build, Configure, Run, M
 
 ## 4. Target Audiences
 
-1. Manufacturing engineers learning or implementing ISA-95 concepts.
-2. Small manufacturers evaluating lightweight MES options.
-3. Developers building manufacturing systems who need a reference stack.
-4. Teams exploring smart manufacturing who want real MES tools with built-in analytics, not chatbot demos.
+### Primary buyer — ops manager or owner at a small contract manufacturer (10–100 employees)
+
+This is someone upgrading from Excel, whiteboards, or nothing at all — not someone evaluating SAP or Tulip. The same person is the buyer at every pricing tier; what changes is the external pressure driving their upgrade.
+
+**Stage 1 — Internal need (Starter, €99/month):**
+- Walks the floor counting WIP manually, no real-time visibility
+- Finds quality problems at end-of-shift when it's too late to act
+- Can't answer "can we ship 500 units Friday?" without an hour of work
+- Wants: production tracking, WIP dashboards, quality logs
+
+**Stage 2 — Customer demand (Pro, €499/month):**
+- An OEM customer audits them and asks for structured traceability data
+- A quality escape cost them a customer relationship
+- Wants: full lot traceability, quality analytics, alerts, audit-ready records
+
+**Stage 3 — Regulatory / supply chain (Enterprise, €1,500/month):**
+- A large OEM (BMW, Siemens, a medical device company) tells them: "Provide carbon footprint data per batch or lose the contract"
+- EU CSRD and the EU Digital Product Passport are cascading compliance requirements down to small shops
+- Wants: PCF reports, Pathfinder export, tamper-proof production records
+
+The key insight for website messaging: **the blockchain and carbon features are not for a different buyer.** They're for the same ops manager at a later stage, when their biggest customer is demanding it. The website growth narrative is "MESkit grows with you" — not feature upsell.
+
+**Their language (not MES jargon):**
+- "Where are my units?"
+- "Are we going to hit the deadline?"
+- "Why does Station 3 keep failing?"
+- "I need to know what happened to lot 4472."
+- "BMW just told us we need carbon data per unit or lose the contract."
+
+### Secondary user — developer or system integrator
+
+Finds MESkit on GitHub. Self-hosts it. Evaluates the architecture. If good, deploys for 5–20 clients. Not the primary website audience — served by README, docs, and community (GitHub, Hacker News, Reddit). The website serves the ops manager.
+
+### Non-targets (for now)
+
+- Plant managers at 500+ person manufacturers: require IT approval, procurement, compliance certifications. Served by Tulip, Rockwell, Siemens. Can't reach without a sales team.
+- MES-curious developers who want to learn: will star the repo but not pay. Fine for awareness, not for conversion.
+- Pharma / medical devices (cold start): require GxP validation, SOC 2. May become accessible as the product reaches Stage 3 maturity — not the entry point.
 
 ## 5. Messaging Framework
 
@@ -71,9 +116,27 @@ MVP product scope focuses on discrete manufacturing UX (Build, Configure, Run, M
 
 **Finally, an MES that's as easy to use as asking a question.** Open-source MES with built-in analytics.
 
+### Hero copy
+
+| Element | Copy |
+|---------|------|
+| **H1** | Finally, an MES that's as easy to use as asking a question. |
+| **Subheadline** | Stop chasing data across spreadsheets. Ask MESkit what's happening on your floor and get a real answer. |
+| **Body** | Open-source MES with production tracking, quality alerts, and built-in analytics. Free to self-host. Cloud from €99/month. |
+| **Primary CTA** | Try the Simulator (no signup) |
+| **Secondary CTA** | View Plans |
+
+The "spreadsheets" reference in the subheadline is intentional — it is the signal that tells the right buyer "this is for me." The technical details (ISA-95, MQTT, tool layer) belong further down the page, not in the hero.
+
 ### Core promise
 
-"Open-source MES toolkit with built-in analytics, quality alerts, and natural language queries. ISA-95 aligned, simulation-first, MQTT-ready."
+"Open-source MES with production tracking, quality alerts, and built-in analytics. Free to self-host. Cloud from €99/month."
+
+### Growth narrative
+
+**MESkit grows with you.** Start with production tracking. Add full traceability and quality analytics when your customers demand it. Add carbon reporting and tamper-proof records when regulations require it. One system — not three.
+
+This narrative is the unifying message for the pricing page and anywhere the product is shown at full scope. It reframes advanced features (PCF, blockchain) as "what you'll need when your biggest customer asks for it" rather than premium upsell. Use it on the pricing page, the home page below the fold, and in the FAQ.
 
 ### North Star
 
@@ -303,16 +366,17 @@ When showing MESkit interactions on the website (for illustration, not live):
 
 ### Primary CTAs
 
-1. "View on GitHub"
-2. "Read Docs"
-3. "Get Updates" (newsletter/waitlist)
+1. "Try the Simulator (no signup)" — lowers the biggest objection for the primary buyer (fear of wasted setup time)
+2. "View Plans" — captures buyers ready to commit
+3. "View on GitHub" — captures developers and self-hosters
 
 ### Secondary CTAs
 
-1. "See the Tool Layer"
-2. "See Smart Features"
+1. "See Smart Features"
+2. "Read Docs"
 3. "View Roadmap"
 4. "Read ISA-95 Primer"
+5. "Get Updates" (newsletter/waitlist)
 
 ## 8. Information Architecture (Sitemap)
 
@@ -323,11 +387,12 @@ When showing MESkit interactions on the website (for illustration, not live):
 3. `/agents` Smart features — what they do, how they work, tool layer architecture
 4. `/isa-95` ISA-95 mapping and model explanation
 5. `/architecture` Stack + tool layer + intelligence layer architecture + MQTT-ready design
-6. `/roadmap` Public milestones (M1-M6)
-7. `/docs` Docs entry page linking to technical docs
-8. `/blog` SEO/GEO content hub
-9. `/about` Mission + open-source positioning
-10. `/faq` Concise answer blocks for users and AI systems
+6. `/pricing` Tier comparison with the three-stage buyer journey narrative
+7. `/roadmap` Public milestones (M1-M6)
+8. `/docs` Docs entry page linking to technical docs
+9. `/blog` SEO/GEO content hub
+10. `/about` Mission + open-source positioning
+11. `/faq` Concise answer blocks for users and AI systems
 
 ### Optional pages (post-MVP)
 
@@ -342,7 +407,7 @@ When showing MESkit interactions on the website (for illustration, not live):
 
 Must include:
 
-1. Clear hero with brand tagline ("Finally, an MES that's as easy to use as asking a question.") and value proposition emphasizing built-in analytics + ISA-95 + open-source. North Star vision statement below the fold.
+1. Hero using the approved copy from Section 5 (Messaging Framework). Subheadline must reference spreadsheets explicitly — this is the primary buyer signal. Technical details (ISA-95, MQTT, tool layer) must appear below the fold, not in the hero. North Star vision statement below the fold.
 2. "How it works" flow aligned to product loop:
    - Define product.
    - Build route.
@@ -355,6 +420,19 @@ Must include:
 5. ISA-95 credibility section.
 6. Architecture snapshot (four-layer diagram).
 7. Primary and secondary CTAs.
+
+### Pricing (`/pricing`)
+
+Must include:
+
+1. The three-stage buyer journey narrative — tiers are framed by what the customer's customer demands, not by feature count. Stage 1: internal need. Stage 2: customer demands traceability. Stage 3: OEM/regulatory demands carbon data.
+2. Tier comparison table (Self-hosted free / Starter €99 / Pro €499 / Enterprise €1,500) with what each tier unlocks.
+3. "MESkit grows with you" as the headline framing — not "choose your plan."
+4. The moat argument: once a shop is on MESkit, their production history, trained operators, and configured data model make switching increasingly costly. Upgrade within MESkit when your requirements escalate.
+5. FAQ mini-section: "Who needs the blockchain features?" / "Who needs the carbon footprint reports?" — answered with "the same shop at a later stage, when their biggest customer asks for it."
+6. CTAs: primary "Start free" (simulator) + "Talk to us" for Enterprise.
+
+Tone: frame pricing around the buyer's growth journey, not product capabilities. The right question on this page is "what stage is your shop at?" not "how many users do you have?"
 
 ### Product (`/product`)
 

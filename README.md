@@ -10,6 +10,18 @@ Open-source MES toolkit with built-in analytics, quality alerts, and natural lan
 
 ---
 
+## Documentation Foundation
+
+MESkit's core docs are intentionally connected so product, roadmap, growth, and onboarding decisions stay aligned:
+
+- [Documentation Map](docs/DOCUMENTATION_MAP.md) — how the core docs fit together
+- [Product Principles](PRODUCT_PRINCIPLES.md) — what MESkit must remain
+- [PRD](MESKIT_PRD.md) — product strategy, scope, and architecture
+- [Roadmap](ROADMAP.md) — milestone execution plan
+- [Licensing and Growth Strategy](LICENSING_AND_GROWTH_STRATEGY.md) — PLG, packaging, and licensing direction
+- [Target Audience](docs/GTM_Target_Audience.md) — ICP and acquisition focus
+- [Manufacturing Software Stack](docs/MANUFACTURING_SOFTWARE_STACK.md) — onboarding integration priorities
+
 ## What is MESkit?
 
 MESkit is a complete, buildable Manufacturing Execution System built on the ISA-95 standard. It starts with simulation, includes smart features powered by an intelligence layer, and is architecturally ready for real sensor input via MQTT.
@@ -156,9 +168,19 @@ Open [localhost:3000](http://localhost:3000), sign up, and start using Ask MESki
 
 ## Docs
 
-- [Full PRD](MESKIT_PRD.md) — Architecture, data model, tool layer, smart features, milestones
-- [Roadmap](ROADMAP.md) — Detailed milestone checklists
+- [Documentation Map](docs/DOCUMENTATION_MAP.md) — Core documentation system and source-of-truth guide
+- [Product Principles](PRODUCT_PRINCIPLES.md) — Durable product truths and decision rules
+- [Full PRD](MESKIT_PRD.md) — Product strategy, architecture, pricing, and milestones
+- [Roadmap](ROADMAP.md) — Detailed milestone checklists and future tracks
+- [Licensing and Growth Strategy](LICENSING_AND_GROWTH_STRATEGY.md) — Product-led growth, packaging, and licensing direction
+- [Target Audience](docs/GTM_Target_Audience.md) — ICP, search intent, and GTM focus
+- [Manufacturing Software Stack](docs/MANUFACTURING_SOFTWARE_STACK.md) — Integration priorities that reduce onboarding friction
+- [Licensing](LICENSING.md) — Plain-English usage rights
 
 ## License
 
-MIT
+Source-available under the Business Source License 1.1. Internal self-hosting
+and internal production use are allowed. Hosted resale, white-labeling, and
+commercial third-party offering require a separate written agreement.
+
+See [LICENSE](LICENSE) and [LICENSING.md](LICENSING.md).

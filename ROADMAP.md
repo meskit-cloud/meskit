@@ -1,6 +1,16 @@
 # MESkit Roadmap
 
-> Status: M3 complete — M1 scaffold, M2 Build Mode, and M3 Configure Mode all done. M4 — Run Mode + Quality Analyst next.
+> Status: M3 complete — M1 scaffold, M2 Build Mode, and M3 Configure Mode all done. M4 — Run Mode + Production Simulator + Quality Monitor next.
+
+## Related Docs
+
+- [Documentation Map](docs/DOCUMENTATION_MAP.md) — overview of the core doc system
+- [README](README.md) — public-facing summary of current product state
+- [Product Principles](PRODUCT_PRINCIPLES.md) — what should constrain roadmap decisions
+- [PRD](MESKIT_PRD.md) — product strategy and scope this roadmap executes
+- [Licensing and Growth Strategy](LICENSING_AND_GROWTH_STRATEGY.md) — post-v1 business and PLG direction
+- [Target Audience](docs/GTM_Target_Audience.md) — GTM focus for post-v1 execution
+- [Manufacturing Software Stack](docs/MANUFACTURING_SOFTWARE_STACK.md) — integration priorities referenced in future roadmap sections
 
 ---
 
@@ -100,10 +110,6 @@ Product and process definition: part numbers, BOMs, routes, serial algorithms.
 
 ### Tools
 
-<<<<<<< Updated upstream
-
-### Tools
-
 - [x] Implement product tools: `list_part_numbers`, `create_part_number`, `update_part_number`, `delete_part_number`, `get_bom`, `set_bom_entry`, `delete_bom_entry`
 - [x] Implement item tools: `list_items`, `create_item`
 - [x] Implement route tools: `list_routes`, `create_route`, `update_route`, `delete_route`
@@ -133,12 +139,15 @@ Product and process definition: part numbers, BOMs, routes, serial algorithms.
 
 Production execution: unit generation, WIP movement, quality gates. Built-in simulator replaces traditional auto-run. Quality monitoring goes live. See [`docs/simulator.md`](docs/simulator.md) for the full Production Simulator design.
 
+**M4 core MVP deliverable**: Run Mode + Production Simulator + Quality Monitor. The simulator is part of MVP, not optional polish. PackML, REST API, onboarding, demo retention, and user docs can land in parallel, but they do not block the core simulator-enabled Run Mode sign-off.
+
 ### Tools
 
 - [ ] Implement production tools: `generate_units`, `move_unit`, `scrap_unit`, `get_wip_status`, `search_units`
 - [ ] Implement quality tools: `create_quality_event`, `list_defect_codes`, `create_defect_code`
+- [ ] Implement monitor analytics helpers: `get_throughput`, `get_yield_report`, `get_unit_history` — required by Quality Monitor in M4 and reused by Monitor Mode in M5
 - [ ] Register all production and quality tools in intelligence layer
-- [ ] Create `production_orders` and `job_orders` tables (ISA-95 F1) — migration with order_number, part_number_id, quantity_ordered, quantity_completed, status enum (new/scheduled/running/complete/closed)
+- [ ] Create `production_orders` table (ISA-95 F1) — migration with order_number, part_number_id, quantity_ordered, quantity_completed, status enum (new/scheduled/running/complete/closed)
 - [ ] Implement production order tools: `create_production_order`, `update_order_status`, `list_production_orders` (ISA-95 F1)
 - [ ] Add `ideal_cycle_time_seconds` column to `route_steps` (ISA-95 F3) — migration
 - [ ] Create `quality_test_definitions` table (ISA-95 F4) — test_name, part_number_id, route_step_id, property, unit_of_measure, lower_limit, upper_limit, measurement_method
@@ -147,13 +156,13 @@ Production execution: unit generation, WIP movement, quality gates. Built-in sim
 
 ### Production Simulator (replaces auto-run engine)
 
-The Production Simulator role-plays as a factory — generating units, moving WIP, introducing realistic failures, and toggling machine statuses through the same tool layer that humans use. No separate simulation engine needed.
+The Production Simulator role-plays as a factory — generating units, moving WIP, introducing realistic failures, and toggling machine statuses through the same tool layer that humans use. No separate simulation engine needed. It is the core MVP activation path for first-run and demo use.
 
 **Isolation rule**: The Simulator is a pure consumer of the MES — it lives in `lib/simulator/` and `app/api/simulation/`, uses only public tool APIs, and introduces no simulation-specific columns or conditionals in MES core code. Deleting all Simulator files must leave the MES fully functional. See [`docs/simulator.md` §8](docs/simulator.md) for full isolation rules.
 
 - [ ] Production Simulator config, system prompt, and tool subset (`lib/agents/simulator.ts`)
 - [ ] Simulation API routes (`/api/simulation/start`, `/pause`, `/reset`)
-- [ ] Simulation loop — server-side recurring invocations with configurable tick interval
+- [ ] Simulation tick execution — server-side `/api/simulation/tick` invoked by a client-held clock in MVP, with configurable tick interval
 - [ ] Capacity-aware WIP movement — respects workstation capacity, won't pile units
 - [ ] Contextual quality decisions — base yield ~95%, degrades over time, clusters defects realistically
 - [ ] Machine lifecycle — toggles machine statuses (running → fault → repair → idle)
@@ -224,7 +233,22 @@ Guided onboarding for new users. See [`docs/onboarding-plan.md`](docs/onboarding
 - [ ] Top bar banner with days-remaining countdown (amber → red)
 - [ ] MESkit welcome message mentions the 7-day limit
 
-**Done when**: A user can start a simulation, watch units flow through workstations driven by the Production Simulator, see realistic quality events and machine faults, receive proactive quality alerts from the Quality Monitor, and follow everything in the live ticker. Manual production via UI and chat also works independently of the simulation. All tools are accessible via REST endpoints with OpenAPI documentation. New users are greeted by MESkit and can have a working demo shop floor within 30 seconds of signup.
+### User Documentation
+
+End-user documentation pages published to the marketing website (`website/`). Generated with the `/doc-writer` skill.
+
+- [ ] Getting Started — sign up, onboarding flow, first demo shop floor
+- [ ] Build Mode — create lines, workstations, and machines
+- [ ] Configure Mode — define part numbers, BOMs, serial algorithms, and routes
+- [ ] Run Mode — generate units, move WIP, log quality events, scrap units
+- [ ] Production Simulator — start/pause/reset, speed controls, what the simulator does
+- [ ] Ask MESkit — natural language interface, example prompts per mode
+- [ ] Quality Monitor — how alerts are triggered, what they mean, configuring thresholds
+- [ ] REST API — authentication, endpoint structure, OpenAPI spec
+
+**M4 core done when**: A user can start a simulation, watch units flow through workstations driven by the Production Simulator, see realistic quality events and machine faults, receive proactive quality alerts from the Quality Monitor, and follow everything in the live ticker. Manual production via UI and chat also works independently of the simulation.
+
+**Parallel completion items**: REST API foundation, onboarding, demo retention, and user documentation can land during M4 or immediately after without blocking the simulator-enabled MVP.
 
 ---
 
@@ -234,7 +258,7 @@ Dashboard: live charts, lot traceability, automated insights, production plannin
 
 ### Tools
 
-- [ ] Implement analytics tools: `get_throughput`, `get_yield_report`, `get_unit_history`
+- [ ] Complete Monitor Mode integration for `get_throughput`, `get_yield_report`, `get_unit_history` (implemented in M4 for Quality Monitor, surfaced in dashboards and planner in M5)
 - [ ] Register analytics tools in intelligence layer
 - [ ] Implement `get_oee` tool — computes Availability × Performance × Quality over a time window (ISA-95, requires F2 + F3 from M4)
 - [ ] Implement `get_order_summary` tool — order completion %, units remaining, estimated time (ISA-95 F1)
@@ -465,6 +489,29 @@ Anchor a cryptographic hash of every completed work order to a public blockchain
 - [ ] `<BlockchainBadge>` UI component in Monitor Mode — explorer link + verification status
 - [ ] Public verification endpoint — anyone can re-hash and compare without system access
 - [ ] Migrate from Amoy testnet to Polygon PoS mainnet for production deployments
+
+### Post-v1 Onboarding Integrations
+
+Once the core MESkit loop is stable in production, prioritize integrations that reduce adoption friction for the actual target buyer: small manufacturers upgrading from spreadsheets and lightweight software. These are onboarding accelerators, not enterprise checkbox integrations. See [`docs/MANUFACTURING_SOFTWARE_STACK.md`](docs/MANUFACTURING_SOFTWARE_STACK.md) for the full prioritization and solution map.
+
+- [ ] Tier 1: Spreadsheet import/export (`CSV`, Excel, Google Sheets) for core MES entities
+- [ ] Tier 1: Barcode scanner and label-printing workflows (Zebra, Brother, keyboard-wedge scanners)
+- [ ] Tier 1: Email alerts, webhooks, and no-code automation recipes (Zapier, Make)
+- [ ] Tier 1: QuickBooks/Xero coexistence for item, order, and completion handoff
+- [ ] Tier 2: Slack/Teams alerts and document-link attachments (Drive, SharePoint, Dropbox)
+- [ ] Tier 2: Light ERP/MRP coexistence (Odoo, Fishbowl, MRPeasy, Katana, Cin7 Core, Unleashed)
+- [ ] Tier 3: Vertical onboarding modules for CNC, PCB assembly, 3D print farms, and food batch traceability
+- [ ] Publish a "manufacturing software stack" content and integration page to support product-led onboarding and SEO
+
+### Post-v1 Target Audience and GTM Execution
+
+Once MESkit has a stable product loop and onboarding foundation, operationalize the target audience and acquisition strategy defined in [`docs/GTM_Target_Audience.md`](docs/GTM_Target_Audience.md). This work should guide content, templates, partner motion, and future onboarding decisions.
+
+- [ ] Turn the target audience doc into a concrete ICP playbook by vertical: CNC, PCB assembly, 3D print farms, food and beverage
+- [ ] Build content and landing pages around the highest-intent pain queries from the doc
+- [ ] Align demo templates and onboarding flows with the four prioritized target segments
+- [ ] Create partner and outreach materials for operations managers, production leads, plant managers, and owner-operators
+- [ ] Validate which target segment converts best through the simulator and onboarding funnel
 
 ### Other Ideas
 

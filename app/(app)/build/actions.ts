@@ -115,7 +115,7 @@ export async function removeMachine(id: string) {
 
 export async function changeMachineStatus(
   id: string,
-  status: "idle" | "running" | "down",
+  status: "STOPPED" | "IDLE" | "EXECUTE" | "HELD" | "SUSPENDED" | "COMPLETE" | "ABORTED",
 ) {
   const result = await updateMachineStatus({ id, status });
   writeAuditLog({ action: "update_machine_status", entity_type: "machine", entity_id: id, metadata: { status } });

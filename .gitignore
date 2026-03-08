@@ -21,6 +21,7 @@ out/
 # Internal Tooling
 .claude/settings.local.json
 .playwright-mcp/
+output/playwright/
 
 # Misc
 .DS_Store

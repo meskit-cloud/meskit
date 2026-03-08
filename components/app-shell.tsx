@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useUiStore } from "@/lib/stores/ui-store";
+import { SimulationControls } from "@/components/simulation-controls";
 import { createClient } from "@/lib/supabase/client";
 
 const modes = [
@@ -68,12 +69,18 @@ export function Sidebar() {
   );
 }
 
-export function TopBar({ userEmail }: { userEmail: string }) {
+export function TopBar({ userEmail, userCreatedAt }: { userEmail: string; userCreatedAt: string }) {
   const router = useRouter();
   const { chatPanelOpen, toggleChatPanel } = useUiStore();
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => setMounted(true), []);
+
+  const daysRemaining = Math.max(
+    0,
+    7 - Math.floor((Date.now() - new Date(userCreatedAt).getTime()) / (1000 * 60 * 60 * 24)),
+  );
 
   async function handleLogout() {
     const supabase = createClient();
@@ -89,9 +96,25 @@ export function TopBar({ userEmail }: { userEmail: string }) {
           <span className="text-accent">kit</span>
         </span>
         <span className="text-xs text-text-secondary font-mono bg-bg-app px-2 py-0.5 rounded">
-          M3
+          M4
         </span>
+        {daysRemaining <= 7 && (
+          <span
+            className={`text-xs font-mono px-2 py-0.5 rounded ${
+              daysRemaining <= 1
+                ? "bg-error/10 text-error"
+                : daysRemaining <= 3
+                  ? "bg-warning/10 text-warning"
+                  : "bg-bg-app text-text-secondary"
+            }`}
+            title="Demo environment — data deleted after 7 days"
+          >
+            {daysRemaining === 0 ? "Expiring today" : `${daysRemaining}d left`}
+          </span>
+        )}
       </div>
+
+      <SimulationControls />
 
       <div className="flex items-center gap-2">
         <a

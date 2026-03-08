@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { writeAuditLog, inferEntityType } from "@/lib/audit";
+import { fireWebhooksForTool } from "@/lib/webhooks";
+import { createClient } from "@/lib/supabase/server";
 
 // --- Tool Definition ---
 
@@ -64,6 +66,14 @@ export async function executeTool(
     entity_id: entityId,
     metadata: validated as Record<string, unknown>,
   });
+
+  // Fire webhooks — get userId from auth context
+  createClient()
+    .then((sb) => sb.auth.getUser())
+    .then(({ data }) => {
+      if (data.user) fireWebhooksForTool(name, data.user.id, result);
+    })
+    .catch(() => {});
 
   return result;
 }

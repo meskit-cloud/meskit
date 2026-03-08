@@ -10,15 +10,16 @@
 // Deleting all Simulator files must leave the MES fully functional.
 //
 // The Simulator is NOT user_initiated (no chat panel) and NOT event_driven
-// (no Realtime trigger). It is SYSTEM_INITIATED — driven by a server-side
-// tick loop at a configurable interval.
+// (no Realtime trigger). It is SYSTEM_INITIATED. In MVP, the active client
+// session holds the clock and POSTs to /api/simulation/tick at the selected
+// cadence, while all simulation decisions and tool calls execute server-side.
 
 export const simulatorConfig = {
   name: "Simulator",
   description:
     "Autonomous factory simulation agent — drives production runs, introduces realistic failures, and manages machine lifecycle through the MES tool layer",
   agentType: "simulator" as const,
-  triggerType: "system_initiated" as const, // tick-based server loop, not chat or Realtime
+  triggerType: "system_initiated" as const, // server-executed ticks, not chat or Realtime
 };
 
 // --- Tool Subset ---
@@ -246,11 +247,12 @@ function getScenarioBehaviorTargets(scenario: SimulationScenario): string {
 }
 
 // --- Trigger Definition ---
-// The simulator is driven by a server-side tick loop in app/api/simulation/.
+// The simulator is driven by /api/simulation/tick in app/api/simulation/.
+// In MVP, the browser owns the clock; the server owns tick execution.
 // It is NOT triggered by Supabase Realtime.
 
 export const simulatorTickConfig = {
-  description: "Server-side recurring invocation at configurable interval",
+  description: "Server-executed tick endpoint invoked at configurable interval by the active client session",
   endpoint: "/api/simulation/tick",
   speeds: {
     "1x":  2000,

@@ -53,12 +53,31 @@ interface Workstation {
   created_at: string;
 }
 
+type PackMLState =
+  | "STOPPED"
+  | "IDLE"
+  | "EXECUTE"
+  | "HELD"
+  | "SUSPENDED"
+  | "COMPLETE"
+  | "ABORTED";
+
+const PACKLML_TRANSITIONS: Record<PackMLState, PackMLState[]> = {
+  STOPPED: ["IDLE"],
+  IDLE: ["EXECUTE", "STOPPED"],
+  EXECUTE: ["HELD", "COMPLETE", "ABORTED"],
+  HELD: ["SUSPENDED", "EXECUTE", "ABORTED"],
+  SUSPENDED: ["EXECUTE", "ABORTED"],
+  COMPLETE: ["IDLE", "STOPPED"],
+  ABORTED: ["STOPPED"],
+};
+
 interface Machine {
   id: string;
   workstation_id: string | null;
   name: string;
   type: string;
-  status: "idle" | "running" | "down";
+  status: PackMLState;
   created_at: string;
 }
 
@@ -620,11 +639,18 @@ function WorkstationsPanel({
 
 // --- Machines Panel ---
 
-const statusConfig = {
-  idle: { color: "text-text-secondary", bg: "bg-text-secondary/10", label: "Idle" },
-  running: { color: "text-success", bg: "bg-success/10", label: "Running" },
-  down: { color: "text-error", bg: "bg-error/10", label: "Down" },
-} as const;
+const statusConfig: Record<
+  PackMLState,
+  { color: string; bg: string; label: string }
+> = {
+  STOPPED:   { color: "text-text-secondary",  bg: "bg-text-secondary/10",  label: "Stopped"   },
+  IDLE:      { color: "text-accent",           bg: "bg-accent/10",          label: "Idle"       },
+  EXECUTE:   { color: "text-success",          bg: "bg-success/10",         label: "Execute"    },
+  HELD:      { color: "text-warning",          bg: "bg-warning/10",         label: "Held"       },
+  SUSPENDED: { color: "text-warning",          bg: "bg-warning/5",          label: "Suspended"  },
+  COMPLETE:  { color: "text-success",          bg: "bg-success/5",          label: "Complete"   },
+  ABORTED:   { color: "text-error",            bg: "bg-error/10",           label: "Aborted"    },
+};
 
 function MachinesPanel({
   workstation,
@@ -862,18 +888,14 @@ function MachinesPanel({
                     {machine.type}
                   </div>
                   <div className="flex gap-1 mt-2 ml-5">
-                    {(["idle", "running", "down"] as const).map((s) => (
+                    {PACKLML_TRANSITIONS[machine.status].map((s) => (
                       <button
                         key={s}
                         onClick={() => handleStatusChange(machine, s)}
-                        disabled={pending || machine.status === s}
-                        className={`px-2 py-0.5 text-xs rounded transition-colors ${
-                          machine.status === s
-                            ? `${statusConfig[s].bg} ${statusConfig[s].color} font-medium`
-                            : "text-text-secondary hover:bg-bg-app disabled:opacity-30"
-                        }`}
+                        disabled={pending}
+                        className={`px-2 py-0.5 text-xs rounded transition-colors text-text-secondary hover:bg-bg-app disabled:opacity-30`}
                       >
-                        {statusConfig[s].label}
+                        → {statusConfig[s].label}
                       </button>
                     ))}
                   </div>

@@ -134,7 +134,11 @@ function SignupForm() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-text-secondary">
+      <p className="mt-4 text-center text-xs text-text-secondary bg-bg-app rounded-lg px-3 py-2 border border-border">
+        Demo environment — data is automatically deleted after 7 days.
+      </p>
+
+      <p className="mt-4 text-center text-sm text-text-secondary">
         Already have an account?{" "}
         <Link href={loginHref} className="text-accent hover:underline">
           Sign in

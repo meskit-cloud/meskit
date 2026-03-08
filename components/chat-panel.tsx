@@ -35,6 +35,8 @@ export function ChatPanel() {
     selectedPartNumberName,
     selectedRouteId,
     selectedRouteName,
+    selectedProductionOrderId,
+    selectedProductionOrderNumber,
   } = useUiStore();
   const chatPanelOpen = useUiStore((s) => s.chatPanelOpen);
 
@@ -95,6 +97,8 @@ export function ChatPanel() {
             selectedPartNumberName,
             selectedRouteId,
             selectedRouteName,
+            selectedProductionOrderId,
+            selectedProductionOrderNumber,
             activeProductionRun: null,
           },
         }),

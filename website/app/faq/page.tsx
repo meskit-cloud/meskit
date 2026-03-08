@@ -65,7 +65,7 @@ const faqEntries = [
   {
     question: 'Is MESkit production-ready or simulation-only today?',
     answer:
-      'MESkit is in active development with M3 (Configure Mode) in progress. M1 and M2 are complete. The public six-milestone roadmap runs from M1 scaffold through M6 MQTT integration. The simulation-first model lets teams validate line flow and quality thresholds before connecting real hardware, reducing pilot failure risk.',
+      'MESkit has completed M1 through M3 (scaffold, Build Mode, and Configure Mode). M4 — Run Mode and the Production Simulator — is in progress. The public six-milestone roadmap runs from M1 through M6 MQTT integration. The simulation-first model lets teams validate line flow and quality thresholds before connecting real hardware, reducing pilot failure risk.',
   },
   {
     question: 'How does MESkit integrate with MQTT?',
@@ -76,6 +76,21 @@ const faqEntries = [
     question: 'Can I control MESkit with natural language?',
     answer:
       'Yes. Natural-language commands are interpreted by smart features and translated into explicit tool calls such as move_unit, get_wip_status, and create_quality_event. Each call is schema-validated before execution, and the full tool chain is visible in the conversation timeline for auditability.',
+  },
+  {
+    question: 'Who are the blockchain anchoring and carbon footprint features for?',
+    answer:
+      'The same shop that starts with basic production tracking — at a later stage. A 50-person contract manufacturer supplying BMW, Siemens, or a medical device OEM is increasingly being told: "We need carbon data per batch. We need verifiable production records." MESkit\'s Enterprise tier gives small shops the infrastructure to meet those requirements without switching to a new system. The blockchain and carbon features are not for a different buyer; they\'re for the same buyer when their biggest customer asks for it.',
+  },
+  {
+    question: 'Does MESkit help with EU CSRD or Digital Product Passport compliance?',
+    answer:
+      'Yes, at the Enterprise tier. MESkit computes Product Carbon Footprint (PCF) per work order aligned with ISO 14067 and the GHG Protocol, and exports Pathfinder Framework 2.0 JSON for direct B2B data exchange with OEM sustainability teams. Blockchain batch anchoring (Polygon PoS) produces tamper-proof production records independently verifiable without system access. These features are designed for small contract manufacturers who supply large OEMs under cascading CSRD obligations.',
+  },
+  {
+    question: 'What kind of manufacturer is MESkit built for?',
+    answer:
+      'Small contract manufacturers with 10–100 employees who are currently tracking production on spreadsheets, whiteboards, or nothing at all. MESkit is not positioned against SAP or Tulip — it\'s positioned against Excel. The entry point is basic production visibility (Starter). As the shop\'s customer requirements escalate — traceability audits (Pro), then carbon and compliance mandates (Enterprise) — MESkit grows with them. One system, not three.',
   },
 ];
 

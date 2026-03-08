@@ -17,6 +17,8 @@ export default async function AppLayout({
   }
 
   return (
-    <AppShellClient userEmail={user.email ?? ""}>{children}</AppShellClient>
+    <AppShellClient userEmail={user.email ?? ""} userCreatedAt={user.created_at}>
+      {children}
+    </AppShellClient>
   );
 }

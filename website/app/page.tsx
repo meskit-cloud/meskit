@@ -12,18 +12,18 @@ import { buildPageMetadata, coreFacts, siteConfig } from '@/lib/site';
 import { howToJsonLd } from '@/lib/structured-data';
 
 export const metadata = buildPageMetadata({
-  title: 'Open-Source MES with Built-in Analytics',
+  title: 'Open-Source MES for Small Manufacturers',
   description:
-    'Open-source MES with built-in analytics, quality alerts, and natural language queries. ISA-95 aligned, simulation-first, MQTT-ready.',
+    'Open-source MES with production tracking, quality alerts, and natural language queries. Built for small contract manufacturers upgrading from spreadsheets.',
   path: '/',
   keywords: [
     'open source MES',
     'MES for small manufacturers',
+    'manufacturing execution system',
     'MES with natural language',
+    'lot traceability',
+    'production tracking software',
     'MES quality analytics',
-    'predictive maintenance MES',
-    'ISA-95 MES',
-    'simulation-first MES',
   ],
 });
 
@@ -41,7 +41,7 @@ const homeFaq = [
   {
     question: 'Is MESkit production-ready today?',
     answer:
-      'MESkit has completed M1 through M3 (scaffold, Build Mode, and Configure Mode). Shop floor tools and the natural language interface are functional. The public milestone roadmap tracks progress toward full production readiness, with the simulation-first model letting teams validate line flow before connecting real hardware via MQTT in M6.',
+      'MESkit has completed M1 through M3 (scaffold, Build Mode, and Configure Mode). M4 — Run Mode and the Production Simulator — is in progress. The public six-milestone roadmap tracks progress toward full production readiness, with the simulation-first model letting teams validate line flow before connecting real hardware via MQTT in M6.',
   },
 ];
 
@@ -69,13 +69,12 @@ export default function HomePage() {
       <div className="container">
         <header className="page-intro">
           <p className="eyebrow">Open-source MES toolkit</p>
-          <h1>Finally, an MES that&apos;s as easy to use as asking a question.</h1>
+          <h1>Know your floor. Hit your deadlines. Answer any audit.</h1>
           <p className="lead" style={{ fontSize: '1.18rem', color: 'var(--text-primary)', fontWeight: 500 }}>
-            Track production, prevent problems, and get answers in plain English.
+            Stop chasing data across spreadsheets. Ask MESkit what&apos;s happening on your floor and get a real answer.
           </p>
           <p className="lead" style={{ marginTop: '0.8rem' }}>
-            ISA-95 aligned, simulation-first, and MQTT-ready. One typed tool layer for UI actions and
-            natural language queries. Built-in analytics that help your team act on insights instead of chasing data.
+            Open-source MES with production tracking, quality alerts, and built-in analytics. Free to self-host.
           </p>
           <p className="updated">Last updated: {siteConfig.lastUpdated}</p>
           <div style={{ marginTop: '1.1rem' }}>
@@ -167,6 +166,45 @@ export default function HomePage() {
             which triggers the Act — closing the coordination loop. See the{' '}
             <Link href="/roadmap">roadmap</Link> for milestone details.
           </p>
+        </Section>
+
+        <Section
+          title="MESkit grows with you"
+          subtitle="Start with visibility. Add traceability when your customers demand it. Add compliance when regulations require it."
+        >
+          <div className="grid-3" style={{ marginTop: '1rem' }}>
+            <article className="card">
+              <h3>Know your floor</h3>
+              <p>
+                Replace end-of-shift walkabouts with real-time dashboards. See WIP, yield, and quality
+                events as they happen — and ask MESkit questions instead of digging through spreadsheets.
+              </p>
+              <p style={{ marginTop: '0.5rem', fontSize: '0.84rem', color: 'var(--text-tertiary)' }}>
+                Production tracking · Quality logs · Natural language interface
+              </p>
+            </article>
+            <article className="card">
+              <h3>Answer any audit</h3>
+              <p>
+                When a customer asks what happened to lot 4472, you have the answer in seconds — full
+                route history, quality events, and operator actions. No manual reconstruction.
+              </p>
+              <p style={{ marginTop: '0.5rem', fontSize: '0.84rem', color: 'var(--text-tertiary)' }}>
+                Lot traceability · Quality Monitor · Defect analytics
+              </p>
+            </article>
+            <article className="card">
+              <h3>Meet what&apos;s coming</h3>
+              <p>
+                EU CSRD and Digital Product Passport requirements are pushing carbon and traceability
+                obligations down supply chains onto small shops. MESkit gives you the infrastructure to comply
+                before your biggest customer asks.
+              </p>
+              <p style={{ marginTop: '0.5rem', fontSize: '0.84rem', color: 'var(--text-tertiary)' }}>
+                Carbon footprint per batch · Blockchain-anchored records · OEM-ready exports
+              </p>
+            </article>
+          </div>
         </Section>
 
         <Section

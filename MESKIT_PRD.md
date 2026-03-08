@@ -1,5 +1,17 @@
 # MESkit — Product Requirements Document
 
+- Status: v4
+- Last updated: 2026-03-07
+
+## Related Docs
+
+- [Documentation Map](docs/DOCUMENTATION_MAP.md) — how the core MESkit docs fit together
+- [Product Principles](PRODUCT_PRINCIPLES.md) — durable product constraints this PRD should follow
+- [Roadmap](ROADMAP.md) — milestone execution derived from this PRD
+- [Licensing and Growth Strategy](LICENSING_AND_GROWTH_STRATEGY.md) — business model and PLG strategy that shape packaging and GTM
+- [Target Audience](docs/GTM_Target_Audience.md) — ICP and acquisition focus behind the buyer sections
+- [Manufacturing Software Stack](docs/MANUFACTURING_SOFTWARE_STACK.md) — onboarding integration priorities for the target buyer
+
 ## 1. Project Identity & Vision
 
 **MESkit** is an open-source Manufacturing Execution System toolkit with built-in analytics, quality alerts, and natural language queries. It provides a complete, buildable MES that starts with simulation, includes smart features powered by an intelligence layer, and is architecturally ready for real sensor input via MQTT.
@@ -22,20 +34,225 @@ The product roadmap builds toward this: the Machine Health Monitor detects degra
 
 Every MES operation — moving a lot, logging a defect, querying yield — flows through a **tool layer** that both the UI and smart features consume. The same function that powers a button click also powers a natural-language command. Smart features are force multipliers for human operators, not assistants to the UI.
 
-### Target Users
-
-- **Manufacturing engineers** learning MES concepts and ISA-95 patterns
-- **Small shops** that need a lightweight, self-hosted MES without enterprise pricing
-- **Developers** building manufacturing applications who need a reference implementation
-- **Teams exploring smart manufacturing** who want a real MES with built-in analytics, not a chatbot demo
-
 ### What MESkit Is NOT
 
 MESkit is not a learning exercise or a demo wrapper around a vendor API. It is a standalone product with its own persistence layer, authentication, real-time infrastructure, and intelligence layer.
 
 ---
 
-## 2. Architecture — Four-Layer Design
+## 2. Target User
+
+### Primary buyer — ops manager or owner at a small contract manufacturer (10–100 employees)
+
+This is someone upgrading from Excel, whiteboards, or nothing at all — not someone evaluating SAP or Tulip. The same person is the buyer at every pricing tier; what changes is the external pressure driving their upgrade.
+
+**Daily pain (Stage 1 — entry):**
+- Walks the floor manually counting WIP. Has no real-time visibility.
+- Finds out about quality problems at end-of-shift when it's too late to act.
+- Can't answer "can we ship 500 units Friday?" without spending an hour pulling numbers together.
+- No dedicated MES admin — the same person managing production is also handling customer calls and ordering materials.
+
+**External pressure (Stage 2–3 — upgrade):**
+- A customer asks for traceability on lot 4472. They can't answer.
+- An OEM audits them and finds no structured quality records. They risk losing the contract.
+- BMW or Siemens or a medical device OEM tells them: "We need carbon footprint data per batch. If you can't provide it, we'll find a supplier who can."
+- EU CSRD and the EU Digital Product Passport are pushing sustainability and traceability requirements *down the supply chain* onto exactly these small shops. They have zero infrastructure to comply.
+
+The insight: **their customers' requirements are the upgrade trigger, not product features.** MESkit grows with the shop as external pressure increases.
+
+**Why they're the right buyer:**
+- Makes the software decision alone — no IT department, no procurement process, no 6-month RFP. They see a tool, they try it, they put in a credit card. Critical for a product with no sales team.
+- Has looked at MES before and bounced — Tulip ($12K+/year minimum), Plex, Carbon MES (too ERP-heavy), qcadoo (old Java, requires a developer). Concluded "MES is not for shops our size" and went back to spreadsheets.
+- €99/month is a no-brainer at €500K–5M annual revenue. No board approval needed.
+- The natural language interface solves their specific problem. They don't have time to learn complex menus. "Type what you need" is the reason they'll keep using MESkit past week two.
+- The simulator removes their biggest objection. They can experience a running factory in 30 seconds before investing any setup time.
+
+**Their language (not MES jargon):**
+- "Where are my units?"
+- "Are we going to hit the deadline?"
+- "Why does Station 3 keep failing?"
+- "I need to know what happened to lot 4472."
+- "Can you print me a report for the customer audit?"
+- "BMW just told us we need to provide carbon data per unit or lose the contract."
+
+### Secondary user — developer or system integrator
+
+Finds MESkit on GitHub. Self-hosts it. Evaluates the architecture. If good, deploys for 5–20 clients — becoming a revenue multiplier when their clients graduate to cloud subscriptions. Served by README, docs, and community (GitHub, Hacker News, Reddit), not the marketing website.
+
+### Non-targets (for now)
+
+- **500+ person manufacturers**: Require IT approval, procurement, compliance certifications. Served by Tulip, Rockwell, Siemens. Unreachable without a sales team.
+- **MES-curious developers**: Will star the repo but not pay. Fine for awareness; don't optimize for conversion.
+- **Pharma / medical devices / aerospace (cold start)**: Require GxP validation, SOC 2. These may become accessible at Stage 3+ of the product — not the entry point.
+
+---
+
+## 3. Problem & Buying Scenario
+
+### The problem MESkit solves
+
+Small contract manufacturers (10–100 people) are running production on spreadsheets, whiteboards, and gut feel. They know they need a MES. They've looked at enterprise options and concluded they can't afford them or don't have the IT resources to implement them. They go back to Excel.
+
+The consequences compound over time:
+- Quality problems discovered at end of shift, after hundreds of defective units have been built.
+- No lot traceability — a customer asks "what happened to lot 4472?" and the answer requires manual digging.
+- Delivery estimates made by gut feel — leading to missed commitments or over-promising.
+- No visibility into what's stuck, where, and why — managers walk the floor instead of managing.
+- Increasingly: inability to meet supply chain compliance requirements from larger OEM customers, which threatens contracts.
+
+### The three-stage buying journey
+
+The primary buyer is always the same person — the ops manager or owner at a small contract shop. What changes across pricing tiers is the external pressure driving the upgrade, not the buyer profile.
+
+**Stage 1 — Internal need: "I need to see what's happening."**
+
+Trigger: spreadsheets are breaking, they lost track of WIP, a quality problem surprised them. They're not yet under external pressure — they just need basic visibility. They come for dashboards, unit tracking, and quality logs.
+
+Entry product: **MESkit Starter (€99/month)**. They get production tracking, WIP visibility, quality logging, and the natural language interface. The simulator lets them start in 30 seconds without setup.
+
+**Stage 2 — Customer demand: "We need full traceability."**
+
+Trigger: an OEM customer audits them and asks for structured traceability data. Or they have a quality escape and can't reconstruct lot history. They need to pull audit data in seconds, not hours.
+
+Upgrade product: **MESkit Pro (€499/month)**. Full lot traceability, quality analytics, Quality Monitor alerts, Production Planner. The natural language interface pays off here — they can answer "what happened to lot 4472?" in one chat message instead of manually reconstructing it.
+
+**Stage 3 — Regulatory/supply chain: "Provide carbon data or lose the contract."**
+
+Trigger: a large OEM (BMW, Siemens, a medical device company) tells them they need carbon footprint data per batch and verifiable production records. The EU Corporate Sustainability Reporting Directive (CSRD) is rolling out now. The EU Digital Product Passport is coming. These requirements are cascading down supply chains onto small shops that have zero infrastructure to comply.
+
+Upgrade product: **MESkit Enterprise (€1,500/month)**. Product Carbon Footprint (PCF) computation per work order, Pathfinder Framework 2.0 export for OEM sustainability teams, blockchain batch anchoring for tamper-proof production records, and the REST/MCP integration layer for direct OEM system connections.
+
+### Why they stay in MESkit through all three stages
+
+The switching cost compounds. A shop that started on MESkit Starter has:
+- Their entire production history in MESkit's data model
+- Operators trained on the natural language interface
+- Their part numbers, BOMs, routes, and serial algorithms configured
+
+When their OEM customer asks for carbon data (Stage 3), evaluating a new system means losing all of that and starting over. They upgrade within MESkit instead. **MESkit grows with them; no one else can say that at this price point.**
+
+### Why they buy MESkit specifically (initial conversion)
+
+1. **The simulator removes the biggest barrier**: no setup required to see the product working. "I don't want to waste time on something that might not work" is the most common reason small shops don't try MES. The simulator eliminates it.
+2. **The price is safe to try**: €99/month is within operating budget. Free self-host is zero risk.
+3. **Plain English interface means no training**: operators use it from day one without a week of onboarding.
+4. **"ISA-95 aligned" signals future-proofing**: if they grow and their requirements escalate, they're not trapped in a proprietary model.
+5. **Open source means no vendor lock-in**: they've been burned by vendor lock-in on other software before.
+
+---
+
+## 4. Competitive Landscape
+
+### Direct alternatives
+
+| Alternative | Why they lose | MESkit advantage |
+|-------------|--------------|-----------------|
+| **Tulip** | $12K+/year minimum, requires integrator | €99/month, self-service |
+| **Plex** | Enterprise complexity, long implementation | Simple, simulation-first |
+| **Carbon MES** | ERP+MES+QMS combined, overwhelming | Focused MES scope |
+| **qcadoo** | Old Java stack, developer required to set up | Modern stack, no-code setup |
+| **Custom spreadsheets** | No traceability, breaks at scale | Structured data model from day one |
+| **Custom Supabase build** | Months of dev time, no smart features | Working MES from day one, open source |
+
+### Indirect alternatives
+
+| Alternative | Context |
+|-------------|---------|
+| **Doing nothing** | Most common. They stay on spreadsheets until a trigger event forces change. |
+| **ERP with lite MES modules** | Odoo, SAP B1. Usually too broad and expensive for small shops. |
+| **QMS standalone** | Doesn't solve the WIP tracking or delivery visibility problem. |
+
+### MESkit's defensible position
+
+MESkit is the only open-source MES with a natural language interface that is:
+1. Self-service (no integrator required, no sales call)
+2. Simulation-first (30-second time-to-value)
+3. Priced for shops that previously couldn't afford MES
+4. **Designed to grow with the shop through all three stages** — basic tracking → full traceability → sustainability compliance — without switching systems
+
+The combination of open-source + natural language + simulation-first + stage-based upgrade path is not replicated by any current alternative.
+
+The moat deepens at each stage: a shop's production history, trained operators, and configured data model make switching increasingly costly. No competitor is positioned below Tulip's price point and above spreadsheets — that is where MESkit owns the market.
+
+---
+
+## 5. Pricing & Packaging
+
+### Tiers are driven by what the customer's customer demands
+
+The pricing tiers are not about user count or feature flags. They map to the three stages of external pressure on a contract manufacturer. The buyer at each stage is the same person; the trigger is different.
+
+| Tier | Price | Who | What drives the upgrade |
+|------|-------|-----|------------------------|
+| **Self-hosted** | Free forever | Developers, integrators, cost-sensitive shops | Evaluation, deployment for clients |
+| **Starter** | €99/month | Shop owner replacing spreadsheets | Internal need: "I need to see what's happening on my floor" |
+| **Pro** | €499/month | Ops manager with quality requirements | Customer demand: "We need full traceability and quality records" |
+| **Enterprise** | €1,500/month | Supplier to large OEMs under regulatory pressure | Supply chain / regulatory: "Provide carbon data per batch or lose the contract" |
+
+### What each tier unlocks
+
+**Starter (€99/month):**
+- Production tracking, WIP visibility, quality logging
+- Natural language interface (Ask MESkit)
+- Production Simulator (demo environment)
+- Supabase Realtime live ticker
+- Up to [N] users, [X] months data retention
+
+**Pro (€499/month):**
+- Everything in Starter
+- Full lot traceability and unit history
+- Quality Monitor (event-driven alerts, defect clustering)
+- Production Planner
+- REST API with OpenAPI spec
+- Extended data retention
+
+**Enterprise (€1,500/month):**
+- Everything in Pro
+- Product Carbon Footprint (PCF) per work order (ISO 14067, GHG Protocol, EU CSRD aligned)
+- Pathfinder Framework 2.0 JSON export for OEM sustainability teams
+- Blockchain batch anchoring (Polygon PoS, tamper-proof production records)
+- MCP Server (expose tool layer to external ERP/supply chain systems)
+- MQTT device integration
+- Priority support and SLA
+
+### Pricing rationale
+
+- €99/month is under the "no approval needed" threshold for most ops managers at small shops.
+- €499/month is a real decision but within ops authority — no board sign-off required.
+- €1,500/month is a straightforward ROI decision when the alternative is losing a major OEM contract.
+- Free self-hosted tier generates GitHub traction and integrator channel without cannibalizing cloud revenue.
+
+### Demo environment
+
+All cloud signups start in a demo environment:
+- 7-day data retention (pg_cron automated cleanup)
+- Visible countdown in the top bar (amber at 3 days remaining, red at 1 day)
+- MESkit's onboarding message surfaces the limit on first login
+- Prompt to export or upgrade before data expires
+
+---
+
+## 6. Go-to-Market Principles
+
+1. **Simulator-first conversion**: The primary conversion path is "try the simulator without signing up." Every visitor experiences a running factory before creating an account. No cold-start problem.
+
+2. **No sales team in MVP**: All acquisition is self-serve. Website → simulator → signup → cloud. The product must convert without human intervention.
+
+3. **Developer channel as multiplier**: Developers and integrators self-host and deploy for clients. README, docs, and architecture quality are a marketing channel. They drive cloud subscriptions when clients want managed hosting.
+
+4. **GitHub as awareness, website as conversion**: GitHub/Hacker News/Reddit serve the developer audience. The website converts the ops manager. These are different surfaces with different messages.
+
+5. **Content authority**: Blog content targets the ops manager's trigger moments — "what is lot traceability", "how to track production without a MES", "MES for small manufacturers" — not developer topics. Technical content lives in docs.
+
+6. **Vertical focus (phase 2)**: After product-market fit in discrete manufacturing, add use-case pages for specific verticals (electronics assembly, medical devices, food & beverage). Don't dilute the message before traction.
+
+7. **Stage-based upsell, not feature-based upsell**: Upgrade prompts should be triggered by real events — a user tries to pull lot history they can't access (Stage 2 trigger), or the system detects they supply to OEMs (Stage 3 trigger). Never show features the user doesn't need yet. The right upgrade message is "your customer is asking for this" not "unlock more features."
+
+---
+
+---
+
+## 7. Architecture — Four-Layer Design
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -98,7 +315,7 @@ Zustand manages **ephemeral UI state only** — selected sidebar mode, open pane
 
 ---
 
-## 3. Data Model — ISA-95 Aligned
+## 8. Data Model — ISA-95 Aligned
 
 All tables live in Supabase Postgres. The model follows the ISA-95 hierarchy: physical assets → product definitions → process routes → production execution → quality.
 
@@ -251,7 +468,7 @@ mqtt_messages
 
 ---
 
-## 4. Tool Layer — MES Operations
+## 9. Tool Layer — MES Operations
 
 The tool layer is the central nervous system of MESkit. Every MES operation is a typed Server Action that validates inputs, executes the operation against Supabase, and returns a structured result.
 
@@ -342,7 +559,7 @@ The same function is:
 
 ---
 
-## 5. Intelligence Layer — Smart Features
+## 10. Intelligence Layer — Smart Features
 
 MESkit ships with three smart features. Each uses Claude's tool-use capability to call MES tools based on natural-language input or event triggers.
 
@@ -464,7 +681,7 @@ MESkit: calls list_routes(part_number_id=...)
 
 ---
 
-## 6. MVP Scope — What's IN
+## 11. MVP Scope — What's IN
 
 The core loop remains: **define a product → build a route → move a unit through workstations → collect quality/production data → visualize results**.
 
@@ -490,9 +707,11 @@ All operations flow through the tool layer. The UI subscribes to Realtime change
 - **Unit Generation**: Generate N units for a part number; serial numbers auto-assigned via the algorithm; units written to Supabase
 - **WIP Movement**: Move units step-by-step through their route
   - **Manual**: User clicks "Move" per unit, or tells MESkit "move SMX-00042"
-  - **Auto-run**: Units auto-advance at a configurable interval (simulated cycle time)
+  - **Production Simulator**: Built-in simulator advances units through the same public tool layer, with start/pause/reset controls and configurable speed for the first-run demo path
 - **Quality Gates**: At each pass/fail step, randomly inject outcomes based on a configurable yield rate (default 95%); failed units are scrapped and logged
 - **Live Ticker**: Supabase Realtime subscription renders a scrolling event log of every unit creation, move, and quality event
+
+The Production Simulator is part of the MVP, not a post-MVP add-on. It is the primary no-setup activation path for new users and the same execution surface that powers the demo environment.
 
 ### 6.4 Monitor Mode — Dashboard
 
@@ -512,7 +731,7 @@ All operations flow through the tool layer. The UI subscribes to Realtime change
 
 ---
 
-## 7. Scope: What's OUT
+## 12. Scope: What's OUT
 
 | Feature | Reason deferred |
 |---------|----------------|
@@ -524,14 +743,14 @@ All operations flow through the tool layer. The UI subscribes to Realtime change
 | Label templates & printing | Peripheral feature |
 | Work Instructions authoring | Content authoring scope |
 | OEE (full Availability x Performance x Quality) | Needs downtime & ideal cycle time model |
-| Time control (2x, 5x, 10x simulation speed) | Can be layered on top of auto-run later |
+| Autonomous background simulation with no active client session | MVP keeps the simulator clock in the active session; move unattended runs to a persistent worker later |
 | Multi-feature orchestration | Smart features work independently in MVP; coordination comes later |
 | Voice input for operators | Chat-first; voice is a future input modality |
 | Cross-session memory | Conversations persist, but no long-term learning in MVP |
 
 ---
 
-## 8. MQTT-Ready Architecture
+## 13. MQTT-Ready Architecture
 
 Implementation is deferred to M6, but the interface contract is defined now so the data model and Edge Function architecture are ready.
 
@@ -578,7 +797,7 @@ MQTT Broker
 
 ### 8.4 Simulation Mode — Virtual Device
 
-Before a real MQTT broker exists, the auto-run engine in Run Mode generates events using the **exact same JSON schema**. When the broker is introduced in M6, the only change is the transport — the data shape is already correct.
+Before a real MQTT broker exists, the Production Simulator in Run Mode generates events using the **exact same JSON schema**. When the broker is introduced in M6, the only change is the transport — the data shape is already correct.
 
 A "virtual device" module publishes fake MQTT messages at configurable intervals:
 - `cycle_complete` — unit finishes a workstation step
@@ -587,20 +806,20 @@ A "virtual device" module publishes fake MQTT messages at configurable intervals
 
 ---
 
-## 9. Milestones
+## 14. Milestones
 
 | # | Milestone | Deliverable | Key Details |
 |---|-----------|-------------|-------------|
 | **M1** | Project scaffold + Tool Layer | Next.js app, Supabase project, auth, professional light-first shell, tool layer scaffold, chat panel | Design tokens, Zustand stores, Supabase client, sidebar + top bar + ticker + chat panel layout, login/signup, tool layer architecture with Zod schemas |
 | **M2** | Build Mode + Ask MESkit | CRUD for lines, workstations, machines via UI and chat | Shop floor tools implemented, Ask MESkit wired to Claude tool-use, Realtime subscriptions |
 | **M3** | Configure Mode | Part numbers, BOM, routes, serial algorithms via UI and chat | Product & process tools, route step designer, BOM assembly UI, all operations available via natural language |
-| **M4** | Run Mode + Quality Monitor | Unit generation, WIP movement, quality gates, proactive quality alerts | Production tools, auto-run engine, yield injection, Quality Monitor with event-driven triggers |
+| **M4** | Run Mode + Production Simulator + Quality Monitor | Unit generation, WIP movement, simulator-driven execution, quality gates, proactive quality alerts | Production tools, Production Simulator, yield injection, event-driven Quality Monitor, first-run demo path |
 | **M5** | Monitor Mode + Planner | Dashboard with live charts, natural-language insights, production planning | Analytics tools, Recharts dashboards, Quality Monitor insights in UI, Production Planner |
 | **M6** | MQTT Interface + Machine Health Monitor | Broker setup, message schema, device gateway, sensor anomaly detection | Mosquitto/HiveMQ Cloud, Edge Function bridge, virtual device module, Machine Health Monitor |
 
 ---
 
-## 10. Design System
+## 15. Design System
 
 ### 10.1 Brand DNA — MESkit Identity
 
@@ -649,7 +868,7 @@ MESkit uses a professional, engineering-first visual identity: clean information
 
 ---
 
-## 11. Technical Decisions
+## 16. Technical Decisions
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
@@ -667,7 +886,7 @@ MESkit uses a professional, engineering-first visual identity: clean information
 
 ---
 
-## 12. ISA-95 Alignment
+## 17. ISA-95 Alignment
 
 MESkit's data model maps to the ISA-95 hierarchy:
 
@@ -683,3 +902,47 @@ MESkit's data model maps to the ISA-95 hierarchy:
 MESkit's smart features operate at Level 3 — the same level as human operators and supervisors. They don't replace the ISA-95 model; they consume it through the tool layer, just as a human operator would through the UI.
 
 This alignment means MESkit speaks the same language as enterprise MES systems, making it useful for learning and as a foundation for real deployments — with built-in analytics, quality alerts, and natural language queries from day one.
+
+---
+
+## 18. Success Metrics
+
+### Acquisition
+
+| Metric | Target (6 months post-launch) |
+|--------|-------------------------------|
+| GitHub stars | 500 |
+| Monthly website visitors (organic) | 2,000 |
+| Simulator sessions (no signup) | 500/month |
+| Cloud signups | 100 total |
+
+### Activation
+
+| Metric | Definition | Target |
+|--------|-----------|--------|
+| Time-to-running-simulation | Minutes from signup to first simulator run | < 5 min |
+| Onboarding completion rate | % of new signups who complete the guided first-run flow | > 60% |
+| "Aha moment" completion | % of signups who generate at least one unit | > 70% |
+
+### Retention
+
+| Metric | Definition | Target |
+|--------|-----------|--------|
+| Week-2 retention | % of signups still active 14 days after signup | > 40% |
+| Day-7 data retention conversion | % of demo users who upgrade before data expires | > 15% |
+
+### Revenue
+
+| Metric | Target (12 months post-launch) |
+|--------|-------------------------------|
+| Paying cloud customers | 50 |
+| Monthly Recurring Revenue (MRR) | €5,000 |
+| Average Revenue Per Account | €150/month (mix of Starter and Pro) |
+
+### Product quality
+
+| Metric | Target |
+|--------|--------|
+| Simulator → signup conversion | > 20% of simulator sessions create an account |
+| Chat panel usage rate | > 50% of active users send at least one message per session |
+| Quality Monitor alert accuracy | < 5% false positive rate in simulator scenarios |

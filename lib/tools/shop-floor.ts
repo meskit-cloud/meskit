@@ -291,9 +291,31 @@ registerTool({
 
 // --- list_machines ---
 
+export const PACKLML_STATES = [
+  "STOPPED",
+  "IDLE",
+  "EXECUTE",
+  "HELD",
+  "SUSPENDED",
+  "COMPLETE",
+  "ABORTED",
+] as const;
+
+export type PackMLState = (typeof PACKLML_STATES)[number];
+
+export const PACKLML_TRANSITIONS: Record<PackMLState, PackMLState[]> = {
+  STOPPED: ["IDLE"],
+  IDLE: ["EXECUTE", "STOPPED"],
+  EXECUTE: ["HELD", "COMPLETE", "ABORTED"],
+  HELD: ["SUSPENDED", "EXECUTE", "ABORTED"],
+  SUSPENDED: ["EXECUTE", "ABORTED"],
+  COMPLETE: ["IDLE", "STOPPED"],
+  ABORTED: ["STOPPED"],
+};
+
 export const listMachinesSchema = z.object({
   workstation_id: z.string().uuid().optional(),
-  status: z.enum(["idle", "running", "down"]).optional(),
+  status: z.enum(["STOPPED", "IDLE", "EXECUTE", "HELD", "SUSPENDED", "COMPLETE", "ABORTED"]).optional(),
 });
 
 export type ListMachinesInput = z.infer<typeof listMachinesSchema>;
@@ -391,7 +413,7 @@ registerTool({
 
 export const updateMachineStatusSchema = z.object({
   id: z.string().uuid(),
-  status: z.enum(["idle", "running", "down"]),
+  status: z.enum(["STOPPED", "IDLE", "EXECUTE", "HELD", "SUSPENDED", "COMPLETE", "ABORTED"]),
 });
 
 export type UpdateMachineStatusInput = z.infer<
@@ -401,6 +423,24 @@ export type UpdateMachineStatusInput = z.infer<
 export async function updateMachineStatus(input: UpdateMachineStatusInput) {
   const validated = updateMachineStatusSchema.parse(input);
   const supabase = await createClient();
+
+  // Fetch current status and validate PackML transition
+  const { data: machine, error: fetchError } = await supabase
+    .from("machines")
+    .select("status")
+    .eq("id", validated.id)
+    .single();
+
+  if (fetchError || !machine)
+    throw new Error("update_machine_status: machine not found");
+
+  const currentStatus = machine.status as PackMLState;
+  const allowed = PACKLML_TRANSITIONS[currentStatus] ?? [];
+  if (!allowed.includes(validated.status as PackMLState)) {
+    throw new Error(
+      `update_machine_status: invalid PackML transition ${currentStatus} → ${validated.status}. Allowed: ${allowed.join(", ") || "none"}`,
+    );
+  }
 
   const { data, error } = await supabase
     .from("machines")
@@ -416,7 +456,8 @@ export async function updateMachineStatus(input: UpdateMachineStatusInput) {
 
 registerTool({
   name: "update_machine_status",
-  description: "Change machine status (idle/running/down)",
+  description:
+    "Change machine status using valid PackML transitions. States: STOPPED → IDLE → EXECUTE → HELD/COMPLETE/ABORTED. Invalid transitions are rejected.",
   schema: updateMachineStatusSchema,
   execute: updateMachineStatus,
 });
