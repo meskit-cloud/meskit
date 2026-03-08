@@ -2,7 +2,7 @@
 
 **Finally, an MES that's as easy to use as asking a question.**
 
-Open-source MES toolkit with built-in analytics, quality alerts, and natural language queries. ISA-95 aligned, simulation-first, MQTT-ready.
+Source-available MES toolkit with built-in analytics, quality alerts, and natural language queries. Free to self-host for internal use. ISA-95 aligned, simulation-first, MQTT-ready.
 
 **[meskit.cloud](https://meskit.cloud)**
 
