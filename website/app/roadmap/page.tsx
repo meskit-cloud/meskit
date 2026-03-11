@@ -62,7 +62,7 @@ const milestones = [
     title: 'Run mode + Quality Monitor',
     status: 'planned',
     detail:
-      'Unit generation, movement, quality events, and event-driven yield/defect monitoring alerts.',
+      'Unit generation, movement, quality events, and event-driven yield/defect monitoring alerts. A separate operator-station kiosk concept is parked on branch codex/kiosk at commit 7cbec45 for later evaluation.',
   },
   {
     id: 'M5',
@@ -84,6 +84,7 @@ const facts = [
   'Roadmap covers six milestones plus a completed pre-M1 baseline phase.',
   'Feature progression: M2 Ask MESkit, M4 Quality Monitor, M5 Planner, M6 Machine Health Monitor.',
   'M1 is complete. M2 is in progress — shop floor tools and Ask MESkit are functional.',
+  'A scan-first Operator Station Kiosk prototype is intentionally parked outside the M5 branch on codex/kiosk (commit 7cbec45).',
   'Architecture and PRD are canonical references for scope checks.',
 ];
 

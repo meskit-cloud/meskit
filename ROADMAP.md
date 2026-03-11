@@ -250,11 +250,15 @@ End-user documentation pages published to the marketing website (`website/`). Ge
 
 **Remaining parallel items** (do not block M4 sign-off): Configurable alert thresholds, webhook subscription UI, and cross-mode progress checklist.
 
+**Parked branch concept** (not merged into `feature/M5-monitor-mode`): A scan-first Operator Station Kiosk prototype was captured on branch `codex/kiosk` at commit `7cbec45`. The concept keeps `/run` as the supervisor console and adds a separate workstation-pinned `/run/station` kiosk optimized for barcode-scanner input, oversized touch actions, structured fail/defect capture, and a printable station command sheet. Keep this parked until M5 Monitor Mode stabilizes or the operator-floor UX becomes the next active priority.
+
 ---
 
 ## M5 — Monitor Mode + Production Planner
 
 Dashboard: live charts, lot traceability, automated insights, production planning.
+
+**Revenue-adjacency note**: M5 sits at the highest-value operational decisions — accepting a production order, committing a ship date, and estimating completion time. The Production Planner is not just a planning tool; it is where MESkit answers "can we ship 500 units Friday?" The Monitor Mode closes the loop on quality escapes. These are the moments closest to money for the primary buyer.
 
 ### Tools
 
@@ -295,7 +299,16 @@ Public natural language endpoint with API key auth — external systems send pla
 - [ ] Webhook callbacks for async operations (e.g., "notify me when production order completes")
 - [ ] Multi-turn conversation support for complex queries
 
-**Done when**: A user running a simulation in one tab can open Monitor Mode in another and see live WIP, throughput, yield, automated insights, and drill into any unit's history. The Planner can answer capacity and scheduling questions based on real simulation data. External systems can query the MES via natural language through the MESkit API endpoint.
+### Content / Media (parallel to M5 development)
+
+The target buyer (ops manager frustrated with spreadsheets) reads technical content before committing to a tool. Content needs to be live by the time M5 ships, not after. Write these in parallel with M5 features:
+
+- [ ] "ISA-95 for developers" — educational primer, high search intent, establishes topical authority
+- [ ] "How the MESkit tool layer works" — technical explainer on the tool-first architecture
+- [ ] "A quality escape reaches your customer: how MESkit answers the question" — the workflow-first story that leads with the buyer's real pain, not the feature map
+- [ ] Publish blog infrastructure on `meskit.cloud/blog` before M5 ships
+
+**Done when**: A user running a simulation in one tab can open Monitor Mode in another and see live WIP, throughput, yield, automated insights, and drill into any unit's history. The Planner can answer capacity and scheduling questions based on real simulation data. External systems can query the MES via natural language through the MESkit API endpoint. Three foundational blog posts are published.
 
 ---
 
@@ -622,3 +635,14 @@ Once MESkit has a stable product loop and onboarding foundation, operationalize 
 | Custom monitors | Users define domain-specific monitors with custom rules and tool subsets |
 | ISA-95 Operations Performance | Track actual vs planned performance per order with KPIs (ISA-95) |
 | ISA-95 Operations Response | Formal response messages when orders complete — supports ERP integration (ISA-95) |
+| Work order operator UX | Production orders exist in M4 (table, tools, simulator integration) but there's no dedicated operator-facing view — operators can't see assigned orders, claim them, or track completion from a work order list |
+| Production order due dates | M4 production orders have quantity and status but no due_date/deadline — operators and planners have no target completion time to schedule against |
+| Operator sessions | Track who worked on what and when — operator logs into a workstation, session is timestamped, units and quality events are attributed to that session; enables per-operator throughput and quality metrics |
+| Barcode/scan interaction UX | Scan-first operator workflow — scan a serial number to move a unit, scan to log a quality event, scan to identify a machine; distinct from the Post-v1 hardware integration (Zebra/keyboard-wedge), which covers hardware setup but not the scan-driven UX patterns |
+| Dispatch queue per workstation | Operator-facing prioritized work list — shows which units are ready at their workstation in priority order (due date, order priority, FIFO); replaces manual WIP scanning; feeds from production order demand |
+| Setup time tracking | Track changeover and setup time separately from run time — `setup_time_seconds` on route steps, log actual vs planned; feeds OEE availability and helps planners estimate realistic shift capacity |
+| Rework workflow | Failed units returned to a previous route step for remediation instead of being scrapped — requires rerouting logic, rework loop prevention, and rework history in `unit_history`; distinct from scrap |
+| Equipment and tool tracking | Define which tools, fixtures, or gauges are required at each route step — validate availability before production starts, track calibration status and assignment; prerequisite for ISO 9001 tooling traceability |
+| Exception handling | Formal workflow events for production disruptions: material shortages, unplanned downtime, labor absences — creates a blocking exception attached to affected units or orders until resolved; machine downtime has PackML states but material/labor exceptions have no structured model |
+| Manufacturing role hierarchy | M6 introduces SaaS roles (owner/admin/operator/viewer) but not manufacturing-specific roles: supervisor, planner, quality engineer, process engineer, maintenance tech, plant manager — each needs different permissions (who can edit routes, approve rework, scrap units, view cost data) and different default views |
+| Document-driven onboarding | Customer uploads a document (PDF, Excel, Word) containing their product specs, BOMs, routes, and shop floor layout — an Onboarding Agent extracts structured data, presents a confirmation map ("I found 3 lines, 12 part numbers, 2 BOMs — confirm?"), then auto-configures the system by calling the tool layer. No Playwright needed; the tool layer already has all the create operations. The visual "watch it configure itself" feel can be achieved by streaming a narrated log of each action. Main new work: file upload endpoint, document chunking/parsing, and an Onboarding Agent prompt tuned for ISA-95 entity extraction. |

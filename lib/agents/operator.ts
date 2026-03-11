@@ -59,6 +59,9 @@ export const operatorAssistantTools: string[] = [
   "get_throughput",
   "get_yield_report",
   "get_unit_history",
+  "get_oee",
+  "get_order_summary",
+  "get_capability_snapshot",
   // Carbon footprint (PCF feature)
   "get_carbon_footprint",
   // Blockchain verification

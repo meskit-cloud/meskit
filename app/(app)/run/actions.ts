@@ -190,6 +190,25 @@ export async function fetchRoutesByPartNumber(partNumberId: string) {
   return listRoutes({ part_number_id: partNumberId });
 }
 
+// --- Scan lookup (exact serial match) ---
+
+export async function lookupUnitBySerial(serial: string) {
+  const results = await searchUnits({ serial_number: serial });
+  const units = results as {
+    id: string;
+    serial_number: string;
+    status: string;
+    current_step: number;
+    part_number_id: string;
+    route_id: string;
+    production_order_id: string | null;
+  }[];
+  // Exact match (searchUnits does ilike, so filter for exact)
+  return units.find(
+    (u) => u.serial_number.toLowerCase() === serial.toLowerCase(),
+  ) ?? null;
+}
+
 // --- Route steps (to know step names and gate flags) ---
 
 export async function fetchRouteSteps(routeId: string) {

@@ -6,7 +6,7 @@ import {
   type OperatorAssistantContext,
 } from "@/lib/agents/operator";
 import { plannerTools, buildPlannerSystemPrompt } from "@/lib/agents/planner";
-import { getWipStatus } from "@/lib/tools/production";
+import { getWipStatus, listProductionOrders } from "@/lib/tools/production";
 
 // Ensure production tools are registered
 import "@/lib/tools/production";
@@ -75,11 +75,30 @@ export async function POST(request: NextRequest) {
         break;
       }
       case "planner": {
+        // Inject live WIP and active orders into planner context
+        let wipSummary: { workstationName: string; unitCount: number }[] | null = null;
+        let activeOrdersSummary: string | null = null;
+        try {
+          const wip = await getWipStatus({});
+          wipSummary = (
+            wip as { workstation_name: string; unit_count: number }[]
+          ).map((w) => ({ workstationName: w.workstation_name, unitCount: w.unit_count }));
+        } catch { /* non-critical */ }
+        try {
+          const orders = await listProductionOrders({ status: "running" });
+          const orderList = orders as { order_number: string; quantity_ordered: number; quantity_completed: number; part_numbers: { name: string } | null }[];
+          if (orderList.length > 0) {
+            activeOrdersSummary = orderList
+              .map((o) => `- ${o.order_number}: ${(o.part_numbers as { name: string } | null)?.name ?? "?"} — ${o.quantity_completed}/${o.quantity_ordered} complete`)
+              .join("\n");
+          }
+        } catch { /* non-critical */ }
+
         systemPrompt = buildPlannerSystemPrompt({
           activeMode: body.context.activeMode,
-          currentWipSummary: null,
+          currentWipSummary: wipSummary,
           shiftEndTime: null,
-          carbonTrackingEnabled: false,
+          activeOrdersSummary,
         });
         toolNames = plannerTools;
         break;

@@ -25,6 +25,7 @@ export function ChatPanel() {
     addToolCallToLastMessage,
     setStreaming,
   } = useChatStore();
+  const isPlanner = activeAgent === "planner";
   const {
     activeMode,
     selectedLineId,
@@ -50,7 +51,7 @@ export function ChatPanel() {
     }
   }, [isStreaming]);
 
-  if (!chatPanelOpen) return null;
+  if (!chatPanelOpen || activeMode === "run") return null;
 
   async function handleSend() {
     if (!input.trim() || isStreaming) return;
@@ -171,9 +172,9 @@ export function ChatPanel() {
     <aside className="w-80 bg-bg-surface border-l border-border flex flex-col shrink-0">
       {/* Header + topic selector */}
       <div className="px-3 py-2 border-b border-border relative">
-        <div className="flex items-center gap-2 text-sm font-medium text-agent mb-1">
+        <div className={`flex items-center gap-2 text-sm font-medium mb-1 ${isPlanner ? "text-agent" : "text-accent"}`}>
           <Bot size={16} />
-          <span>Ask MESkit</span>
+          <span>{isPlanner ? "Production Planner" : "Ask MESkit"}</span>
         </div>
         <button
           onClick={() => setTopicMenuOpen(!topicMenuOpen)}
@@ -218,7 +219,7 @@ export function ChatPanel() {
         )}
 
         {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
+          <MessageBubble key={msg.id} message={msg} isPlanner={isPlanner} />
         ))}
         <div ref={messagesEndRef} />
       </div>
@@ -236,14 +237,18 @@ export function ChatPanel() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask anything about your shop floor..."
+          placeholder={isPlanner ? "Ask about capacity, scheduling..." : "Ask anything about your shop floor..."}
           disabled={isStreaming}
-          className="flex-1 px-3 py-2 rounded-lg border border-border bg-bg-app text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-agent/30 disabled:opacity-50"
+          className={`flex-1 px-3 py-2 rounded-lg border border-border bg-bg-app text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 disabled:opacity-50 ${
+            isPlanner ? "focus:ring-agent/30" : "focus:ring-accent/30"
+          }`}
         />
         <button
           type="submit"
           disabled={isStreaming || !input.trim()}
-          className="p-2 rounded-lg bg-agent text-white hover:bg-agent/90 disabled:opacity-50 transition-colors"
+          className={`p-2 rounded-lg text-white disabled:opacity-50 transition-colors ${
+            isPlanner ? "bg-agent hover:bg-agent/90" : "bg-accent hover:bg-accent/90"
+          }`}
         >
           <Send size={16} />
         </button>
@@ -252,14 +257,16 @@ export function ChatPanel() {
   );
 }
 
-function MessageBubble({ message }: { message: ChatMessage }) {
+function MessageBubble({ message, isPlanner }: { message: ChatMessage; isPlanner: boolean }) {
   const isUser = message.role === "user";
+  const botAccent = isPlanner ? "text-agent" : "text-accent";
+  const botBg = isPlanner ? "bg-agent/10" : "bg-accent/10";
 
   return (
     <div className={`flex gap-2 ${isUser ? "justify-end" : "justify-start"}`}>
       {!isUser && (
-        <div className="w-6 h-6 rounded-full bg-agent/10 flex items-center justify-center shrink-0 mt-0.5">
-          <Bot size={14} className="text-agent" />
+        <div className={`w-6 h-6 rounded-full ${botBg} flex items-center justify-center shrink-0 mt-0.5`}>
+          <Bot size={14} className={botAccent} />
         </div>
       )}
 
@@ -267,7 +274,9 @@ function MessageBubble({ message }: { message: ChatMessage }) {
         className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
           isUser
             ? "bg-accent text-white"
-            : "bg-bg-app text-text-primary"
+            : isPlanner
+              ? "bg-agent/5 text-text-primary border border-agent/20"
+              : "bg-bg-app text-text-primary"
         }`}
       >
         {message.content && (

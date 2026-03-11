@@ -5,6 +5,7 @@ import {
   useEffect,
   useCallback,
   useTransition,
+  useRef,
 } from "react";
 import {
   Plus,
@@ -19,6 +20,7 @@ import {
   AlertTriangle,
   PackageOpen,
   ClipboardList,
+  ScanBarcode,
 } from "lucide-react";
 import { useUiStore } from "@/lib/stores/ui-store";
 import { createClient } from "@/lib/supabase/client";
@@ -38,6 +40,7 @@ import {
   addDefectCode,
   fetchAllPartNumbers,
   fetchRoutesByPartNumber,
+  lookupUnitBySerial,
 } from "./actions";
 
 // --- Types ---
@@ -112,6 +115,17 @@ const severityColors: Record<DefectCode["severity"], string> = {
   critical: "text-error",
 };
 
+// --- Scan feedback ---
+
+type ScanFeedback = {
+  type: "success" | "error" | "info";
+  message: string;
+} | null;
+
+// Known command keywords (case-insensitive)
+const SCAN_COMMANDS = ["PASS", "FAIL", "SCRAP", "MOVE"] as const;
+type ScanCommand = (typeof SCAN_COMMANDS)[number];
+
 // --- Main Component ---
 
 export function RunPanels() {
@@ -127,6 +141,20 @@ export function RunPanels() {
 
   const [wip, setWip] = useState<WipEntry[]>([]);
   const [defectCodes, setDefectCodes] = useState<DefectCode[]>([]);
+
+  // Scan state
+  const [scanUnitId, setScanUnitId] = useState<string | null>(null);
+  const [scanFeedback, setScanFeedback] = useState<ScanFeedback>(null);
+  const [pendingDefectCode, setPendingDefectCode] = useState<string | null>(null);
+  // When FAIL/SCRAP is scanned without a defect code, we hold the action here
+  const [pendingAction, setPendingAction] = useState<"FAIL" | "SCRAP" | null>(null);
+  const scanFeedbackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function showFeedback(fb: ScanFeedback) {
+    if (scanFeedbackTimer.current) clearTimeout(scanFeedbackTimer.current);
+    setScanFeedback(fb);
+    scanFeedbackTimer.current = setTimeout(() => setScanFeedback(null), 3000);
+  }
 
   // Clear cross-mode selections on mount
   useEffect(() => {
@@ -206,6 +234,175 @@ export function RunPanels() {
     selectProductionOrder(order.id, order.order_number);
   }
 
+  // --- Scan handler ---
+
+  async function handleScan(raw: string) {
+    const input = raw.trim();
+    if (!input) return;
+
+    const upper = input.toUpperCase();
+
+    // 1. Check if it's a command (PASS, FAIL, SCRAP, MOVE)
+    if (SCAN_COMMANDS.includes(upper as ScanCommand)) {
+      await handleScanCommand(upper as ScanCommand);
+      return;
+    }
+
+    // 2. Check if it matches a known defect code
+    const matchedDc = defectCodes.find(
+      (dc) => dc.code.toUpperCase() === upper,
+    );
+    if (matchedDc) {
+      // If there's a pending FAIL/SCRAP waiting for a defect code, complete it now
+      if (pendingAction && scanUnitId) {
+        setPendingDefectCode(matchedDc.id);
+        await handleScanCommand(pendingAction, matchedDc.id);
+        return;
+      }
+      // Otherwise just queue the defect for the next FAIL/SCRAP
+      setPendingDefectCode(matchedDc.id);
+      showFeedback({ type: "info", message: `Defect ${matchedDc.code} queued — scan FAIL or SCRAP to apply` });
+      return;
+    }
+
+    // 3. Otherwise treat as serial number lookup
+    try {
+      const found = await lookupUnitBySerial(input);
+      if (!found) {
+        showFeedback({ type: "error", message: `No unit found: ${input}` });
+        return;
+      }
+
+      // Auto-select the order if different
+      if (found.production_order_id && found.production_order_id !== selectedOrderId) {
+        const order = orders.find((o) => o.id === found.production_order_id);
+        if (order) {
+          setSelectedOrderId(order.id);
+          selectProductionOrder(order.id, order.order_number);
+          // Reload units for the new order
+          const [unitData, stepData] = await Promise.all([
+            fetchUnitsForOrder(order.id),
+            fetchRouteSteps(order.route_id),
+          ]);
+          setUnits((unitData as Unit[]) ?? []);
+          setRouteSteps(stepData ?? []);
+          setUnitsLoaded(true);
+        }
+      }
+
+      setScanUnitId(found.id);
+      setPendingDefectCode(null);
+      setPendingAction(null);
+      // No feedback message needed — the context card shows the unit state and next action
+    } catch {
+      showFeedback({ type: "error", message: "Lookup failed" });
+    }
+  }
+
+  async function handleScanCommand(cmd: ScanCommand, defectCodeOverride?: string) {
+    if (!scanUnitId) {
+      showFeedback({ type: "error", message: "Scan a unit serial number first." });
+      return;
+    }
+
+    const unit = units.find((u) => u.id === scanUnitId);
+    if (!unit) {
+      showFeedback({ type: "error", message: "Unit not loaded. Scan the serial again." });
+      return;
+    }
+
+    if (unit.status === "completed") {
+      showFeedback({ type: "error", message: "This unit already finished its route." });
+      return;
+    }
+    if (unit.status === "scrapped") {
+      showFeedback({ type: "error", message: "This unit was scrapped." });
+      return;
+    }
+
+    const step = routeSteps.find((s) => s.step_number === unit.current_step);
+    const effectiveDefect = defectCodeOverride ?? pendingDefectCode;
+
+    const reload = () => {
+      loadOrders();
+      const order = orders.find((o) => o.id === selectedOrderId);
+      if (order) loadUnits(order);
+      loadSidePanel();
+    };
+
+    try {
+      switch (cmd) {
+        case "PASS": {
+          if (!step?.pass_fail_gate) {
+            showFeedback({ type: "error", message: "This step is not a quality gate. Scan MOVE instead." });
+            return;
+          }
+          setPendingAction(null);
+          await passUnit(unit.id, step.workstation_id);
+          showFeedback({ type: "success", message: `${unit.serial_number} passed. Scan next unit.` });
+          setScanUnitId(null);
+          setPendingDefectCode(null);
+          break;
+        }
+        case "FAIL": {
+          if (!step?.pass_fail_gate) {
+            showFeedback({ type: "error", message: "This step is not a quality gate. Use SCRAP to reject." });
+            return;
+          }
+          // Require a defect code — if none, hold and ask
+          if (!effectiveDefect) {
+            setPendingAction("FAIL");
+            showFeedback({ type: "info", message: "Scan a defect code." });
+            return;
+          }
+          const dcName = defectCodes.find((dc) => dc.id === effectiveDefect)?.code;
+          await failUnit(unit.id, step.workstation_id, effectiveDefect);
+          showFeedback({
+            type: "error",
+            message: `${unit.serial_number} failed — ${dcName}. Scan next unit.`,
+          });
+          setScanUnitId(null);
+          setPendingDefectCode(null);
+          setPendingAction(null);
+          break;
+        }
+        case "SCRAP": {
+          // Require a defect code — if none, hold and ask
+          if (!effectiveDefect) {
+            setPendingAction("SCRAP");
+            showFeedback({ type: "info", message: "Scan a defect code." });
+            return;
+          }
+          const dcNameScrap = defectCodes.find((dc) => dc.id === effectiveDefect)?.code;
+          await scrapSelectedUnit(unit.id, effectiveDefect);
+          showFeedback({
+            type: "error",
+            message: `${unit.serial_number} scrapped — ${dcNameScrap}. Scan next unit.`,
+          });
+          setScanUnitId(null);
+          setPendingDefectCode(null);
+          setPendingAction(null);
+          break;
+        }
+        case "MOVE": {
+          if (step?.pass_fail_gate) {
+            showFeedback({ type: "error", message: "This is a quality gate. Scan PASS or FAIL." });
+            return;
+          }
+          setPendingAction(null);
+          await advanceUnit(unit.id);
+          showFeedback({ type: "success", message: `${unit.serial_number} moved to next step. Scan next unit.` });
+          setScanUnitId(null);
+          setPendingDefectCode(null);
+          break;
+        }
+      }
+      reload();
+    } catch (e) {
+      showFeedback({ type: "error", message: e instanceof Error ? e.message : "Action failed" });
+    }
+  }
+
   const selectedOrder = orders.find((o) => o.id === selectedOrderId) ?? null;
 
   return (
@@ -223,6 +420,24 @@ export function RunPanels() {
         unitsLoaded={unitsLoaded}
         routeSteps={routeSteps}
         defectCodes={defectCodes}
+        scanUnitId={scanUnitId}
+        scanFeedback={scanFeedback}
+        scanContext={(() => {
+          if (!scanUnitId) return null;
+          const unit = units.find((u) => u.id === scanUnitId);
+          if (!unit) return null;
+          const step = routeSteps.find((s) => s.step_number === unit.current_step) ?? null;
+          const order = orders.find((o) => o.id === unit.production_order_id);
+          return { unit, step, orderNumber: order?.order_number ?? null };
+        })()}
+        pendingDefectCode={pendingDefectCode}
+        pendingAction={pendingAction}
+        defectCodeName={
+          pendingDefectCode
+            ? defectCodes.find((dc) => dc.id === pendingDefectCode)?.code ?? null
+            : null
+        }
+        onScan={handleScan}
         onReload={() => {
           loadOrders();
           if (selectedOrder) loadUnits(selectedOrder);
@@ -234,6 +449,240 @@ export function RunPanels() {
         defectCodes={defectCodes}
         onDefectCodeAdded={() => loadSidePanel()}
       />
+    </div>
+  );
+}
+
+// --- Scan context: what the operator sees after scanning a serial ---
+
+interface ScanContext {
+  unit: Unit;
+  step: RouteStep | null;
+  orderNumber: string | null;
+}
+
+// --- Scan Bar ---
+//
+// Two modes:
+// 1. Idle — compact input bar, "Scan a unit serial number…"
+// 2. Unit active — expands to fill the panel with big serial, status, next action.
+//    The unit list is hidden. Everything happens via scan.
+
+function ScanBar({
+  onScan,
+  feedback,
+  scanContext,
+  pendingDefectCode,
+  pendingAction,
+}: {
+  onScan: (input: string) => void;
+  feedback: ScanFeedback;
+  scanContext: ScanContext | null;
+  pendingDefectCode: string | null;
+  pendingAction: "FAIL" | "SCRAP" | null;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [value, setValue] = useState("");
+  const [processing, setProcessing] = useState(false);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [feedback, scanContext]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!value.trim() || processing) return;
+    setProcessing(true);
+    await onScan(value);
+    setValue("");
+    setProcessing(false);
+    inputRef.current?.focus();
+  }
+
+  // --- Idle: no unit scanned ---
+  if (!scanContext && !feedback) {
+    return (
+      <div className="px-4 py-2 border-b border-border bg-bg-surface shrink-0">
+        <form onSubmit={handleSubmit} className="flex items-center gap-2">
+          <ScanBarcode size={16} className="text-text-secondary shrink-0" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Scan a unit serial number…"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            className="flex-1 px-2.5 py-1.5 text-sm rounded border border-border bg-bg-app text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-accent font-mono"
+          />
+        </form>
+      </div>
+    );
+  }
+
+  // --- Active: unit scanned, or showing action result ---
+  // This takes over the entire center panel via flex-1.
+
+  const feedbackBg = {
+    success: "bg-success/10",
+    error: "bg-error/10",
+    info: "bg-accent/10",
+  };
+
+  return (
+    <div className="flex-1 flex flex-col bg-bg-surface">
+      {/* Hidden scan input — catches scanner keystrokes */}
+      <form onSubmit={handleSubmit} className="px-4 pt-3 pb-2 shrink-0">
+        <div className="flex items-center gap-2">
+          <ScanBarcode size={16} className="text-text-secondary shrink-0" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Scan next…"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            className="flex-1 px-2.5 py-1.5 text-sm rounded border border-border bg-bg-app text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-accent font-mono"
+          />
+          {pendingDefectCode && (
+            <span className="text-sm px-2 py-1 rounded bg-warning/10 text-warning font-mono font-semibold shrink-0">
+              {pendingDefectCode}
+            </span>
+          )}
+        </div>
+      </form>
+
+      {/* Action result — big transient feedback */}
+      {feedback && (
+        <div className={`mx-4 mb-3 px-4 py-3 rounded-lg ${feedbackBg[feedback.type]} shrink-0`}>
+          <p className={`text-lg font-semibold ${
+            feedback.type === "success" ? "text-success" :
+            feedback.type === "error" ? "text-error" : "text-accent"
+          }`}>
+            {feedback.message}
+          </p>
+        </div>
+      )}
+
+      {/* Unit context — big, centered, dominant */}
+      {scanContext && (
+        <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
+          {/* Serial number — the biggest thing on screen */}
+          <p className="font-mono text-3xl font-bold text-text-primary tracking-wide">
+            {scanContext.unit.serial_number}
+          </p>
+
+          {scanContext.orderNumber && (
+            <p className="text-sm text-text-secondary mt-1">
+              {scanContext.orderNumber}
+            </p>
+          )}
+
+          {/* Status and next action */}
+          {(() => {
+            const { unit, step } = scanContext;
+
+            if (unit.status === "completed") {
+              return (
+                <div className="mt-6">
+                  <p className="text-xl font-semibold text-success">Done</p>
+                  <p className="text-sm text-text-secondary mt-1">This unit finished its route.</p>
+                </div>
+              );
+            }
+            if (unit.status === "scrapped") {
+              return (
+                <div className="mt-6">
+                  <p className="text-xl font-semibold text-error">Scrapped</p>
+                  <p className="text-sm text-text-secondary mt-1">Scan another unit.</p>
+                </div>
+              );
+            }
+
+            // in_progress
+            if (unit.current_step === 0) {
+              return (
+                <div className="mt-6">
+                  <p className="text-lg text-text-secondary">Not started</p>
+                  <p className="mt-4 text-xl font-semibold text-accent">
+                    Scan MOVE
+                  </p>
+                </div>
+              );
+            }
+
+            if (step?.pass_fail_gate) {
+              // Waiting for defect code after FAIL/SCRAP
+              if (pendingAction) {
+                return (
+                  <div className="mt-6">
+                    <p className="text-lg font-medium text-warning">
+                      Quality gate — {step.name}
+                    </p>
+                    {step.workstations?.name && (
+                      <p className="text-sm text-text-secondary mt-0.5">
+                        @ {step.workstations.name}
+                      </p>
+                    )}
+                    <div className="mt-6 px-8 py-4 rounded-lg bg-error/5 border-2 border-error/20">
+                      <p className="text-lg font-semibold text-error">
+                        {pendingAction}
+                      </p>
+                      <p className="text-xl font-bold text-text-primary mt-2">
+                        Scan a defect code
+                      </p>
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="mt-6">
+                  <p className="text-lg font-medium text-warning">
+                    Quality gate — {step.name}
+                  </p>
+                  {step.workstations?.name && (
+                    <p className="text-sm text-text-secondary mt-0.5">
+                      @ {step.workstations.name}
+                    </p>
+                  )}
+                  <div className="mt-6 flex items-center justify-center gap-6">
+                    <div className="px-6 py-3 rounded-lg bg-success/10 border-2 border-success/30">
+                      <p className="text-xl font-bold text-success">PASS</p>
+                    </div>
+                    <span className="text-text-secondary">or</span>
+                    <div className="px-6 py-3 rounded-lg bg-error/10 border-2 border-error/30">
+                      <p className="text-xl font-bold text-error">FAIL</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // Normal step (no gate)
+            return (
+              <div className="mt-6">
+                <p className="text-lg font-medium text-text-primary">
+                  {step?.name ?? `Step ${unit.current_step}`}
+                </p>
+                {step?.workstations?.name && (
+                  <p className="text-sm text-text-secondary mt-0.5">
+                    @ {step.workstations.name}
+                  </p>
+                )}
+                <p className="mt-4 text-xl font-semibold text-accent">
+                  Scan MOVE
+                </p>
+              </div>
+            );
+          })()}
+        </div>
+      )}
     </div>
   );
 }
@@ -442,6 +891,13 @@ function UnitsPanel({
   unitsLoaded,
   routeSteps,
   defectCodes,
+  scanUnitId,
+  scanFeedback,
+  scanContext,
+  pendingDefectCode,
+  pendingAction,
+  defectCodeName,
+  onScan,
   onReload,
 }: {
   order: ProductionOrder | null;
@@ -449,6 +905,13 @@ function UnitsPanel({
   unitsLoaded: boolean;
   routeSteps: RouteStep[];
   defectCodes: DefectCode[];
+  scanUnitId: string | null;
+  scanFeedback: ScanFeedback;
+  scanContext: ScanContext | null;
+  pendingDefectCode: string | null;
+  pendingAction: "FAIL" | "SCRAP" | null;
+  defectCodeName: string | null;
+  onScan: (input: string) => void;
   onReload: () => void;
 }) {
   const [pending, startTransition] = useTransition();
@@ -532,14 +995,27 @@ function UnitsPanel({
     }
   }
 
+  const scanActive = !!(scanContext || scanFeedback);
+
   if (!order) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
-        <PackageOpen size={36} className="text-text-secondary/30 mb-4" />
-        <p className="text-sm text-text-secondary">Select a production order</p>
-        <p className="text-xs text-text-secondary/60 mt-1">
-          Choose an order from the left panel to see its units
-        </p>
+      <div className="flex-1 flex flex-col min-h-0">
+        <ScanBar
+          onScan={onScan}
+          feedback={scanFeedback}
+          scanContext={scanContext}
+          pendingDefectCode={defectCodeName}
+          pendingAction={pendingAction}
+        />
+        {!scanActive && (
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
+            <PackageOpen size={36} className="text-text-secondary/30 mb-4" />
+            <p className="text-sm text-text-secondary">Select an order or scan a serial</p>
+            <p className="text-xs text-text-secondary/60 mt-1">
+              Choose an order from the left, or scan a barcode to jump to a unit
+            </p>
+          </div>
+        )}
       </div>
     );
   }
@@ -554,7 +1030,16 @@ function UnitsPanel({
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
-      {/* Order header */}
+      <ScanBar
+        onScan={onScan}
+        feedback={scanFeedback}
+        scanContext={scanContext}
+        pendingDefectCode={defectCodeName}
+        pendingAction={pendingAction}
+      />
+
+      {/* Order header + unit list — hidden when scan is active */}
+      {!scanActive && <>
       <div className="px-4 py-3 border-b border-border bg-bg-surface shrink-0">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -642,12 +1127,14 @@ function UnitsPanel({
           const step = getStep(unit);
           const isAtGate = step?.pass_fail_gate === true;
           const isActionTarget = actionUnitId === unit.id;
+          const isScanSelected = scanUnitId === unit.id;
 
           return (
-            <div key={unit.id} className="border-b border-border">
+            <div key={unit.id} className={`border-b border-border ${isScanSelected ? "bg-accent/5 ring-1 ring-inset ring-accent/30" : ""}`}>
               <div className="px-4 py-2.5 flex items-center gap-3">
                 {/* Serial */}
-                <span className="font-mono text-sm font-medium text-text-primary w-32 shrink-0">
+                <span className={`font-mono text-sm font-medium w-32 shrink-0 ${isScanSelected ? "text-accent" : "text-text-primary"}`}>
+                  {isScanSelected && <ScanBarcode size={12} className="inline mr-1.5 -mt-0.5" />}
                   {unit.serial_number}
                 </span>
 
@@ -778,6 +1265,7 @@ function UnitsPanel({
           );
         })}
       </div>
+      </>}
     </div>
   );
 }

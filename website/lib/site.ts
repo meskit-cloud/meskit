@@ -9,7 +9,7 @@ export const siteConfig = {
   appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://app.meskit.cloud',
   githubUrl: 'https://github.com/meskit-cloud/meskit',
   docsUrl: 'https://meskit.cloud/docs',
-  lastUpdated: 'March 7, 2026',
+  lastUpdated: 'March 8, 2026',
   author: 'MESkit Team',
 };
 
@@ -137,7 +137,7 @@ export const coreFacts = [
   'Tool layer: 26 Zod-validated server actions shared by UI and intelligence layer.',
   'Smart features: Ask MESkit (natural language queries), Quality Monitor, Production Planner.',
   'North Star: Predict machine failure and coordinate the response via three automation layers (Monitor, Plan, Act) — operators stay in command.',
-  'Roadmap: 6 milestones. M1–M3 complete (scaffold, Build Mode, Configure Mode). M4 (Run Mode + Simulator) in progress.',
+  'Roadmap: 6 milestones. M1–M5 complete (scaffold, Build Mode, Configure Mode, Run Mode + Simulator, Monitor Mode + Planner). M6 (MQTT integration) next.',
   'Stack: Next.js, Supabase, Claude API (tool-use), TypeScript.',
 ];
 

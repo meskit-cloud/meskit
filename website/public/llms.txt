@@ -7,7 +7,10 @@
 
 ## Product
 - [Product](https://meskit.cloud/product): Build, Configure, Run, Monitor modes
-- [Docs](https://meskit.cloud/docs): 
+- [Docs](https://meskit.cloud/docs): User guides for every mode and feature
+- [Monitor Mode](https://meskit.cloud/docs/monitor-mode): Real-time dashboards for throughput, yield, OEE, WIP tracking, and order progress
+- [Production Planner](https://meskit.cloud/docs/planner): AI agent for capacity analysis and scheduling using live production data
+- [REST API](https://meskit.cloud/docs/rest-api): Auto-generated REST endpoints and Natural Language API with API key auth
 - [Smart Features](https://meskit.cloud/agents): Three smart features sharing one typed tool layer
 - [ISA-95](https://meskit.cloud/isa-95): Standards alignment and database schema mapping
 - [Architecture](https://meskit.cloud/architecture): Four-layer design with tool layer rationale
@@ -25,5 +28,5 @@
 - Tool layer: 26 Zod-validated server actions shared by UI and intelligence layer.
 - Smart features: Ask MESkit (natural language queries), Quality Monitor, Production Planner.
 - North Star: Predict machine failure and coordinate the response via three automation layers (Monitor, Plan, Act) — operators stay in command.
-- Roadmap: 6 milestones. M1–M3 complete (scaffold, Build Mode, Configure Mode). M4 (Run Mode + Simulator) in progress.
+- Roadmap: 6 milestones. M1–M5 complete (scaffold, Build Mode, Configure Mode, Run Mode + Simulator, Monitor Mode + Planner). M6 (MQTT integration) next.
 - Stack: Next.js, Supabase, Claude API (tool-use), TypeScript.

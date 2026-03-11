@@ -1,7 +1,7 @@
 # MESkit Website PRD
 
-- Status: Draft v4
-- Last updated: 2026-03-07
+- Status: Draft v5
+- Last updated: 2026-03-10
 - Source context: `/MESKIT_PRD.md` (product PRD)
 
 ## Related Docs
@@ -127,6 +127,8 @@ Finds MESkit on GitHub. Self-hosts it. Evaluates the architecture. If good, depl
 | **Secondary CTA** | View Plans |
 
 The "spreadsheets" reference in the subheadline is intentional — it is the signal that tells the right buyer "this is for me." The technical details (ISA-95, MQTT, tool layer) belong further down the page, not in the hero.
+
+**Workflow-question framing note**: The tagline "as easy to use as asking a question" is a capability claim. The buyer's actual question is "Why did Station 3 fail 12 units this morning before I even noticed?" Test hero copy that leads with the buyer's question, with the tagline as the answer. The product loop (Build → Configure → Run → Monitor) is how MESkit is organized internally — do not let it become the hero framing. Lead with the workflow (quality escape → lot → workstation → operator → defect code, in one query), not the mode structure.
 
 ### Core promise
 
@@ -429,8 +431,9 @@ Must include:
 2. Tier comparison table (Self-hosted free / Starter €99 / Pro €499 / Enterprise €1,500) with what each tier unlocks.
 3. "MESkit grows with you" as the headline framing — not "choose your plan."
 4. The moat argument: once a shop is on MESkit, their production history, trained operators, and configured data model make switching increasingly costly. Upgrade within MESkit when your requirements escalate.
-5. FAQ mini-section: "Who needs the blockchain features?" / "Who needs the carbon footprint reports?" — answered with "the same shop at a later stage, when their biggest customer asks for it."
-6. CTAs: primary "Start free" (simulator) + "Talk to us" for Enterprise.
+5. **Concrete pain quantification** — a cost anchor for the conversion argument. Example: a quality escape that ships 200 defective units to a customer. Add up rework labor, return shipping, replacement production, customer penalty clause, and the downstream risk of losing the contract. Show the real number. This is the economic argument that makes €99/month feel trivial by comparison.
+6. FAQ mini-section: "Who needs the blockchain features?" / "Who needs the carbon footprint reports?" — answered with "the same shop at a later stage, when their biggest customer asks for it."
+7. CTAs: primary "Start free" (simulator) + "Talk to us" for Enterprise.
 
 Tone: frame pricing around the buyer's growth journey, not product capabilities. The right question on this page is "what stage is your shop at?" not "how many users do you have?"
 
@@ -629,8 +632,9 @@ Every major page should include:
 
 ### Editorial cadence
 
-1. Minimum: 2 high-quality posts per month during launch period.
-2. Quarterly refresh of core pages (`/product`, `/agents`, `/isa-95`, `/architecture`, `/roadmap`, `/faq`).
+1. **Start during M5 development** — not post-launch. The target buyer reads technical content before buying. Content must be live when M5 ships or it won't exist when the first real users arrive. The three priority posts (ISA-95 primer, tool layer explainer, quality-escape workflow story) should be drafted during M5 and published when the blog infrastructure is ready.
+2. Minimum: 2 high-quality posts per month from launch onward.
+3. Quarterly refresh of core pages (`/product`, `/agents`, `/isa-95`, `/architecture`, `/roadmap`, `/faq`).
 
 ### Authoring checklist per page/post
 

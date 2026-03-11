@@ -1,7 +1,7 @@
 # MESkit — Product Requirements Document
 
-- Status: v4
-- Last updated: 2026-03-07
+- Status: v5
+- Last updated: 2026-03-10
 
 ## Related Docs
 
@@ -23,6 +23,14 @@ MESkit follows the **ISA-95** standard data model — no proprietary API depende
 **Finally, an MES that's as easy to use as asking a question.** Open-source MES with built-in analytics.
 
 MESkit is not a chatbot demo or a thin wrapper. It is a Manufacturing Execution System with smart features — quality alerts, production planning, and natural language queries — that route through the same typed tool layer as UI buttons, removing coordination bottlenecks so operators can focus on decisions instead of chasing data.
+
+### Workflow-First Positioning
+
+The product is organized around modes (Build → Configure → Run → Monitor), but external messaging should lead with the workflow the buyer actually runs — not the feature map. The right story is the quality-escape scenario:
+
+> A quality escape reaches your customer. MESkit tells you which lot, which workstation, which operator, and which defect code — in one query.
+
+That is the workflow. The mode structure is how the product is built internally. The buyer's question — "Why did Station 3 fail 12 units this morning before I even noticed?" — is the hook. The tagline is the answer. Lead with the question, not the feature structure.
 
 ### North Star
 
