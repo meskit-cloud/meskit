@@ -7,6 +7,7 @@ import {
 } from "@/lib/agents/operator";
 import { plannerTools, buildPlannerSystemPrompt } from "@/lib/agents/planner";
 import { getWipStatus, listProductionOrders } from "@/lib/tools/production";
+import { getOrgContext } from "@/lib/org-context";
 
 // Ensure production tools are registered
 import "@/lib/tools/production";
@@ -36,6 +37,17 @@ interface ChatRequestBody {
 export async function POST(request: NextRequest) {
   try {
     const body: ChatRequestBody = await request.json();
+
+    // Resolve org context for role-based prompt injection
+    let orgName = "My Organization";
+    let role: "owner" | "admin" | "operator" | "viewer" = "owner";
+    try {
+      const orgCtx = await getOrgContext();
+      orgName = orgCtx.orgName;
+      role = orgCtx.role;
+    } catch {
+      // Fallback to defaults if org context unavailable
+    }
 
     let systemPrompt: string;
     let toolNames: string[];
@@ -69,6 +81,8 @@ export async function POST(request: NextRequest) {
           selectedProductionOrderNumber: body.context.selectedProductionOrderNumber ?? null,
           activeProductionRun: body.context.activeProductionRun,
           wipSummary,
+          orgName,
+          role,
         };
         systemPrompt = buildOperatorAssistantSystemPrompt(ctx);
         toolNames = operatorAssistantTools;
@@ -99,6 +113,8 @@ export async function POST(request: NextRequest) {
           currentWipSummary: wipSummary,
           shiftEndTime: null,
           activeOrdersSummary,
+          orgName,
+          role,
         });
         toolNames = plannerTools;
         break;

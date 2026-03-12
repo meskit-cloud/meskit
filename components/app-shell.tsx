@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import {
   Hammer,
   Settings,
+  Settings2,
   Play,
   BarChart3,
   MessageSquare,
@@ -38,16 +39,31 @@ const modes = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({
+  role = "owner",
+}: {
+  role?: "owner" | "admin" | "operator" | "viewer";
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const { activeMode, setActiveMode } = useUiStore();
+
+  const isViewOnly = role === "viewer";
+  const isOperator = role === "operator";
+
+  function showViewLabel(modeKey: string): boolean {
+    if (isViewOnly) return true;
+    if (isOperator && (modeKey === "build" || modeKey === "configure"))
+      return true;
+    return false;
+  }
 
   return (
     <aside className="w-16 bg-bg-surface border-r border-border flex flex-col items-center py-4 gap-1 shrink-0">
       {modes.map((mode) => {
         const isActive =
           activeMode === mode.key || pathname === mode.href;
+        const viewLabel = showViewLabel(mode.key);
         return (
           <button
             key={mode.key}
@@ -59,18 +75,49 @@ export function Sidebar() {
                 ? "bg-accent/10 text-accent"
                 : "text-text-secondary hover:bg-bg-app"
               }`}
-            title={mode.label}
+            title={viewLabel ? `${mode.label} (view)` : mode.label}
           >
             <mode.icon size={20} />
-            <span className="text-[10px] leading-none">{mode.label}</span>
+            <span className="text-[10px] leading-none">
+              {mode.label}
+              {viewLabel && (
+                <span className="text-text-secondary/60 ml-0.5">(v)</span>
+              )}
+            </span>
           </button>
         );
       })}
+
+      {/* Settings link — owner & admin only */}
+      {(role === "owner" || role === "admin") && (
+        <div className="mt-auto">
+          <button
+            onClick={() => router.push("/settings")}
+            className={`w-12 h-12 rounded-lg flex flex-col items-center justify-center gap-0.5 text-xs transition-colors ${
+              pathname === "/settings"
+                ? "bg-accent/10 text-accent"
+                : "text-text-secondary hover:bg-bg-app"
+            }`}
+            title="Settings"
+          >
+            <Settings2 size={20} />
+            <span className="text-[10px] leading-none">Settings</span>
+          </button>
+        </div>
+      )}
     </aside>
   );
 }
 
-export function TopBar({ userEmail, userCreatedAt }: { userEmail: string; userCreatedAt: string }) {
+export function TopBar({
+  userEmail,
+  userCreatedAt,
+  orgName,
+}: {
+  userEmail: string;
+  userCreatedAt: string;
+  orgName?: string;
+}) {
   const router = useRouter();
   const { chatPanelOpen, toggleChatPanel } = useUiStore();
   const { resolvedTheme, setTheme } = useTheme();
@@ -96,26 +143,18 @@ export function TopBar({ userEmail, userCreatedAt }: { userEmail: string; userCr
           <span className="text-text-primary">MES</span>
           <span className="text-accent">kit</span>
         </span>
-        <span className="text-xs text-text-secondary font-mono bg-bg-app px-2 py-0.5 rounded">
-          M4
-        </span>
-        {daysRemaining <= 7 && (
-          <span
-            className={`text-xs font-mono px-2 py-0.5 rounded ${
-              daysRemaining <= 1
-                ? "bg-error/10 text-error"
-                : daysRemaining <= 3
-                  ? "bg-warning/10 text-warning"
-                  : "bg-bg-app text-text-secondary"
-            }`}
-            title="Demo environment — data deleted after 7 days"
-          >
-            {daysRemaining === 0 ? "Expiring today" : `${daysRemaining}d left`}
+        {orgName && (
+          <span className="text-xs text-text-secondary truncate max-w-[160px]" title={orgName}>
+            {orgName}
           </span>
         )}
+        <span className="text-xs text-text-secondary font-mono bg-bg-app px-2 py-0.5 rounded">
+          M8
+        </span>
+        {/* Demo expiry badge hidden — cron cleanup disabled */}
       </div>
 
-      <SimulationControls />
+      {/* SimulationControls hidden — not yet functional */}
 
       <div className="flex items-center gap-2">
         <a

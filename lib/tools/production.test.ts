@@ -5,8 +5,12 @@ vi.mock("./registry", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./registry")>();
   return { ...actual, registerTool: vi.fn() };
 });
+vi.mock("@/lib/org-context", () => ({
+  getOrgContext: vi.fn(),
+}));
 
 import { createClient } from "@/lib/supabase/server";
+import { getOrgContext } from "@/lib/org-context";
 import { dbChain } from "@/tests/mocks/supabase";
 import {
   generateUnitsSchema,
@@ -18,8 +22,16 @@ import {
 } from "./production";
 
 const mockCreateClient = vi.mocked(createClient);
+const mockGetOrgContext = vi.mocked(getOrgContext);
 
 const USER = { id: "user-abc" };
+const ORG_CONTEXT = {
+  userId: USER.id,
+  orgId: "org-123",
+  plantId: "plant-456",
+  role: "owner" as const,
+  orgName: "Test Org",
+};
 const ALGO = {
   id: "algo-id",
   prefix: "SN",
@@ -45,7 +57,10 @@ function makeClient(fromChains: ReturnType<typeof dbChain>[], rpcResult?: { data
   return client;
 }
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockGetOrgContext.mockResolvedValue(ORG_CONTEXT);
+});
 
 // --- generateUnitsSchema ---
 
@@ -173,11 +188,8 @@ describe("generateUnits — serial number generation", () => {
   });
 
   it("throws when not authenticated", async () => {
-    const client = {
-      auth: { getUser: vi.fn().mockResolvedValue({ data: { user: null } }) },
-      from: vi.fn(),
-    };
-    mockCreateClient.mockResolvedValue(client as never);
+    mockGetOrgContext.mockRejectedValue(new Error("Not authenticated"));
+    makeClient([]);
 
     await expect(
       generateUnits({ part_number_id: PART_NUMBER_ID, route_id: ROUTE_ID, count: 1 }),

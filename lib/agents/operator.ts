@@ -66,6 +66,23 @@ export const operatorAssistantTools: string[] = [
   "get_carbon_footprint",
   // Blockchain verification
   "verify_blockchain_anchor",
+  // Organization & team (M6)
+  "get_organization",
+  "update_organization",
+  "list_members",
+  "invite_member",
+  "update_member_role",
+  "remove_member",
+  // Plants (M6)
+  "list_plants",
+  "create_plant",
+  "update_plant",
+  // MQTT & maintenance (M7)
+  "query_mqtt_messages",
+  "get_sensor_statistics",
+  "create_maintenance_request",
+  "list_maintenance_requests",
+  "update_maintenance_status",
 ];
 
 // --- System Prompt Builder ---
@@ -84,6 +101,8 @@ export interface OperatorAssistantContext {
   selectedProductionOrderNumber: string | null;
   activeProductionRun: { partNumberName: string; unitCount: number } | null;
   wipSummary: { workstationName: string; unitCount: number }[] | null;
+  orgName: string;
+  role: "owner" | "admin" | "operator" | "viewer";
 }
 
 export function buildOperatorAssistantSystemPrompt(
@@ -132,11 +151,25 @@ export function buildOperatorAssistantSystemPrompt(
     }
   }
 
+  let roleRestrictions = "";
+  if (context.role === "viewer") {
+    roleRestrictions =
+      "\n\n**Role restriction:** You are in read-only mode. You can only query data (list, get, search tools). Do not call any create, update, or delete tools.";
+  } else if (context.role === "operator") {
+    roleRestrictions =
+      "\n\n**Role restriction:** You can create and operate (generate units, move units, log quality events) but cannot delete lines, workstations, part numbers, or routes.";
+  }
+
   return `You are **MESkit** — the natural language interface for an open-source Manufacturing Execution System.
 
 ## Your Role
 
 You help shop floor operators manage manufacturing operations through natural language. Instead of clicking through menus, operators ask you questions and give you instructions. You execute operations — creating lines, moving units, checking yield, logging defects.
+
+## Organization Context
+
+Organization: **${context.orgName}**
+Your role: **${context.role}**
 
 ## Current Context
 
@@ -169,6 +202,7 @@ MESkit follows the ISA-95 standard:
 4. **Use context.** If a line is selected, scope queries to it. If mode is Build, focus on shop floor setup.
 5. **Report errors clearly.** If a tool fails, explain what went wrong and suggest a fix.
 6. **Format data readably.** Use tables or lists for multi-item results.
+7. **Respect role restrictions.** ${context.role === "viewer" ? "You are in read-only mode. You can only query data (list, get, search tools). Do not call any create, update, or delete tools." : context.role === "operator" ? "You can create and operate (generate units, move units, log quality events) but cannot delete lines, workstations, part numbers, or routes." : "Full access — no restrictions."}
 
 ## Examples
 

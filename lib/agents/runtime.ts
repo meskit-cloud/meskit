@@ -11,6 +11,11 @@ import "@/lib/tools/quality";
 import "@/lib/tools/analytics";
 import "@/lib/tools/carbon";     // PCF: get_carbon_footprint, compare_carbon_by_line, export_pathfinder_json
 import "@/lib/tools/blockchain"; // Blockchain: verify_blockchain_anchor
+import "@/lib/tools/org";        // M6: get_organization, update_organization
+import "@/lib/tools/team";       // M6: list_members, invite_member, update_member_role, remove_member
+import "@/lib/tools/plant";      // M6: list_plants, create_plant, update_plant
+import "@/lib/tools/maintenance"; // M7: create_maintenance_request, list_maintenance_requests, update_maintenance_status
+import "@/lib/tools/mqtt";        // M7: query_mqtt_messages, get_sensor_statistics, publish_mqtt_message
 
 export interface AgentMessage {
   role: "user" | "assistant";

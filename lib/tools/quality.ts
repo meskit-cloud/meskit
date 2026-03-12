@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { registerTool } from "./registry";
+import { getOrgContext } from "@/lib/org-context";
 
 // --- create_quality_event ---
 
@@ -88,15 +89,11 @@ export type CreateDefectCodeInput = z.infer<typeof createDefectCodeSchema>;
 export async function createDefectCode(input: CreateDefectCodeInput) {
   const validated = createDefectCodeSchema.parse(input);
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  const ctx = await getOrgContext();
 
   const { data, error } = await supabase
     .from("defect_codes")
-    .insert({ ...validated, user_id: user.id })
+    .insert({ ...validated, user_id: ctx.userId, org_id: ctx.orgId })
     .select()
     .single();
 
@@ -131,11 +128,7 @@ export type CreateTestDefinitionInput = z.infer<
 export async function createTestDefinition(input: CreateTestDefinitionInput) {
   const validated = createTestDefinitionSchema.parse(input);
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  const ctx = await getOrgContext();
 
   if (validated.lower_limit >= validated.upper_limit) {
     throw new Error(
@@ -145,7 +138,7 @@ export async function createTestDefinition(input: CreateTestDefinitionInput) {
 
   const { data, error } = await supabase
     .from("quality_test_definitions")
-    .insert({ ...validated, user_id: user.id })
+    .insert({ ...validated, user_id: ctx.userId, org_id: ctx.orgId })
     .select()
     .single();
 

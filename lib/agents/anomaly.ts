@@ -1,133 +1,149 @@
-// --- Anomaly Monitor / Machine Health Monitor (stub — activated in M6) ---
+// --- Machine Health Monitor Agent Configuration (M7) ---
 //
 // Event-driven agent triggered by MQTT message ingestion.
 // Detects out-of-range sensor values, degradation trends, and equipment faults.
 // Generates maintenance requests when fault patterns are confirmed.
-//
-// Follows the same pattern as quality.ts and carbon.ts — event-driven,
-// proactive, surfacing alerts to the live ticker and chat panel.
 
 export const anomalyMonitorConfig = {
   name: "Machine Health Monitor",
-  description:
-    "Monitors MQTT sensor telemetry for out-of-range values, degradation trends, and equipment fault patterns. Generates maintenance requests when issues are confirmed (ISA-95 F9).",
+  description: "Monitors sensor data and machine health for anomalies",
   agentType: "anomaly_monitor" as const,
   triggerType: "event_driven" as const,
 };
 
 // --- Tool Subset ---
-// Reads MQTT data and analytics; writes maintenance requests.
-// Does NOT have access to production tools — it observes, diagnoses, and escalates.
 
 export const anomalyMonitorTools: string[] = [
-  // MQTT telemetry (M6 tools — stubs until implemented)
-  "query_mqtt_messages",        // fetch recent messages for a machine/workstation
-  "get_sensor_statistics",      // mean, std dev, min/max for a measurement property
-  // Shop floor context (read-only)
+  "query_mqtt_messages",
+  "get_sensor_statistics",
   "list_machines",
-  "list_workstations",
-  // Analytics for correlation
-  "get_throughput",
-  "get_yield_report",
-  // Maintenance request creation (ISA-95 F9)
   "create_maintenance_request",
   "list_maintenance_requests",
+  "update_maintenance_status",
+  "get_yield_report",
+  "get_throughput",
 ];
 
 // --- Context ---
 
 export interface AnomalyMonitorContext {
-  triggerEvent: string;           // "mqtt_insert" | "scheduled_scan"
-  triggerData: Record<string, unknown>;
-  machineId?: string;
-  machineName?: string;
-  workstationName?: string;
-  lineName?: string;
-  measurementProperty?: string;   // e.g. "temperature", "torque", "vibration"
+  machineId: string;
+  machineName: string;
+  workstationName: string;
+  eventType: "measurement" | "fault" | "cycle_complete";
+  latestPayload: Record<string, unknown>;
 }
+
+// --- Known Measurement Properties ---
+
+export const knownMeasurementProperties: Record<
+  string,
+  { unit: string; normalRange: [number, number]; warningRange: [number, number] }
+> = {
+  temperature: { unit: "\u00b0C", normalRange: [18, 45], warningRange: [45, 60] },
+  torque: { unit: "Nm", normalRange: [40, 60], warningRange: [60, 75] },
+  vibration: { unit: "mm/s", normalRange: [0, 4.5], warningRange: [4.5, 7.1] },
+  pressure: { unit: "bar", normalRange: [1, 6], warningRange: [6, 8] },
+};
 
 // --- System Prompt Builder ---
 
 export function buildAnomalyMonitorSystemPrompt(
   context: AnomalyMonitorContext,
 ): string {
+  const propertiesRef = Object.entries(knownMeasurementProperties)
+    .map(
+      ([prop, info]) =>
+        `- **${prop}**: ${info.normalRange[0]}–${info.normalRange[1]} ${info.unit} (normal), ${info.warningRange[0]}–${info.warningRange[1]} ${info.unit} (warning)`,
+    )
+    .join("\n");
+
   return `You are the **Machine Health Monitor** for MESkit — a predictive maintenance agent.
 
 ## Your Role
 
-You monitor real-time sensor telemetry from MQTT messages. You detect anomalies — out-of-range values, degradation trends, and fault precursors — before they cause production stoppage. When you confirm a problem, you create a maintenance request through the tool layer.
+You monitor real-time sensor telemetry and machine health events. You detect anomalies — out-of-range values, degradation trends, and fault precursors — before they cause production stoppage. When you confirm a problem, you create a maintenance request through the tool layer.
 
-Your goal is NOT to react to faults after they happen. It is to detect the signal before the fault — the temperature climbing before a motor fails, the torque drifting before a tool wears out.
+## Incoming Event
 
-## MQTT Topic Convention
+- **Machine:** ${context.machineName} (${context.machineId})
+- **Workstation:** ${context.workstationName}
+- **Event type:** ${context.eventType}
+- **Payload:** ${JSON.stringify(context.latestPayload)}
 
-Messages arrive on topics: \`meskit/{line_id}/{workstation_id}/{event_type}\`
+## Known Measurement Properties
 
-Event types you monitor:
-- \`measurement\` — sensor reading (temperature, torque, vibration, pressure, humidity)
-- \`fault\` — machine-reported error event
-- \`cycle_complete\` — end of a production cycle (use for cycle time drift analysis)
+${propertiesRef}
 
-## Trigger
+## Analysis Instructions
 
-This analysis was triggered by: **${context.triggerEvent}**
-Trigger data: ${JSON.stringify(context.triggerData)}
-${context.machineName ? `Machine: **${context.machineName}**` : ""}
-${context.workstationName ? `Workstation: **${context.workstationName}**` : ""}
-${context.measurementProperty ? `Measurement property: **${context.measurementProperty}**` : ""}
+### For \`measurement\` events:
+1. Call \`get_sensor_statistics\` to get historical mean, standard deviation, min, and max for the measurement property on this machine.
+2. Compare the current value against the historical distribution.
+3. Detect **out-of-range values**: flag if > 2.5 standard deviations from the mean.
+4. Detect **degradation trends**: a progressive drift over recent readings signals tool wear or component degradation.
+5. If warning range is breached, increase urgency.
 
-## Alert Format
+### For \`fault\` events:
+1. Immediately create a **corrective** maintenance request — do not wait for trend confirmation.
+2. Include the fault details from the payload in the maintenance request description.
+3. Call \`get_yield_report\` to check if yield at the affected workstation has degraded.
 
-**[Anomaly Alert]** {summary}
-- **Machine:** {machine name and workstation}
-- **Measurement:** {property} — current: {value} {unit}, normal range: {min}–{max}
-- **Pattern:** {what the data shows — spike, drift, clustering, pre-fault signal}
-- **Correlation:** {any related production events — yield drop, throughput change}
-- **Action taken:** {maintenance request created | monitoring escalated | no action (within threshold)}
-- **Severity:** minor (informational) | major (schedule maintenance) | critical (stop machine)
-
-## Instructions
-
-1. **Always pull sensor history before concluding.** Call query_mqtt_messages with a recent window (last 50–100 messages for the machine). Never alert on a single data point.
-2. **Compute statistics before alerting.** Call get_sensor_statistics to get mean and standard deviation. A value is anomalous when it is > 2.5 standard deviations from the mean over the observation window.
-3. **Distinguish spikes from trends.** A single spike may be noise. A rising trend over 20+ readings is a degradation signal. Report both but escalate trends more urgently.
-4. **Correlate with production.** Call get_yield_report for the affected workstation. A yield drop coinciding with a sensor anomaly strengthens the diagnosis.
-5. **Create maintenance requests for confirmed issues.** When severity is major or critical and the pattern persists over at least 10 readings, call create_maintenance_request.
-6. **Escalate to Production Planner for critical faults.** When severity is critical, surface a recommendation to reschedule production away from the affected workstation.
-7. **Be precise with units.** Always state the measurement unit: °C, Nm, mm/s, bar.
+### For \`cycle_complete\` events with slow cycle time:
+1. Flag cycle time drift if the reported cycle time is **> 15% above expected**.
+2. Call \`get_sensor_statistics\` for cycle_time to compare against historical distribution.
+3. Sustained drift over multiple cycles suggests mechanical degradation.
 
 ## Severity Classification
 
 | Severity | Condition | Action |
 |----------|-----------|--------|
-| minor | Single anomalous reading, within 2.5–3 std dev | Log alert, continue monitoring |
+| minor | Single anomalous reading, 2.5–3 std dev from mean | Log alert, continue monitoring |
 | major | Trending anomaly over 10+ readings, 3–4 std dev | Create maintenance request (preventive) |
 | critical | Fault event received, or > 4 std dev sustained | Create maintenance request (corrective), recommend rescheduling |
 
-## ISA-95 F9 — Maintenance Operations
+## Maintenance Requests
 
-When creating a maintenance request, use:
-- \`request_type: "corrective"\` — for confirmed faults (machine is failing)
-- \`request_type: "preventive"\` — for detected degradation trends (failure is coming)
-- Always link the request to the \`machine_id\` — not the workstation`;
+When creating a maintenance request:
+- Use \`request_type: "corrective"\` for confirmed faults (machine is failing)
+- Use \`request_type: "preventive"\` for detected degradation trends (failure is coming)
+- Always link the request to the \`machine_id\`
+
+## Alert Format
+
+**[Anomaly Alert]** {summary}
+- **Machine:** {machine name} at {workstation}
+- **Measurement:** {property} — current: {value} {unit}, normal range: {min}–{max}
+- **Pattern:** {spike | drift | fault | cycle time drift}
+- **Severity:** minor | major | critical
+- **Action taken:** {maintenance request created | monitoring escalated | no action}
+
+## Instructions
+
+1. **Always pull sensor history before concluding.** Call \`get_sensor_statistics\` for context. Never alert on a single data point alone (except for fault events).
+2. **Distinguish spikes from trends.** A single spike may be noise. A rising trend over 20+ readings is a degradation signal.
+3. **Correlate with production.** Call \`get_yield_report\` to check if anomalies coincide with quality degradation.
+4. **Create maintenance requests for confirmed issues.** Severity major or critical with a persistent pattern warrants a maintenance request.
+5. **Be precise with units.** Always state the measurement unit: °C, Nm, mm/s, bar.
+6. **Be concise.** Operators are busy — lead with the finding, then the evidence.`;
 }
 
 // --- Trigger Definitions ---
 
 export const anomalyMonitorTriggers = {
   outOfRange: {
-    description: "Sensor value outside configured min/max range",
+    description: "Sensor value outside configured normal range",
     table: "mqtt_messages",
     event: "INSERT",
     filter: "event_type=eq.measurement",
-    evaluationWindow: 10,          // readings to consider before alerting
+    evaluationWindow: 10,
   },
   degradationTrend: {
     description: "Progressive upward/downward drift in a measurement property",
     table: "mqtt_messages",
     event: "INSERT",
     filter: "event_type=eq.measurement",
-    evaluationWindow: 50,          // larger window to detect trends
+    evaluationWindow: 50,
     driftThresholdStdDev: 2.5,
   },
   faultEvent: {
@@ -135,26 +151,14 @@ export const anomalyMonitorTriggers = {
     table: "mqtt_messages",
     event: "INSERT",
     filter: "event_type=eq.fault",
-    evaluationWindow: 1,           // act immediately on fault events
+    evaluationWindow: 1,
   },
   cycleTimeDrift: {
-    description: "Cycle time drifting beyond expected range (signals tool wear or jams)",
+    description: "Cycle time drifting beyond expected range",
     table: "mqtt_messages",
     event: "INSERT",
     filter: "event_type=eq.cycle_complete",
     evaluationWindow: 20,
-    driftThresholdPercent: 0.15,   // 15% over expected_duration_s triggers review
+    driftThresholdPercent: 0.15,
   },
 };
-
-// --- Measurement Properties Reference ---
-// Standard properties the Simulator Agent generates in M4/M6.
-// Used to validate incoming MQTT payloads.
-
-export const knownMeasurementProperties = [
-  { property: "temperature",  unit: "°C",    normalRange: [15, 85]  },
-  { property: "torque",       unit: "Nm",    normalRange: [0, 150]  },
-  { property: "vibration",    unit: "mm/s",  normalRange: [0, 4.5]  },
-  { property: "pressure",     unit: "bar",   normalRange: [0.5, 8]  },
-  { property: "cycle_time",   unit: "ms",    normalRange: [0, 30000]},
-] as const;

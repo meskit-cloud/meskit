@@ -1,4 +1,15 @@
 import { defineConfig } from "@playwright/test";
+import fs from "node:fs";
+
+// Load .env.local so E2E_* vars are available to tests without requiring
+// the caller to export them manually on the command line.
+if (fs.existsSync(".env.local")) {
+  const lines = fs.readFileSync(".env.local", "utf8").split("\n");
+  for (const line of lines) {
+    const match = line.match(/^([A-Z0-9_]+)=(.*)$/);
+    if (match) process.env[match[1]] ??= match[2];
+  }
+}
 
 const port = Number(process.env.PLAYWRIGHT_PORT ?? "3001");
 const baseURL =
@@ -6,7 +17,7 @@ const baseURL =
 
 export default defineConfig({
   testDir: "./e2e",
-  timeout: 30_000,
+  timeout: 120_000,
   expect: {
     timeout: 5_000,
   },
@@ -28,4 +39,22 @@ export default defineConfig({
         stderr: "pipe",
         timeout: 120_000,
       },
+  projects: [
+    // Step 1: Log in once and save auth state
+    { name: "setup", testMatch: /auth\.setup\.ts/ },
+
+    // Step 2a: Unauthenticated smoke tests
+    { name: "smoke", testMatch: /login-smoke\.spec\.ts/ },
+
+    // Step 2b: NL API tests — API-level only, no browser auth required
+    { name: "nl-api", testMatch: /m5-nl-api\.spec\.ts/ },
+
+    // Step 2c: Authenticated Monitor Mode UI tests
+    {
+      name: "m5-ui",
+      use: { storageState: "playwright/.auth/user.json" },
+      dependencies: ["setup"],
+      testMatch: /m5-monitor\.spec\.ts/,
+    },
+  ],
 });

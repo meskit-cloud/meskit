@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
+import { getOrgContext } from "@/lib/org-context";
 
 function generateApiKey(): string {
   return `mk_${crypto.randomBytes(32).toString("hex")}`;
@@ -18,11 +19,14 @@ export async function POST(request: NextRequest) {
     if (!name || typeof name !== "string")
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
+    const ctx = await getOrgContext();
+
     const rawKey = generateApiKey();
     const keyHash = crypto.createHash("sha256").update(rawKey).digest("hex");
 
     const { error } = await supabase.from("api_keys").insert({
       user_id: user.id,
+      org_id: ctx.orgId,
       name: name.trim(),
       key_hash: keyHash,
     });
@@ -46,11 +50,13 @@ export async function DELETE(request: NextRequest) {
     const { id } = await request.json();
     if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
 
+    const ctx = await getOrgContext();
+
     const { error } = await supabase
       .from("api_keys")
       .delete()
       .eq("id", id)
-      .eq("user_id", user.id);
+      .eq("org_id", ctx.orgId);
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 

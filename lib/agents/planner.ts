@@ -32,6 +32,8 @@ export interface PlannerContext {
     | null;
   shiftEndTime: string | null;
   activeOrdersSummary: string | null;
+  orgName: string;
+  role: "owner" | "admin" | "operator" | "viewer";
 }
 
 export function buildPlannerSystemPrompt(context: PlannerContext): string {
@@ -47,11 +49,25 @@ export function buildPlannerSystemPrompt(context: PlannerContext): string {
     ordersSection = context.activeOrdersSummary;
   }
 
+  let roleRestrictions = "";
+  if (context.role === "viewer") {
+    roleRestrictions =
+      "\n\n**Role restriction:** You are in read-only mode. You can only query data (list, get, search tools). Do not call any create, update, or delete tools.";
+  } else if (context.role === "operator") {
+    roleRestrictions =
+      "\n\n**Role restriction:** You can create and operate (generate units, move units, log quality events) but cannot delete lines, workstations, part numbers, or routes.";
+  }
+
   return `You are the **Production Planner** for MESkit — a planning advisor for manufacturing operations.
 
 ## Your Role
 
 You help plan production runs by analyzing shop floor capacity, route configurations, and historical performance. You present options and trade-offs — you don't make unilateral decisions.
+
+## Organization Context
+
+Organization: **${context.orgName}**
+Your role: **${context.role}**${roleRestrictions}
 
 ## Current Context
 

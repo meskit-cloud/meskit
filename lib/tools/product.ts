@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { registerTool } from "./registry";
+import { getOrgContext } from "@/lib/org-context";
 
 // --- list_part_numbers ---
 
@@ -36,15 +37,11 @@ export type CreatePartNumberInput = z.infer<typeof createPartNumberSchema>;
 export async function createPartNumber(input: CreatePartNumberInput) {
   const validated = createPartNumberSchema.parse(input);
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  const ctx = await getOrgContext();
 
   const { data, error } = await supabase
     .from("part_numbers")
-    .insert({ ...validated, user_id: user.id })
+    .insert({ ...validated, user_id: ctx.userId, org_id: ctx.orgId })
     .select()
     .single();
 
@@ -152,15 +149,11 @@ export type CreateItemInput = z.infer<typeof createItemSchema>;
 export async function createItem(input: CreateItemInput) {
   const validated = createItemSchema.parse(input);
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  const ctx = await getOrgContext();
 
   const { data, error } = await supabase
     .from("items")
-    .insert({ ...validated, user_id: user.id })
+    .insert({ ...validated, user_id: ctx.userId, org_id: ctx.orgId })
     .select()
     .single();
 
@@ -337,11 +330,7 @@ export type CreateRouteInput = z.infer<typeof createRouteSchema>;
 export async function createRoute(input: CreateRouteInput) {
   const validated = createRouteSchema.parse(input);
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  const ctx = await getOrgContext();
 
   // Insert the route
   const { data: route, error: routeError } = await supabase
@@ -349,7 +338,8 @@ export async function createRoute(input: CreateRouteInput) {
     .insert({
       part_number_id: validated.part_number_id,
       name: validated.name,
-      user_id: user.id,
+      user_id: ctx.userId,
+      org_id: ctx.orgId,
     })
     .select()
     .single();

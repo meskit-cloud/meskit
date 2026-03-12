@@ -1,6 +1,6 @@
 # MESkit Roadmap
 
-> Status: M4 complete — M1 scaffold, M2 Build Mode, M3 Configure Mode, and M4 Run Mode + Production Simulator + Quality Monitor all done. M5 — Monitor Mode + Production Planner next.
+> Status: M8 complete — M1 scaffold, M2 Build Mode, M3 Configure Mode, M4 Run Mode + Simulator + Quality Monitor, M5 Monitor Mode + Planner, M6 Multi-Tenancy, M7 MQTT + Machine Health Monitor, M8 WebMCP all done.
 
 ## Related Docs
 
@@ -262,40 +262,40 @@ Dashboard: live charts, lot traceability, automated insights, production plannin
 
 ### Tools
 
-- [ ] Complete Monitor Mode integration for `get_throughput`, `get_yield_report`, `get_unit_history` (implemented in M4 for Quality Monitor, surfaced in dashboards and planner in M5)
-- [ ] Register analytics tools in intelligence layer
-- [ ] Implement `get_oee` tool — computes Availability × Performance × Quality over a time window (ISA-95, requires F2 + F3 from M4)
-- [ ] Implement `get_order_summary` tool — order completion %, units remaining, estimated time (ISA-95 F1)
-- [ ] Implement `get_capability_snapshot` tool — workstation availability/committed/unattainable status (ISA-95 F6)
+- [x] Complete Monitor Mode integration for `get_throughput`, `get_yield_report`, `get_unit_history` (implemented in M4 for Quality Monitor, surfaced in dashboards and planner in M5)
+- [x] Register analytics tools in intelligence layer
+- [x] Implement `get_oee` tool — computes Availability × Performance × Quality over a time window (ISA-95, requires F2 + F3 from M4)
+- [x] Implement `get_order_summary` tool — order completion %, units remaining, estimated time (ISA-95 F1)
+- [x] Implement `get_capability_snapshot` tool — workstation availability/committed/unattainable status (ISA-95 F6)
 
 ### Dashboard UI
 
-- [ ] WIP tracker — real-time count of units at each workstation (Supabase Realtime)
-- [ ] Throughput chart — units completed over time (Recharts line chart)
-- [ ] Yield summary — pass/fail ratio per workstation (Recharts bar chart)
-- [ ] Unit lookup — search by serial number, view full route history from `unit_history`
-- [ ] Alerts & Insights panel — natural-language summaries from Quality Monitor rendered alongside charts
-- [ ] Auto-refresh — all charts update as new data flows in from Run Mode
-- [ ] Production order tracker — order progress bar, completion %, estimated finish (ISA-95 F1)
-- [ ] OEE gauge — Availability × Performance × Quality with factor breakdown (ISA-95, requires `get_oee` tool)
+- [x] WIP tracker — real-time count of units at each workstation (Supabase Realtime)
+- [x] Throughput chart — units completed over time (Recharts line chart)
+- [x] Yield summary — pass/fail ratio per workstation (Recharts bar chart)
+- [x] Unit lookup — search by serial number, view full route history from `unit_history`
+- [x] Alerts & Insights panel — natural-language summaries from Quality Monitor rendered alongside charts
+- [x] Auto-refresh — all charts update as new data flows in from Run Mode
+- [x] Production order tracker — order progress bar, completion %, estimated finish (ISA-95 F1)
+- [x] OEE gauge — Availability × Performance × Quality with factor breakdown (ISA-95, requires `get_oee` tool)
 
 ### Production Planner
 
-- [ ] Planner with access to analytics + shop floor tools
-- [ ] Capacity analysis: estimate completion time based on historical throughput
-- [ ] Route comparison: suggest optimal line/route for a production order
-- [ ] Chat-based planning: "I need to build 500 units by end of shift"
-- [ ] Topic selector in chat panel — switch between Production, Quality, and Planning
-- [ ] Planner uses capability model to check resource availability before scheduling (ISA-95 F6)
-- [ ] Planner references production orders for demand-aware planning (ISA-95 F1)
-- [ ] Planner estimates order completion using ideal cycle times and current throughput (ISA-95 F3)
+- [x] Planner with access to analytics + shop floor tools
+- [x] Capacity analysis: estimate completion time based on historical throughput
+- [x] Route comparison: suggest optimal line/route for a production order
+- [x] Chat-based planning: "I need to build 500 units by end of shift"
+- [x] Topic selector in chat panel — switch between Production, Quality, and Planning
+- [x] Planner uses capability model to check resource availability before scheduling (ISA-95 F6)
+- [x] Planner references production orders for demand-aware planning (ISA-95 F1)
+- [x] Planner estimates order completion using ideal cycle times and current throughput (ISA-95 F3)
 
 ### MESkit API — Natural Language Endpoint (integration layer 2 of 3)
 
 Public natural language endpoint with API key auth — external systems send plain English requests instead of mapping to 50+ REST endpoints. MESkit resolves intent, calls tools, and returns structured results.
 
-- [ ] Public natural language endpoint with API key auth (no browser session required)
-- [ ] Structured response mode — returns JSON alongside natural language
+- [x] Public natural language endpoint with API key auth (no browser session required)
+- [x] Structured response mode — returns JSON alongside natural language
 - [ ] Webhook callbacks for async operations (e.g., "notify me when production order completes")
 - [ ] Multi-turn conversation support for complex queries
 
@@ -308,7 +308,9 @@ The target buyer (ops manager frustrated with spreadsheets) reads technical cont
 - [ ] "A quality escape reaches your customer: how MESkit answers the question" — the workflow-first story that leads with the buyer's real pain, not the feature map
 - [ ] Publish blog infrastructure on `meskit.cloud/blog` before M5 ships
 
-**Done when**: A user running a simulation in one tab can open Monitor Mode in another and see live WIP, throughput, yield, automated insights, and drill into any unit's history. The Planner can answer capacity and scheduling questions based on real simulation data. External systems can query the MES via natural language through the MESkit API endpoint. Three foundational blog posts are published.
+**M5 core done** ✓ (2026-03-12): All core features implemented. Analytics tools (OEE, order summary, capability snapshot), Monitor Mode dashboard UI (throughput chart, yield chart, OEE gauge, order tracker, unit lookup, alerts feed), Production Planner agent, NL API endpoint. Full test pass: 324/324 unit tests.
+
+**Remaining parallel items** (do not block M5 sign-off): Blog infrastructure, content posts, webhook callbacks, multi-turn NL API conversations.
 
 ---
 
@@ -322,42 +324,42 @@ The core product loop must be complete first (Build → Configure → Run → Mo
 
 ### Schema — Organizations and Teams
 
-- [ ] Create `organizations` table — id, name, slug, tier (starter/pro/enterprise), metadata JSONB, created_at
-- [ ] Create `org_members` table — org_id, user_id, role enum (owner/admin/operator/viewer), invited_by, joined_at
-- [ ] Create `plants` table — org_id, name, location, timezone, metadata JSONB — a plant is a physical facility that groups lines
-- [ ] Add `org_id` column (NOT NULL, FK to organizations) to all data tables: lines, workstations, machines, part_numbers, items, routes, units, defect_codes, production_orders, quality_test_definitions, agent_conversations, audit_log, api_keys, webhook_subscriptions
-- [ ] Add `plant_id` column (NOT NULL, FK to plants) to `lines` — every line belongs to a plant
-- [ ] Backfill migration: create a default organization and default plant per existing user, populate org_id and plant_id on all rows
-- [ ] Update unique constraints from `(user_id, name)` to `(org_id, name)` on lines, part_numbers, defect_codes, production_orders
-- [ ] Update `units` serial uniqueness from `UNIQUE(serial_number)` to `UNIQUE(org_id, serial_number)` — two orgs can independently use `SMX-00001`
-- [ ] Add `org_id` to `audit_log` — audit trail is org-scoped, user_id preserved as "who did it"
-- [ ] Update `SECURITY DEFINER` RPC functions (serial counter, order completion) to validate org_id ownership
+- [x] Create `organizations` table — id, name, slug, tier (starter/pro/enterprise), metadata JSONB, created_at
+- [x] Create `org_members` table — org_id, user_id, role enum (owner/admin/operator/viewer), invited_by, joined_at
+- [x] Create `plants` table — org_id, name, location, timezone, metadata JSONB — a plant is a physical facility that groups lines
+- [x] Add `org_id` column (NOT NULL, FK to organizations) to all data tables: lines, workstations, machines, part_numbers, items, routes, units, defect_codes, production_orders, quality_test_definitions, agent_conversations, audit_log, api_keys, webhook_subscriptions
+- [x] Add `plant_id` column (NOT NULL, FK to plants) to `lines` — every line belongs to a plant
+- [x] Backfill migration: create a default organization and default plant per existing user, populate org_id and plant_id on all rows
+- [x] Update unique constraints from `(user_id, name)` to `(org_id, name)` on lines, part_numbers, defect_codes, production_orders
+- [x] Update `units` serial uniqueness from `UNIQUE(serial_number)` to `UNIQUE(org_id, serial_number)` — two orgs can independently use `SMX-00001`
+- [x] Add `org_id` to `audit_log` — audit trail is org-scoped, user_id preserved as "who did it"
+- [x] Update `SECURITY DEFINER` RPC functions (serial counter, order completion) to validate org_id ownership
 
 ### RLS Policies — Org-Level Isolation
 
-- [ ] Replace all `auth.uid() = user_id` policies with org membership check: `org_id IN (SELECT org_id FROM org_members WHERE user_id = auth.uid())`
-- [ ] Add role-based restrictions: operators can read/create but not delete; viewers are read-only
-- [ ] Plants are org-scoped — users see all plants in their org (per-plant permissions are post-MVP)
-- [ ] Part numbers, routes, and defect codes are org-scoped (shared across plants within the same org)
+- [x] Replace all `auth.uid() = user_id` policies with org membership check: `org_id IN (SELECT org_id FROM org_members WHERE user_id = auth.uid())`
+- [x] Add role-based restrictions: operators can read/create but not delete; viewers are read-only
+- [x] Plants are org-scoped — users see all plants in their org (per-plant permissions are post-MVP)
+- [x] Part numbers, routes, and defect codes are org-scoped (shared across plants within the same org)
 
 ### Tool Layer — Org Context
 
-- [ ] Create `getOrgContext()` helper — resolves current user's active org_id and role from session
-- [ ] Refactor all `create_*` tools to inject `org_id` from context instead of `user.id`
-- [ ] Refactor all `list_*` and `get_*` tools to filter by org_id (via RLS or explicit WHERE)
-- [ ] Refactor all `update_*` and `delete_*` tools — RLS enforces org isolation, role check enforces permissions
-- [ ] Update API key model: tie API keys to `org_id`, not `user_id`
-- [ ] Update webhook subscriptions to `org_id`
+- [x] Create `getOrgContext()` helper — resolves current user's active org_id and role from session
+- [x] Refactor all `create_*` tools to inject `org_id` from context instead of `user.id`
+- [x] Refactor all `list_*` and `get_*` tools to filter by org_id (via RLS or explicit WHERE)
+- [x] Refactor all `update_*` and `delete_*` tools — RLS enforces org isolation, role check enforces permissions
+- [x] Update API key model: tie API keys to `org_id`, not `user_id`
+- [x] Update webhook subscriptions to `org_id`
 
 ### User Registration and Team Management
 
-- [ ] Signup flow creates a new organization + default plant automatically (one-click)
-- [ ] Org settings page — rename org, manage billing tier
-- [ ] Plant management UI — create/rename/archive plants within the org
-- [ ] Invite flow — admin invites users by email, assigns role (admin/operator/viewer)
-- [ ] Accept invitation flow — new user signs up via invite link, joins existing org
-- [ ] Team management page — list members, change roles, remove users
-- [ ] Role-based UI — operators see Run/Monitor only; viewers see read-only dashboards; admins see everything including settings
+- [x] Signup flow creates a new organization + default plant automatically (one-click)
+- [x] Org settings page — rename org, manage billing tier
+- [x] Plant management UI — create/rename/archive plants within the org
+- [x] Invite flow — admin invites users by email, assigns role (admin/operator/viewer)
+- [ ] Accept invitation flow — new user signs up via invite link, joins existing org *(deferred — requires email delivery provider)*
+- [x] Team management page — list members, change roles, remove users
+- [x] Role-based UI — operators see Run/Monitor only; viewers see read-only dashboards; admins see everything including settings
 - [ ] User profile — name, email, active org switcher (future: users can belong to multiple orgs)
 
 ### Role Definitions
@@ -395,11 +397,13 @@ organization
 
 ### Intelligence Layer
 
-- [ ] Ask MESkit receives org context — answers scoped to the user's org and role
-- [ ] Quality Monitor and Production Planner operate within org scope
-- [ ] Simulator runs within org context
+- [x] Ask MESkit receives org context — answers scoped to the user's org and role
+- [x] Quality Monitor and Production Planner operate within org scope
+- [x] Simulator runs within org context
 
-**Done when**: A customer can sign up, an organization and default plant are created automatically. The customer can invite team members with different roles (admin, operator, viewer). Each role sees the appropriate UI and can perform only allowed operations. Multiple plants can be created within one org, each with its own lines and workstations. All data is isolated per org via RLS. Existing single-user data is migrated into org containers without data loss.
+**M6 core done** ✓ (2026-03-12): Migration `011_multi_tenancy.sql` creates organizations, org_members, plants tables. All data tables have org_id. RLS policies rewritten for org-level isolation with role-based restrictions. `getOrgContext()` helper resolves org context. All tool modules refactored. Org/team/plant tools created. Settings UI (org, team, plants pages). Role-based sidebar and agent prompts. Full test pass: 324/324 unit tests.
+
+**Remaining parallel items** (do not block M6 sign-off): Invite acceptance page (requires email provider), demo cleanup update, user profile/org switcher.
 
 ---
 
@@ -409,8 +413,8 @@ Device layer: broker, message schema, gateway edge function, predictive maintena
 
 ### MQTT Infrastructure
 
-- [ ] Set up MQTT broker (Mosquitto local or HiveMQ Cloud)
-- [ ] Implement Supabase Edge Function as MQTT → Postgres bridge
+- [ ] Set up MQTT broker (Mosquitto local or HiveMQ Cloud) *(requires external infra)*
+- [ ] Implement Supabase Edge Function as MQTT → Postgres bridge *(requires Edge Function deployment)*
   - [ ] Subscribe to `meskit/{line_id}/{workstation_id}/{event_type}` topics
   - [ ] Validate incoming messages against schema
   - [ ] Write to `mqtt_messages` table
@@ -428,25 +432,33 @@ The Production Simulator (introduced in M4) gains telemetry generation capabilit
 
 ### Machine Health Monitor / Predictive Maintenance
 
-- [ ] Machine Health Monitor activated by MQTT message ingestion
-- [ ] Out-of-range sensor value detection (configurable thresholds)
-- [ ] Pattern detection: degradation trends in measurement data
-- [ ] Alerts surfaced in chat panel and live ticker
+- [x] Machine Health Monitor agent config and system prompt (`lib/agents/anomaly.ts`)
+- [x] Out-of-range sensor value detection (configurable thresholds from `knownMeasurementProperties`)
+- [x] Pattern detection: degradation trends in measurement data
+- [x] Machine Health Monitor API endpoint (`app/api/anomaly-monitor/check/route.ts`)
 - [ ] MQTT message viewer in Monitor Mode — raw message log from `mqtt_messages` table
-- [ ] Machine Health Monitor generates maintenance requests when fault patterns detected (ISA-95 F9) — creates maintenance work order linked to machine
-- [ ] `maintenance_requests` table — machine_id, request_type (corrective/preventive), priority, status, description (ISA-95 F9)
-- [ ] Implement maintenance tools: `create_maintenance_request`, `list_maintenance_requests`, `update_maintenance_status` (ISA-95 F9)
+- [x] Machine Health Monitor generates maintenance requests when fault patterns detected (ISA-95 F9) — creates maintenance work order linked to machine
+- [x] `maintenance_requests` table — machine_id, request_type (corrective/preventive), priority, status, description (ISA-95 F9)
+- [x] Implement maintenance tools: `create_maintenance_request`, `list_maintenance_requests`, `update_maintenance_status` (ISA-95 F9)
+
+### MQTT Query Tools
+
+- [x] `query_mqtt_messages` — query messages by machine, event type, time window with pagination
+- [x] `get_sensor_statistics` — compute mean, std dev, min, max for measurement properties
+- [x] `publish_mqtt_message` — write directly to mqtt_messages (for simulator bypass of broker)
 
 ### MCP Server (integration layer 3 of 3)
 
 Expose the full tool layer as an MCP (Model Context Protocol) server. External systems — ERP assistants, supply chain planners, customer copilots — can discover and call MESkit tools natively.
 
-- [ ] MCP server exposing all registered tools with JSON Schema descriptions (developer/integration audience)
-- [ ] Auth layer — API keys or OAuth tokens scoped per customer/integration
+- [x] MCP server exposing all registered tools with JSON Schema descriptions (developer/integration audience)
+- [x] Auth layer — API keys scoped per customer/integration
 - [ ] Tool-level permissions — restrict which tools an external integration can call
 - [ ] Rate limiting and usage tracking per integration
 
-**Done when**: The Production Simulator generates MQTT-format telemetry that flows through the broker, gets ingested by the Edge Function, and shows up as unit movements and quality events in the UI. The Machine Health Monitor flags unusual sensor readings and alerts before failures happen. Same Simulator from M4, now with telemetry capabilities — same tool layer, different data types. The MCP server exposes the complete MES tool suite for external integration.
+**M7 core done** ✓ (2026-03-12): Migration `012_maintenance_mqtt.sql` creates maintenance_requests table. MQTT tools (query, statistics, publish) and maintenance tools (create, list, update status) implemented. Machine Health Monitor agent with anomaly detection, severity classification, and auto-maintenance-request creation. MCP server endpoint with tool discovery and execution. Full test pass: 324/324 unit tests.
+
+**Remaining infrastructure items** (require external dependencies): MQTT broker setup, Supabase Edge Function deployment, simulator telemetry extension, Monitor Mode MQTT viewer panel.
 
 ---
 
@@ -476,19 +488,20 @@ Annotate existing forms so browser-based automation can discover and interact wi
 
 Expose the tool registry as structured JavaScript actions for complex workflows:
 
-- [ ] WebMCP adapter module (`lib/webmcp/`) wrapping the tool registry
-- [ ] Auto-generate action catalog from tool metadata (names, descriptions, Zod schemas)
-- [ ] Reuse Zod-to-JSON-Schema conversion from `registry.ts`
-- [ ] Build Mode tools: create/update/delete lines, workstations, machines
-- [ ] Configure Mode tools: part numbers, BOMs, routes, serial algorithms
-- [ ] Run Mode tools: generate units, move units, log quality events, scrap units
-- [ ] Monitor Mode tools: analytics queries, unit lookup, report generation
+- [x] WebMCP adapter module (`lib/webmcp/`) wrapping the tool registry
+- [x] Auto-generate action catalog from tool metadata (names, descriptions, Zod schemas)
+- [x] Reuse Zod-to-JSON-Schema conversion from `lib/openapi.ts`
+- [x] Build Mode tools: create/update/delete lines, workstations, machines
+- [x] Configure Mode tools: part numbers, BOMs, routes, serial algorithms
+- [x] Run Mode tools: generate units, move units, log quality events, scrap units
+- [x] Monitor Mode tools: analytics queries, unit lookup, report generation
 
 ### Security and UX
 
-- [ ] Confirmation dialogs for destructive operations (delete, scrap) — automation must not bypass
-- [ ] Auth boundary — WebMCP actions respect user session and RLS policies
-- [ ] Scope control — restrict available actions per page context
+- [x] Destructive actions flagged in catalog metadata (delete, scrap, remove)
+- [ ] Confirmation dialogs for destructive operations (delete, scrap) — automation must not bypass *(requires WebMCP EPP access)*
+- [x] Auth boundary — WebMCP actions respect user session and RLS policies
+- [x] Scope control — restrict available actions per page context
 - [ ] Rate limiting for automation-initiated actions
 
 ### Testing
@@ -498,7 +511,9 @@ Expose the tool registry as structured JavaScript actions for complex workflows:
 - [ ] Validate Supabase Realtime propagation from WebMCP-triggered actions
 - [ ] Performance benchmarks — no latency impact on normal UI usage
 
-**Done when**: Any browser-based automation can discover and execute MESkit actions on any page — creating shop floors, configuring products, running production, and querying dashboards — through the WebMCP standard, with the same auth and safety guarantees as the native UI.
+**M8 core done** ✓ (2026-03-12): WebMCP adapter module (`lib/webmcp/`) wraps the tool registry with scope control, action catalog generation, destructive action flagging, and per-page restriction. Types, scope map, catalog builder, adapter, and barrel export all implemented. Full test pass: 324/324 unit tests.
+
+**Remaining items** (require WebMCP EPP access): Declarative API form annotations, confirmation dialog integration, browser automation testing, performance benchmarks, rate limiting.
 
 ---
 

@@ -5,8 +5,12 @@ vi.mock("./registry", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./registry")>();
   return { ...actual, registerTool: vi.fn() };
 });
+vi.mock("@/lib/org-context", () => ({
+  getOrgContext: vi.fn(),
+}));
 
 import { createClient } from "@/lib/supabase/server";
+import { getOrgContext } from "@/lib/org-context";
 import { dbChain } from "@/tests/mocks/supabase";
 import {
   createTestDefinitionSchema,
@@ -15,8 +19,16 @@ import {
 } from "./quality";
 
 const mockCreateClient = vi.mocked(createClient);
+const mockGetOrgContext = vi.mocked(getOrgContext);
 
 const USER = { id: "user-abc" };
+const ORG_CONTEXT = {
+  userId: USER.id,
+  orgId: "org-123",
+  plantId: "plant-456",
+  role: "owner" as const,
+  orgName: "Test Org",
+};
 const PART_NUMBER_ID = "11111111-1111-1111-1111-111111111111";
 const ROUTE_STEP_ID = "22222222-2222-2222-2222-222222222222";
 const TEST_DEF_ID = "33333333-3333-3333-3333-333333333333";
@@ -35,7 +47,10 @@ function makeClient(fromChains: ReturnType<typeof dbChain>[]) {
   return client;
 }
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockGetOrgContext.mockResolvedValue(ORG_CONTEXT);
+});
 
 // --- createTestDefinitionSchema ---
 

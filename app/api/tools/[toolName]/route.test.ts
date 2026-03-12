@@ -29,6 +29,11 @@ vi.mock("@/lib/tools/product", () => ({}));
 vi.mock("@/lib/tools/production", () => ({}));
 vi.mock("@/lib/tools/quality", () => ({}));
 vi.mock("@/lib/tools/analytics", () => ({}));
+vi.mock("@/lib/tools/org", () => ({}));
+vi.mock("@/lib/tools/team", () => ({}));
+vi.mock("@/lib/tools/plant", () => ({}));
+vi.mock("@/lib/tools/maintenance", () => ({}));
+vi.mock("@/lib/tools/mqtt", () => ({}));
 
 import { dbChain, mockSupabaseClient } from "@/tests/mocks/supabase";
 import { POST } from "./route";

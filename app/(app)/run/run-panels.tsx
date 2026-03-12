@@ -406,7 +406,7 @@ export function RunPanels() {
   const selectedOrder = orders.find((o) => o.id === selectedOrderId) ?? null;
 
   return (
-    <div className="flex flex-1 min-h-0">
+    <div className="flex h-full">
       <OrdersPanel
         orders={orders}
         ordersLoaded={ordersLoaded}

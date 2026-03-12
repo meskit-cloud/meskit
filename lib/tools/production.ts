@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { registerTool } from "./registry";
+import { getOrgContext } from "@/lib/org-context";
 
 // --- generate_units ---
 
@@ -15,11 +16,7 @@ export type GenerateUnitsInput = z.infer<typeof generateUnitsSchema>;
 export async function generateUnits(input: GenerateUnitsInput) {
   const validated = generateUnitsSchema.parse(input);
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  const ctx = await getOrgContext();
 
   // Get serial algorithm for this part number
   const { data: algo, error: algoError } = await supabase
@@ -54,7 +51,8 @@ export async function generateUnits(input: GenerateUnitsInput) {
 
   // Insert all units
   const unitsToInsert = serials.map((serial) => ({
-    user_id: user.id,
+    user_id: ctx.userId,
+    org_id: ctx.orgId,
     serial_number: serial,
     part_number_id: validated.part_number_id,
     route_id: validated.route_id,
@@ -444,37 +442,40 @@ export async function createProductionOrder(
 ) {
   const validated = createProductionOrderSchema.parse(input);
   const supabase = await createClient();
+  const ctx = await getOrgContext();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  // Auto-generate order number, retrying on duplicate key to handle concurrent inserts
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const { data: maxOrder } = await supabase
+      .from("production_orders")
+      .select("order_number")
+      .eq("org_id", ctx.orgId)
+      .order("order_number", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-  // Auto-generate order number from MAX existing to avoid collisions on delete
-  const { data: maxOrder } = await supabase
-    .from("production_orders")
-    .select("order_number")
-    .eq("user_id", user.id)
-    .order("order_number", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    let nextNum = 1;
+    if (maxOrder?.order_number) {
+      const match = maxOrder.order_number.match(/PO-(\d+)/);
+      if (match) nextNum = parseInt(match[1], 10) + 1;
+    }
+    // On retry, skip ahead to avoid the collision
+    nextNum += attempt;
+    const orderNumber = `PO-${String(nextNum).padStart(4, "0")}`;
 
-  let nextNum = 1;
-  if (maxOrder?.order_number) {
-    const match = maxOrder.order_number.match(/PO-(\d+)/);
-    if (match) nextNum = parseInt(match[1], 10) + 1;
+    const { data, error } = await supabase
+      .from("production_orders")
+      .insert({ ...validated, user_id: ctx.userId, org_id: ctx.orgId, order_number: orderNumber })
+      .select("*, part_numbers(name), routes(name)")
+      .single();
+
+    if (!error) return data;
+    if (!error.message.includes("duplicate key")) {
+      throw new Error(`create_production_order failed: ${error.message}`);
+    }
+    // Duplicate key — retry with re-fetched MAX
   }
-  const orderNumber = `PO-${String(nextNum).padStart(4, "0")}`;
-
-  const { data, error } = await supabase
-    .from("production_orders")
-    .insert({ ...validated, user_id: user.id, order_number: orderNumber })
-    .select("*, part_numbers(name), routes(name)")
-    .single();
-
-  if (error)
-    throw new Error(`create_production_order failed: ${error.message}`);
-  return data;
+  throw new Error("create_production_order failed: could not generate unique order number after 5 attempts");
 }
 
 registerTool({

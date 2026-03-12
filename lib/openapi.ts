@@ -7,7 +7,7 @@ import { getAllTools } from "./tools/registry";
 type JsonSchema = Record<string, unknown>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function zodToJsonSchema(schema: z.ZodType): JsonSchema {
+export function zodToJsonSchema(schema: z.ZodType): JsonSchema {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const def = (schema as any)._def;
 

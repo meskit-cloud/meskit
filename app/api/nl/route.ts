@@ -13,6 +13,11 @@ import "@/lib/tools/product";
 import "@/lib/tools/production";
 import "@/lib/tools/quality";
 import "@/lib/tools/analytics";
+import "@/lib/tools/org";
+import "@/lib/tools/team";
+import "@/lib/tools/plant";
+import "@/lib/tools/maintenance";
+import "@/lib/tools/mqtt";
 
 // --- Read-only tool subset (no destructive operations) ---
 

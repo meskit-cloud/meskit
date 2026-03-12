@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { registerTool } from "./registry";
+import { getOrgContext } from "@/lib/org-context";
 
 // --- list_lines ---
 
@@ -38,15 +39,11 @@ export type CreateLineInput = z.infer<typeof createLineSchema>;
 export async function createLine(input: CreateLineInput) {
   const validated = createLineSchema.parse(input);
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  const ctx = await getOrgContext();
 
   const { data, error } = await supabase
     .from("lines")
-    .insert({ ...validated, user_id: user.id })
+    .insert({ ...validated, user_id: ctx.userId, org_id: ctx.orgId, plant_id: ctx.plantId })
     .select()
     .single();
 
@@ -169,15 +166,11 @@ export type CreateWorkstationInput = z.infer<typeof createWorkstationSchema>;
 export async function createWorkstation(input: CreateWorkstationInput) {
   const validated = createWorkstationSchema.parse(input);
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  const ctx = await getOrgContext();
 
   const { data, error } = await supabase
     .from("workstations")
-    .insert({ ...validated, user_id: user.id })
+    .insert({ ...validated, user_id: ctx.userId, org_id: ctx.orgId })
     .select()
     .single();
 
@@ -266,15 +259,11 @@ export type CreateMachineInput = z.infer<typeof createMachineSchema>;
 export async function createMachine(input: CreateMachineInput) {
   const validated = createMachineSchema.parse(input);
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  const ctx = await getOrgContext();
 
   const { data, error } = await supabase
     .from("machines")
-    .insert({ ...validated, user_id: user.id })
+    .insert({ ...validated, user_id: ctx.userId, org_id: ctx.orgId })
     .select()
     .single();
 
