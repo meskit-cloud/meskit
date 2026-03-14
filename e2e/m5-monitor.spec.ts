@@ -27,15 +27,15 @@ test.describe("2.1 Monitor Mode page load", () => {
 
   test("three-panel layout is visible", async ({ page }) => {
     await page.goto("/monitor");
-    // Left panel: Production Orders
+    // Left panel: Production Orders header
     await expect(
-      page.getByText("Production Orders", { exact: false }),
+      page.getByText("Production Orders", { exact: true }),
     ).toBeVisible();
     // Center panel: time range selector
     await expect(page.getByText("Range:", { exact: false })).toBeVisible();
-    // Right panel: Live WIP
+    // Right panel: Live WIP header
     await expect(
-      page.getByText("Live WIP", { exact: false }),
+      page.getByText("Live WIP", { exact: true }),
     ).toBeVisible();
   });
 });
@@ -114,7 +114,7 @@ test.describe("2.3 Time range selector", () => {
 test.describe("2.3 Throughput Chart", () => {
   test("shows Throughput section header", async ({ page }) => {
     await page.goto("/monitor");
-    await expect(page.getByText("Throughput", { exact: false })).toBeVisible();
+    await expect(page.getByText("Throughput", { exact: true })).toBeVisible();
   });
 
   test("shows chart data or empty state", async ({ page }) => {
@@ -208,25 +208,9 @@ test.describe("2.6 Unit Lookup", () => {
     await expect(page.getByText("Unit not found")).toBeVisible({ timeout: 10_000 });
   });
 
-  test("shows unit details for a valid serial", async ({ page }) => {
-    await page.goto("/monitor");
-
-    // Find a real serial number from the order tracker if orders exist
-    const orderText = await page
-      .locator("button")
-      .filter({ hasText: /PO-/ })
-      .first()
-      .textContent()
-      .catch(() => null);
-    if (!orderText) {
-      test.skip();
-      return;
-    }
-
-    // Ask MESkit for a serial (integration check skipped — UI-only test)
-    // Just confirm the layout handles a result correctly
-    // This test validates the result section renders without crash
-    test.skip(); // Requires known serial number — covered by E2E flow tests
+  test("shows unit details for a valid serial", async () => {
+    // Requires a known serial number in the system — covered by integration flow tests
+    test.skip();
   });
 });
 
@@ -235,7 +219,7 @@ test.describe("2.6 Unit Lookup", () => {
 test.describe("2.7 WIP Tracker", () => {
   test("shows 'Live WIP' header", async ({ page }) => {
     await page.goto("/monitor");
-    await expect(page.getByText("Live WIP", { exact: false })).toBeVisible();
+    await expect(page.getByText("Live WIP", { exact: true })).toBeVisible();
   });
 
   test("shows WIP entries or empty state", async ({ page }) => {
@@ -286,8 +270,8 @@ test.describe("3.1-3.2 Topic selector & Planner styling", () => {
   }) => {
     await page.goto("/monitor");
     await page.getByText("Ask about: Production").click();
-    await expect(page.getByRole("button", { name: "Production" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Planning" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Production", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Planning", exact: true })).toBeVisible();
   });
 
   test("selecting Planning changes header to 'Production Planner'", async ({
@@ -335,7 +319,7 @@ test.describe("3.1-3.2 Topic selector & Planner styling", () => {
 test.describe("7. Cross-mode navigation", () => {
   test("navigating away and back preserves Monitor route", async ({ page }) => {
     await page.goto("/monitor");
-    await expect(page.getByText("Production Orders")).toBeVisible();
+    await expect(page.getByText("Production Orders", { exact: true })).toBeVisible();
 
     // Navigate to Build Mode
     await page.getByRole("button", { name: /Build/i }).click();
@@ -344,7 +328,7 @@ test.describe("7. Cross-mode navigation", () => {
     // Navigate back to Monitor
     await page.getByRole("button", { name: /Monitor/i }).click();
     await expect(page).toHaveURL(/\/monitor/);
-    await expect(page.getByText("Production Orders")).toBeVisible();
+    await expect(page.getByText("Production Orders", { exact: true })).toBeVisible();
   });
 
   test("hard refresh reloads Monitor Mode with current data", async ({
@@ -353,7 +337,7 @@ test.describe("7. Cross-mode navigation", () => {
     await page.goto("/monitor");
     await page.reload();
     await expect(page).toHaveURL(/\/monitor/);
-    await expect(page.getByText("Production Orders")).toBeVisible();
-    await expect(page.getByText("Live WIP")).toBeVisible();
+    await expect(page.getByText("Production Orders", { exact: true })).toBeVisible();
+    await expect(page.getByText("Live WIP", { exact: true })).toBeVisible();
   });
 });

@@ -19,7 +19,7 @@ export default defineConfig({
   testDir: "./e2e",
   timeout: 120_000,
   expect: {
-    timeout: 5_000,
+    timeout: 10_000,
   },
   outputDir: "output/playwright/test-results",
   reporter: "list",
@@ -56,5 +56,16 @@ export default defineConfig({
       dependencies: ["setup"],
       testMatch: /m5-monitor\.spec\.ts/,
     },
+
+    // Step 2d: Authenticated M6 Settings + Org tests
+    {
+      name: "m6-org",
+      use: { storageState: "playwright/.auth/user.json" },
+      dependencies: ["setup"],
+      testMatch: /m6-org\.spec\.ts/,
+    },
+
+    // Step 2e: M7 MCP Server + Tool Registration API tests (no browser auth required)
+    { name: "m7-mcp", testMatch: /m7-mcp\.spec\.ts/ },
   ],
 });

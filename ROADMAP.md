@@ -436,7 +436,8 @@ The Production Simulator (introduced in M4) gains telemetry generation capabilit
 - [x] Out-of-range sensor value detection (configurable thresholds from `knownMeasurementProperties`)
 - [x] Pattern detection: degradation trends in measurement data
 - [x] Machine Health Monitor API endpoint (`app/api/anomaly-monitor/check/route.ts`)
-- [ ] MQTT message viewer in Monitor Mode — raw message log from `mqtt_messages` table
+- [ ] MQTT message viewer in Monitor Mode — raw message log from `mqtt_messages` table with event_type/machine/time filters and Realtime updates
+- [ ] Maintenance requests dashboard panel in Monitor Mode — lists open/in-progress requests sorted by priority, status badges, inline status transitions (open → in_progress → completed), Realtime updates via `maintenance_requests` subscription
 - [x] Machine Health Monitor generates maintenance requests when fault patterns detected (ISA-95 F9) — creates maintenance work order linked to machine
 - [x] `maintenance_requests` table — machine_id, request_type (corrective/preventive), priority, status, description (ISA-95 F9)
 - [x] Implement maintenance tools: `create_maintenance_request`, `list_maintenance_requests`, `update_maintenance_status` (ISA-95 F9)
@@ -458,7 +459,7 @@ Expose the full tool layer as an MCP (Model Context Protocol) server. External s
 
 **M7 core done** ✓ (2026-03-12): Migration `012_maintenance_mqtt.sql` creates maintenance_requests table. MQTT tools (query, statistics, publish) and maintenance tools (create, list, update status) implemented. Machine Health Monitor agent with anomaly detection, severity classification, and auto-maintenance-request creation. MCP server endpoint with tool discovery and execution. Full test pass: 324/324 unit tests.
 
-**Remaining infrastructure items** (require external dependencies): MQTT broker setup, Supabase Edge Function deployment, simulator telemetry extension, Monitor Mode MQTT viewer panel.
+**Remaining infrastructure items** (require external dependencies or UI work): MQTT broker setup, Supabase Edge Function deployment, simulator telemetry extension (cycle_complete/measurement/fault generation), Monitor Mode MQTT message viewer panel, Monitor Mode maintenance dashboard panel.
 
 ---
 

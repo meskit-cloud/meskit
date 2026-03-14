@@ -43,6 +43,7 @@ export function dbChain(result: {
     "ilike",
     "order",
     "limit",
+    "range",
   ]) {
     chain[method] = vi.fn().mockReturnValue(chain);
   }
