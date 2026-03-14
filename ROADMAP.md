@@ -2,6 +2,38 @@
 
 > Status: M8 complete — M1 scaffold, M2 Build Mode, M3 Configure Mode, M4 Run Mode + Simulator + Quality Monitor, M5 Monitor Mode + Planner, M6 Multi-Tenancy, M7 MQTT + Machine Health Monitor, M8 WebMCP all done.
 
+---
+
+## Pre-First-Customer Checklist
+
+Items that must be done (or are likely to be raised) before approaching the first potential customer. All other open items are post-v1 or require external infrastructure.
+
+**Hard blockers — product can't be shown without these:**
+- [ ] Deploy to Vercel + Supabase Cloud *(no live URL exists yet — see M1)*
+- [ ] Accept invitation flow *(customers can't add their team without email invite — see M6)*
+
+**UI gaps in completed milestones — look unfinished in a demo:**
+- [ ] MQTT message viewer panel in Monitor Mode *(M7 backend complete, UI missing — see M7)*
+- [ ] Maintenance dashboard panel in Monitor Mode *(M7 backend complete, UI missing — see M7)*
+
+**First experience — what every prospect sees after "Try MESkit":**
+- [ ] Post-signup Simulator quick-start — after demo shop floor auto-creation, guide user to Run Mode with a "Press Start to watch your factory run" prompt; first moment of value must be a live simulation, not a blank screen *(see M4 Onboarding)*
+
+**First questions a customer will ask:**
+- [ ] Configurable quality alert thresholds *(currently hardcoded — see M4)*
+
+**Demo hygiene — multi-tenant data management:**
+- [ ] Demo data cleanup by organization, not by user *(see M6)*
+
+**Polish:**
+- [ ] User profile — name display, active org indicator *(see M6)*
+
+**On the radar for first customer conversations — mapped in Future section:**
+- Customer/client entity — every EMS job-shop (MEBATRON, Dietz, Mektec) will ask "how do I tag this order to a customer?" on the first call *(see Future — Customer/Client Entity)*
+- Certificate of Conformance export — medical (EMO Systems, IEC 60601-1) and automotive (Mektec) customers require a per-order quality record document before they can use any MES in production *(see Future — Certificate of Conformance)*
+
+---
+
 ## Related Docs
 
 - [Documentation Map](docs/DOCUMENTATION_MAP.md) — overview of the core doc system
@@ -24,7 +56,7 @@ Foundation: app shell, auth, database schema, dark theme, tool layer architectur
 - [x] Configure Tailwind CSS with MESkit design tokens (dark theme, cyan accent, smart feature violet)
 - [x] Set up Supabase project (Postgres, Auth, Realtime)
 - [x] Create Supabase client and environment config (`.env.local`)
-- [ ] Deploy to Vercel (frontend) + Supabase Cloud (backend)
+- [ ] Deploy to Vercel (frontend) + Supabase Cloud (backend) *(hard blocker — no live URL exists yet)*
 
 ### Database Schema
 
@@ -189,7 +221,7 @@ The Production Simulator role-plays as a factory — generating units, moving WI
 - [x] Yield threshold monitoring — alert when workstation yield drops below 90%
 - [x] Defect clustering detection — alert when same defect code appears 3+ times in 30 min
 - [x] Natural-language quality alerts displayed in the live ticker and chat panel
-- [ ] Configurable alert thresholds *(deferred — hardcoded defaults work, UI not built)*
+- [ ] Configurable alert thresholds *(first customer ask — hardcoded defaults work for demo but every operator will want to tune these)*
 - [x] Reacts to Simulator-generated patterns (defect clusters, yield drops) in real-time
 - [x] Quality Monitor references test definitions when evaluating pass/fail (ISA-95 F4) — alerts include tolerance context
 
@@ -225,6 +257,8 @@ Guided onboarding for new users. See [`docs/onboarding-plan.md`](docs/onboarding
 - [x] Offer one-click demo shop floor (creates sample line, workstations, machines via tool layer)
 - [x] Guided step-by-step option (MESkit walks through Build → Configure → Run)
 - [ ] Cross-mode progress checklist (optional)
+- [ ] Simulator quick-start as the onboarding finale *(pre-customer)* — after demo shop floor is created, redirect user to Run Mode with Simulator controls visible and a prompt: "Your factory is ready — press Start to watch it run." The first moment of value must be a live simulation, not a blank page. This is what the website "Try MESkit" CTA delivers.
+- [ ] "Try MESkit" website CTA flow is end-to-end verified: website → signup → demo shop floor auto-created → Simulator ready to start, no dead ends *(pre-customer — a broken or confusing first experience loses every prospect who doesn't have a sales rep guiding them)*
 
 ### Demo Environment — 7-Day Data Retention
 
@@ -248,7 +282,7 @@ End-user documentation pages published to the marketing website (`website/`). Ge
 
 **M4 core done** ✓ (2026-03-08): All core features implemented and tested. Full test pass: 290/290 unit tests, all 13 test guide sections verified (manual UI + Playwright). See [`docs/M4_test_guide.md`](docs/M4_test_guide.md) and [`docs/M4_punch_list.md`](docs/M4_punch_list.md).
 
-**Remaining parallel items** (do not block M4 sign-off): Configurable alert thresholds, webhook subscription UI, and cross-mode progress checklist.
+**Remaining parallel items** (do not block M4 sign-off): Configurable alert thresholds *(pre-customer)*, webhook subscription UI, and cross-mode progress checklist.
 
 **Parked branch concept** (not merged into `feature/M5-monitor-mode`): A scan-first Operator Station Kiosk prototype was captured on branch `codex/kiosk` at commit `7cbec45`. The concept keeps `/run` as the supervisor console and adds a separate workstation-pinned `/run/station` kiosk optimized for barcode-scanner input, oversized touch actions, structured fail/defect capture, and a printable station command sheet. Keep this parked until M5 Monitor Mode stabilizes or the operator-floor UX becomes the next active priority.
 
@@ -357,10 +391,10 @@ The core product loop must be complete first (Build → Configure → Run → Mo
 - [x] Org settings page — rename org, manage billing tier
 - [x] Plant management UI — create/rename/archive plants within the org
 - [x] Invite flow — admin invites users by email, assigns role (admin/operator/viewer)
-- [ ] Accept invitation flow — new user signs up via invite link, joins existing org *(deferred — requires email delivery provider)*
+- [ ] Accept invitation flow — new user signs up via invite link, joins existing org *(hard blocker for customer team onboarding — requires email delivery provider, e.g. Resend free tier)*
 - [x] Team management page — list members, change roles, remove users
 - [x] Role-based UI — operators see Run/Monitor only; viewers see read-only dashboards; admins see everything including settings
-- [ ] User profile — name, email, active org switcher (future: users can belong to multiple orgs)
+- [ ] User profile — name, email, active org switcher *(pre-customer polish; future: users can belong to multiple orgs)*
 
 ### Role Definitions
 
@@ -392,8 +426,8 @@ organization
 
 ### Demo Cleanup Update
 
-- [ ] Update demo data cleanup to delete by organization (not user_id) — removing a user from an org must not delete production data
-- [ ] Org-level 7-day retention: the org expires, not individual users
+- [ ] Update demo data cleanup to delete by organization (not user_id) — removing a user from an org must not delete production data *(pre-customer demo hygiene)*
+- [ ] Org-level 7-day retention: the org expires, not individual users *(pre-customer demo hygiene)*
 
 ### Intelligence Layer
 
@@ -403,7 +437,7 @@ organization
 
 **M6 core done** ✓ (2026-03-12): Migration `011_multi_tenancy.sql` creates organizations, org_members, plants tables. All data tables have org_id. RLS policies rewritten for org-level isolation with role-based restrictions. `getOrgContext()` helper resolves org context. All tool modules refactored. Org/team/plant tools created. Settings UI (org, team, plants pages). Role-based sidebar and agent prompts. Full test pass: 324/324 unit tests.
 
-**Remaining parallel items** (do not block M6 sign-off): Invite acceptance page (requires email provider), demo cleanup update, user profile/org switcher.
+**Remaining parallel items** (do not block M6 sign-off): Invite acceptance *(hard blocker for customer onboarding — needs email provider)*, demo cleanup by org *(pre-customer hygiene)*, user profile *(pre-customer polish)*.
 
 ---
 
@@ -459,7 +493,7 @@ Expose the full tool layer as an MCP (Model Context Protocol) server. External s
 
 **M7 core done** ✓ (2026-03-12): Migration `012_maintenance_mqtt.sql` creates maintenance_requests table. MQTT tools (query, statistics, publish) and maintenance tools (create, list, update status) implemented. Machine Health Monitor agent with anomaly detection, severity classification, and auto-maintenance-request creation. MCP server endpoint with tool discovery and execution. Full test pass: 324/324 unit tests.
 
-**Remaining infrastructure items** (require external dependencies or UI work): MQTT broker setup, Supabase Edge Function deployment, simulator telemetry extension (cycle_complete/measurement/fault generation), Monitor Mode MQTT message viewer panel, Monitor Mode maintenance dashboard panel.
+**Remaining infrastructure items** (require external dependencies or UI work): MQTT broker setup *(external infra)*, Supabase Edge Function deployment *(external infra)*, simulator telemetry extension *(cycle_complete/measurement/fault generation)*, Monitor Mode MQTT message viewer panel *(pre-customer — UI gap in completed milestone)*, Monitor Mode maintenance dashboard panel *(pre-customer — UI gap in completed milestone)*.
 
 ---
 
@@ -610,6 +644,28 @@ Anchor a cryptographic hash of every completed work order to a public blockchain
 - [ ] Public verification endpoint — anyone can re-hash and compare without system access
 - [ ] Migrate from Amoy testnet to Polygon PoS mainnet for production deployments
 
+### Customer / Client Entity (EMS Job-Shop Model)
+
+EMS contract manufacturers and job shops manage orders for multiple customers in parallel. Every lead in the initial target set (MEBATRON, Dietz, Mektec) will ask on day one: "How do I know which order belongs to which customer?" Currently production orders have no customer link — all orders belong to the org. This is the most frequently expected feature in the job-shop segment.
+
+- [ ] `customers` table — company_name, contact_name, contact_email, notes; scoped to org
+- [ ] `customer_id` FK on `production_orders` — ties each work order to a customer
+- [ ] Customer tools: `create_customer`, `list_customers`, `assign_order_to_customer`
+- [ ] Customer filter in Monitor Mode — view throughput, yield, WIP, and order status scoped to one customer's orders
+- [ ] Ask MESkit customer queries — "What's the status of all Acme Corp orders?" and "Which customers have open orders right now?" route through customer-scoped tool calls
+- [ ] Customer context in quality alerts — alert text includes customer name when affected order is customer-linked
+
+### Certificate of Conformance / Quality Record Export
+
+Required by medical device manufacturers (IEC 60601-1) and automotive customers (IATF 16949) before any MES can be used in production. A Certificate of Conformance (CoC) is a per-order document that attests all units were produced and inspected per specification. EMO Systems and Mektec are the primary initial leads with this requirement.
+
+- [ ] CoC generation triggered on production order completion — captures: order number, part number, revision, quantity produced, pass/fail counts, yield %, inspection method per route step, date range, and operator IDs
+- [ ] Serial-level annex — list of all unit serial numbers with their individual pass/fail result and any defect codes logged
+- [ ] PDF export via browser print or server-side rendering — customer-deliverable format
+- [ ] HTML preview in Monitor Mode on the production order detail view
+- [ ] Digital sign-off field — quality engineer or supervisor approves before the CoC is exportable; stored as `approved_by` + timestamp on the order
+- [ ] Customer name on CoC — auto-populated when order has a `customer_id`
+
 ### Post-v1 Onboarding Integrations
 
 Once the core MESkit loop is stable in production, prioritize integrations that reduce adoption friction for the actual target buyer: small manufacturers upgrading from spreadsheets and lightweight software. These are onboarding accelerators, not enterprise checkbox integrations. See [`docs/MANUFACTURING_SOFTWARE_STACK.md`](docs/MANUFACTURING_SOFTWARE_STACK.md) for the full prioritization and solution map.
@@ -643,6 +699,8 @@ Once MESkit has a stable product loop and onboarding foundation, operationalize 
 | Batch manufacturing UI | Schema is ready (`tracking_type: batch`); needs quantity-aware UX |
 | Continuous manufacturing UI | Schema is ready (`tracking_type: continuous`); needs time-window tracking |
 | Multi-level BOM | Recursive BOM with sub-assemblies |
+| Customer/client entity | Link production orders to a customer name; filter Monitor Mode and analytics by customer — day-one ask from every EMS job-shop (see full section above) |
+| Certificate of Conformance export | Per-order quality record PDF with serial-level trace and sign-off; required by medical (IEC 60601-1) and automotive (IATF 16949) customers (see full section above) |
 | Supplier traceability | Incoming material lots linked to vendor, PO, certificate of analysis |
 | Work Instructions viewer | Attach documents/images to route steps |
 | Shift management | Operator schedules, workstation assignments by shift |
